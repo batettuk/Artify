@@ -5,28 +5,20 @@ import { FadeIn } from "@/components/motion/FadeIn";
 
 const partners = [
   { name: "Artify", logo: "/images/artify.logo.png" },
-  { name: "Remax Platinum", logo: "/images/remax.logo1.png", size: "small" },
-  { name: "Tech Invent", logo: "/images/Tech.logo.png", size: "small" },
+  { name: "Remax Platinum", logo: "/images/remax.logo1.png" },
+  { name: "Tech Invent", logo: "/images/Tech.logo.png" },
   { name: "Zehnder", logo: "/images/zehnder.logo.png" },
-  { name: "erxes", logo: "/images/erxes.logo.png", size: "small" },
+  { name: "erxes", logo: "/images/erxes.logo.png" },
   { name: "Block MN", logo: "/images/logo2.png" },
 ];
 
 function LogoItem({ partner }: { partner: typeof partners[number] }) {
-  const sizeClasses = {
-    small: "h-10 lg:h-14",
-    large: "h-16 lg:h-24",
-    default: "h-14 lg:h-20",
-  };
-
-  const heightClass = partner.size ? sizeClasses[partner.size as keyof typeof sizeClasses] : sizeClasses.default;
-
   return (
     <div className="flex shrink-0 items-center justify-center px-3 py-2 lg:px-5 lg:py-4">
       <img
         src={partner.logo}
         alt={partner.name}
-        className={`w-auto max-w-[150px] object-contain lg:max-w-[200px] ${heightClass}`}
+        className="h-14 w-auto max-w-[150px] object-contain lg:h-16 lg:max-w-[200px]"
       />
     </div>
   );
