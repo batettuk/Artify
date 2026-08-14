@@ -2,7 +2,6 @@ import { getTranslations } from "next-intl/server";
 import { getStaticApolloClient } from "@/lib/apollo/server-client";
 import { CP_POSTS } from "@/graphql/cms/queries/post";
 import { Hero } from "@/components/sections/Hero";
-import { FeatureCards } from "@/components/sections/FeatureCards";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { CompletedWorkSection } from "@/components/sections/CompletedWorkSection";
 import { MarqueeSection } from "@/components/sections/MarqueeSection";
@@ -41,7 +40,6 @@ export default async function HomePage({
   return (
     <>
       <Hero />
-      <FeatureCards />
       <AboutSection />
       <CompletedWorkSection />
       <MarqueeSection />
