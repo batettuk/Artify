@@ -22,14 +22,6 @@ export function FeatureCards() {
   return (
     <section className="bg-secondary px-3 py-10 lg:px-6 lg:py-16">
       <div className="mx-auto max-w-[1400px]">
-        <FadeIn>
-          <div className="mb-8 text-center lg:mb-12">
-            <h2 className="font-display text-2xl font-semibold text-foreground lg:text-4xl">
-              {t("label")}
-            </h2>
-          </div>
-        </FadeIn>
-
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {cards.map((card, index) => {
           const Icon = card.icon;
