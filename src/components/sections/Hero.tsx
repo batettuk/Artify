@@ -47,7 +47,7 @@ export function Hero() {
           </FadeIn>
 
           <FadeIn delay={0.1}>
-            <h1 className="mt-6 font-display text-3xl font-semibold leading-tight text-white lg:text-5xl xl:text-6xl">
+            <h1 className="mt-6 font-display text-2xl font-semibold leading-tight text-white lg:text-4xl xl:text-5xl">
               {t("line1")}
               <br />
               {t("line2")}

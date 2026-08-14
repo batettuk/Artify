@@ -36,12 +36,12 @@ export default function Header({ locale }: HeaderProps) {
 
         <Link
           href="/"
-          className="flex items-center justify-center lg:absolute lg:left-1/2 lg:-translate-x-1/2"
+          className="flex items-center justify-start"
         >
           <img
             src="/images/artify.logo.png"
             alt="Artify"
-            className="h-16 w-auto lg:h-20"
+            className="h-10 w-auto lg:h-12"
           />
         </Link>
 
