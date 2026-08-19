@@ -18,7 +18,7 @@ function LogoItem({ partner }: { partner: typeof partners[number] }) {
       <img
         src={partner.logo}
         alt={partner.name}
-        className="h-14 w-auto max-w-[150px] object-contain lg:h-16 lg:max-w-[200px]"
+        className="h-14 w-auto max-w-[150px] object-contain brightness-0 lg:h-16 lg:max-w-[200px]"
       />
     </div>
   );
