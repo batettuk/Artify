@@ -4,6 +4,14 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { ArrowUpRight } from "lucide-react";
+import Image from "@/components/common/Image";
+
+interface OverlayLogo {
+  src: string;
+  width: number;
+  height: number;
+  tone: "dark" | "light";
+}
 
 interface ProductCardProps {
   title: string;
@@ -13,22 +21,56 @@ interface ProductCardProps {
   cta: string;
   delay?: number;
   image: string;
+  overlayLogo?: OverlayLogo;
 }
 
-function ProductCard({ title, description, href, external, cta, delay = 0, image }: ProductCardProps) {
+function ProductCard({ title, description, href, external, cta, delay = 0, image, overlayLogo }: ProductCardProps) {
+  const cardMedia = (
+    <>
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+        <Image
+          src={image}
+          alt={title}
+          width={800}
+          height={600}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        {overlayLogo && (
+          <div
+            className={`absolute bottom-3 left-3 px-3 py-2 ${
+              overlayLogo.tone === "dark" ? "bg-black/50" : "bg-white/85"
+            }`}
+          >
+            <Image
+              src={overlayLogo.src}
+              alt=""
+              width={overlayLogo.width}
+              height={overlayLogo.height}
+              className="h-6 w-auto object-contain lg:h-7"
+            />
+          </div>
+        )}
+      </div>
+      <h3 className="mt-5 font-display text-lg font-semibold text-foreground transition-colors group-hover:text-primary lg:text-xl">
+        {title}
+      </h3>
+    </>
+  );
+
   return (
     <FadeIn delay={delay} direction="up">
-      <div className="flex flex-col rounded-3xl bg-card p-5 shadow-sm transition-all hover:shadow-md lg:rounded-[32px] lg:p-8">
-        <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl bg-muted lg:rounded-3xl">
-          <img
-            src={image}
-            alt={title}
-            className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-          />
-        </div>
-        <div className="mt-5 flex flex-1 flex-col">
-          <h3 className="font-display text-lg font-semibold text-foreground lg:text-xl">{title}</h3>
-          <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground lg:text-base">
+      <div className="flex flex-col bg-card p-5 shadow-sm transition-all hover:shadow-md lg:p-8">
+        {external ? (
+          <a href={href} target="_blank" rel="noopener noreferrer" className="group block">
+            {cardMedia}
+          </a>
+        ) : (
+          <Link href={href} className="group block">
+            {cardMedia}
+          </Link>
+        )}
+        <div className="mt-2 flex flex-1 flex-col">
+          <p className="flex-1 text-sm leading-relaxed text-muted-foreground lg:text-base">
             {description}
           </p>
           {external ? (
@@ -36,7 +78,7 @@ function ProductCard({ title, description, href, external, cta, delay = 0, image
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex items-center gap-2 self-start rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
+              className="mt-5 inline-flex items-center gap-2 self-start bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
             >
               {cta}
               <ArrowUpRight size={16} />
@@ -44,7 +86,7 @@ function ProductCard({ title, description, href, external, cta, delay = 0, image
           ) : (
             <Link
               href={href}
-              className="mt-5 inline-flex items-center gap-2 self-start rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
+              className="mt-5 inline-flex items-center gap-2 self-start bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
             >
               {cta}
               <ArrowUpRight size={16} />
@@ -65,7 +107,7 @@ export function ProductsSection() {
         <FadeIn>
           <div className="mb-8 text-center lg:mb-12">
             <h2 className="font-display text-2xl font-semibold text-foreground lg:text-4xl">
-              Products
+              {t("heading")}
             </h2>
           </div>
         </FadeIn>
@@ -74,11 +116,16 @@ export function ProductsSection() {
           <ProductCard
             title={t("blockAcademy.title")}
             description={t("blockAcademy.description")}
-            href="https://block-academy.vercel.app"
-            external
-            cta={t("visitWebsite")}
+            href="/products/block-academy"
+            cta={t("cta")}
             delay={0.1}
             image="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80"
+            overlayLogo={{
+              src: "/images/partners/block-academy.png",
+              width: 226,
+              height: 63,
+              tone: "dark",
+            }}
           />
           <ProductCard
             title={t("techInvent.title")}
@@ -87,16 +134,21 @@ export function ProductsSection() {
             external
             cta={t("visitWebsite")}
             delay={0.2}
-            image="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80"
+            image="/images/products/tech-invent.png"
+            overlayLogo={{
+              src: "/images/partners/zehnder.png",
+              width: 768,
+              height: 479,
+              tone: "light",
+            }}
           />
           <ProductCard
             title={t("customMaterials.title")}
             description={t("customMaterials.description")}
-            href="https://custom-materials.vercel.app"
-            external
-            cta={t("visitWebsite")}
+            href="/products/custom-materials"
+            cta={t("cta")}
             delay={0.3}
-            image="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80"
+            image="/images/products/custom-materials.png"
           />
         </div>
       </div>

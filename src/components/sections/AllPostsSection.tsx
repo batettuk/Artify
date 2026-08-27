@@ -17,7 +17,7 @@ function PostCard({ post, delay = 0 }: { post: Post; delay?: number }) {
   return (
     <FadeIn delay={delay} direction="up">
       <Link href={`/blog/${post.slug ?? post._id}`} className="group block h-full">
-        <article className="flex h-full flex-col overflow-hidden rounded-3xl bg-card shadow-sm transition-all hover:shadow-md lg:rounded-[32px]">
+        <article className="flex h-full flex-col overflow-hidden rounded-none bg-card shadow-sm transition-all hover:shadow-md lg:rounded-none">
           <div className="aspect-[4/3] w-full overflow-hidden bg-muted">
             {post.thumbnail?.url ? (
               <img
@@ -118,7 +118,7 @@ export function AllPostsSection({ posts }: AllPostsSectionProps) {
           <div className="mt-10 text-center">
             <button
               onClick={() => setShowAll(!showAll)}
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
+              className="inline-flex items-center gap-2 rounded-none bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
             >
               {showAll ? (
                 <>

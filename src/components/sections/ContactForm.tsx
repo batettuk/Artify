@@ -31,7 +31,7 @@ export function ContactForm({ locale }: ContactFormProps) {
 
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-16">
           <FadeIn>
-            <div className="rounded-3xl bg-gradient-to-br from-primary to-accent p-6 text-white shadow-lg lg:rounded-[48px] lg:p-12">
+            <div className="rounded-none bg-gradient-to-br from-primary to-accent p-6 text-white shadow-lg lg:rounded-none lg:p-12">
               <span className="text-xs font-semibold uppercase tracking-wider text-white/80">
                 {t("label")}
               </span>
@@ -62,7 +62,7 @@ export function ContactForm({ locale }: ContactFormProps) {
           <FadeIn direction="left" delay={0.1}>
             <form
               onSubmit={handleSubmit}
-              className="rounded-3xl bg-card p-6 shadow-sm lg:rounded-[48px] lg:p-10"
+              className="rounded-none bg-card p-6 shadow-sm lg:rounded-none lg:p-10"
             >
               <div className="space-y-4">
                 <div>
@@ -74,7 +74,7 @@ export function ContactForm({ locale }: ContactFormProps) {
                     name="name"
                     type="text"
                     required
-                    className="mt-2 block w-full rounded-2xl border border-input bg-background px-4 py-3 text-foreground outline-none transition-colors focus:border-primary"
+                    className="mt-2 block w-full rounded-none border border-input bg-background px-4 py-3 text-foreground outline-none transition-colors focus:border-primary"
                   />
                 </div>
 
@@ -87,7 +87,7 @@ export function ContactForm({ locale }: ContactFormProps) {
                     name="email"
                     type="email"
                     required
-                    className="mt-2 block w-full rounded-2xl border border-input bg-background px-4 py-3 text-foreground outline-none transition-colors focus:border-primary"
+                    className="mt-2 block w-full rounded-none border border-input bg-background px-4 py-3 text-foreground outline-none transition-colors focus:border-primary"
                   />
                 </div>
 
@@ -100,7 +100,7 @@ export function ContactForm({ locale }: ContactFormProps) {
                     name="message"
                     rows={5}
                     required
-                    className="mt-2 block w-full rounded-2xl border border-input bg-background px-4 py-3 text-foreground outline-none transition-colors focus:border-primary"
+                    className="mt-2 block w-full rounded-none border border-input bg-background px-4 py-3 text-foreground outline-none transition-colors focus:border-primary"
                   ></textarea>
                 </div>
               </div>
@@ -110,7 +110,7 @@ export function ContactForm({ locale }: ContactFormProps) {
               ) : (
                 <button
                   type="submit"
-                  className="mt-6 inline-flex h-12 items-center justify-center rounded-full bg-primary px-8 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
+                  className="mt-6 inline-flex h-12 items-center justify-center rounded-none bg-primary px-8 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
                 >
                   {t("submit")}
                 </button>

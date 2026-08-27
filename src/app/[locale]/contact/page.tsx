@@ -26,7 +26,7 @@ export default async function ContactPage({
   return (
     <>
       <section className="px-3 pt-28 lg:px-6 lg:pt-32">
-        <div className="relative overflow-hidden rounded-3xl px-6 py-16 text-center text-white lg:rounded-[64px] lg:py-24">
+        <div className="relative overflow-hidden rounded-none px-6 py-16 text-center text-white lg:rounded-none lg:py-24">
           {/* Background Image */}
           <div className="absolute inset-0">
             <img

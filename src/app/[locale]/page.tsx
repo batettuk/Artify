@@ -3,6 +3,7 @@ import { getStaticApolloClient } from "@/lib/apollo/server-client";
 import { CP_POSTS } from "@/graphql/cms/queries/post";
 import { Hero } from "@/components/sections/Hero";
 import { AboutSection } from "@/components/sections/AboutSection";
+import { CeoSection } from "@/components/sections/CeoSection";
 import { CompletedWorkSection } from "@/components/sections/CompletedWorkSection";
 import { MarqueeSection } from "@/components/sections/MarqueeSection";
 import { BlogSection } from "@/components/sections/BlogSection";
@@ -41,6 +42,7 @@ export default async function HomePage({
     <>
       <Hero />
       <AboutSection />
+      <CeoSection />
       <CompletedWorkSection />
       <MarqueeSection />
       <BlogSection posts={data?.cpPosts ?? []} />

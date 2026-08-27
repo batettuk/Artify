@@ -31,7 +31,7 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
 
         <FadeIn delay={0.1}>
           <Link href={`/blog/${post.slug ?? post._id}`} className="group block">
-            <article className="overflow-hidden rounded-3xl bg-card shadow-md transition-all hover:shadow-lg lg:rounded-[48px]">
+            <article className="overflow-hidden rounded-none bg-card shadow-md transition-all hover:shadow-lg lg:rounded-none">
               <div className="grid lg:grid-cols-2">
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted lg:aspect-auto lg:min-h-[400px]">
                   {post.thumbnail?.url ? (
@@ -70,7 +70,7 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
                   </p>
 
                   <div className="mt-8">
-                    <span className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-transform group-hover:scale-105">
+                    <span className="inline-flex items-center gap-2 rounded-none bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-transform group-hover:scale-105">
                       {t("readMore")}
                       <ArrowRight size={16} />
                     </span>

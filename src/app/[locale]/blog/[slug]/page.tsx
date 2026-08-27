@@ -101,7 +101,7 @@ export default async function PostPage({
         <div className="mx-auto max-w-[1280px]">
           {/* Featured Image */}
           <FadeIn delay={0.3}>
-            <div className="relative aspect-[21/9] w-full overflow-hidden rounded-3xl bg-muted shadow-lg lg:rounded-[48px]">
+            <div className="relative aspect-[21/9] w-full overflow-hidden rounded-none bg-muted shadow-lg lg:rounded-none">
               {post.thumbnail?.url ? (
                 <img
                   src={post.thumbnail.url}
@@ -144,7 +144,7 @@ export default async function PostPage({
             <div className="mt-16 border-t border-border pt-8 text-center">
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
+                className="inline-flex items-center gap-2 rounded-none border border-border bg-card px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
               >
                 <ArrowLeft size={16} />
                 Бүх мэдээ рүү буцах

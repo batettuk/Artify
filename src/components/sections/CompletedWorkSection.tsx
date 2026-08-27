@@ -15,7 +15,7 @@ interface Project {
 function ProjectCard({ project, delay = 0 }: { project: Project; delay?: number }) {
   return (
     <FadeIn delay={delay} direction="up">
-      <div className="group flex h-full flex-col overflow-hidden rounded-3xl bg-card shadow-sm transition-all hover:shadow-md lg:rounded-[32px]">
+      <div className="group flex h-full flex-col overflow-hidden rounded-none bg-card shadow-sm transition-all hover:shadow-md lg:rounded-none">
         <div className="aspect-[4/3] w-full overflow-hidden bg-muted">
           <div
             className="h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
@@ -35,7 +35,7 @@ function ProjectCard({ project, delay = 0 }: { project: Project; delay?: number 
             <ul className="space-y-1 text-sm text-foreground">
               {project.scope.map((item) => (
                 <li key={item} className="flex items-start gap-2">
-                  <span className="mt-2 block h-1 w-1 rounded-full bg-primary" />
+                  <span className="mt-2 block h-1 w-1 rounded-none bg-primary" />
                   {item}
                 </li>
               ))}
@@ -126,7 +126,7 @@ export function CompletedWorkSection() {
           <div className="mt-10 text-center">
             <button
               onClick={() => setShowAll(!showAll)}
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
+              className="inline-flex items-center gap-2 rounded-none bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
             >
               {showAll ? (
                 <>

@@ -1,0 +1,13 @@
+{
+  "pages": {},
+  "app": {
+    "[project]/artify/src/app/[locale]/page": [
+      "static/media/44fac91e6f2d2b1b-s.p.0f~sf101j6mzi.woff2",
+      "static/media/e8f2fbee2754df70-s.p.0fzkl03jw-sdz.woff2",
+      "static/media/dcd150d580a10316-s.p.00vt6ovfanaoz.woff2",
+      "static/media/f141b5b7abe57afc-s.p.0-k1k9nod8chc.woff2"
+    ]
+  },
+  "appUsingSizeAdjust": true,
+  "pagesUsingSizeAdjust": false
+}

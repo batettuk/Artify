@@ -15,10 +15,10 @@ export default function EmptyState({
 }: EmptyStateProps) {
   return (
     <div
-      className={`flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-zinc-200 px-6 py-16 text-center dark:border-zinc-800 ${className ?? ""}`}
+      className={`flex flex-col items-center justify-center gap-4 rounded-none border border-dashed border-zinc-200 px-6 py-16 text-center dark:border-zinc-800 ${className ?? ""}`}
     >
       {icon && (
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
+        <div className="flex h-12 w-12 items-center justify-center rounded-none bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
           {icon}
         </div>
       )}

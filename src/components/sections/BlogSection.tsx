@@ -27,7 +27,7 @@ export function BlogSection({ posts }: BlogSectionProps) {
         <div className="mb-8 flex justify-end lg:mb-12">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
+            className="inline-flex items-center gap-2 rounded-none border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
           >
             {t("viewAll")}
             <ArrowRight size={16} />
@@ -43,7 +43,7 @@ export function BlogSection({ posts }: BlogSectionProps) {
             {posts.slice(0, 3).map((post, index) => (
               <FadeIn key={post._id} delay={0.1 * index} direction="up">
                 <Link href={`/blog/${post.slug ?? post._id}`} className="group block">
-                  <article className="overflow-hidden rounded-3xl bg-card shadow-sm transition-all hover:shadow-md lg:rounded-[32px]">
+                  <article className="overflow-hidden rounded-none bg-card shadow-sm transition-all hover:shadow-md lg:rounded-none">
                     <div className="aspect-[16/10] w-full bg-gradient-to-br from-secondary to-border">
                     </div>
                     <div className="p-5 lg:p-6">

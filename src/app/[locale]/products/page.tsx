@@ -38,7 +38,7 @@ export default async function ProductsPage({
   return (
     <>
       <section className="px-3 pt-28 lg:px-6 lg:pt-32">
-        <div className="relative overflow-hidden rounded-3xl px-6 py-16 text-center text-white lg:rounded-[64px] lg:py-24">
+        <div className="relative overflow-hidden rounded-none px-6 py-16 text-center text-white lg:rounded-none lg:py-24">
           {/* Background Image */}
           <div className="absolute inset-0">
             <img
@@ -63,7 +63,7 @@ export default async function ProductsPage({
 
       {page?.content && (
         <section className="px-3 py-10 lg:px-6">
-          <div className="mx-auto max-w-[1400px] rounded-3xl bg-card p-6 shadow-sm lg:rounded-[48px] lg:p-12">
+          <div className="mx-auto max-w-[1400px] rounded-none bg-card p-6 shadow-sm lg:rounded-none lg:p-12">
             <FadeIn>
               <div
                 className="prose max-w-none"

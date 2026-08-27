@@ -13,7 +13,7 @@ export function LanguageSwitcher({ locales }: { locales: string[] }) {
   const pathname = usePathname();
 
   return (
-    <div className="flex items-center rounded-full border border-border bg-background p-1">
+    <div className="flex items-center rounded-none border border-border bg-background p-1">
       {locales.map((l) => (
         <Link
           key={l}
@@ -21,8 +21,8 @@ export function LanguageSwitcher({ locales }: { locales: string[] }) {
           locale={l}
           className={
             l === locale
-              ? "rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground"
-              : "rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+              ? "rounded-none bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground"
+              : "rounded-none px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           }
         >
           {LABELS[l] ?? l.toUpperCase()}

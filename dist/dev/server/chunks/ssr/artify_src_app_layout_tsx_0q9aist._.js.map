@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/tugs19/Documents/artify/src/app/layout.tsx"],"sourcesContent":["// Minimal root layout — locale-specific layout in [locale]/layout.tsx handles html/body.\nexport default function RootLayout({\n  children,\n}: {\n  children: React.ReactNode;\n}) {\n  return children;\n}\n"],"names":["RootLayout","children"],"mappings":"AAAA,yFAAyF;;;;;AAC1E,SAASA,WAAW,EACjCC,QAAQ,EAGT;IACC,OAAOA;AACT"}}]
+}
