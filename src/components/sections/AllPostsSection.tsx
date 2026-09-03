@@ -4,31 +4,27 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { FadeIn } from "@/components/motion/FadeIn";
+import Image from "@/components/common/Image";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import type { Post } from "@/graphql/cms/queries/post";
+import type { BlogCardDto } from "@/api/cms/types/public";
 
 interface AllPostsSectionProps {
-  posts: Post[];
+  posts: BlogCardDto[];
 }
 
-function PostCard({ post, delay = 0 }: { post: Post; delay?: number }) {
+function PostCard({ post, delay = 0 }: { post: BlogCardDto; delay?: number }) {
   const t = useTranslations("blog");
 
   return (
     <FadeIn delay={delay} direction="up">
-      <Link href={`/blog/${post.slug ?? post._id}`} className="group block h-full">
+      <Link href={`/blog/${post.slug}`} className="group block h-full">
         <article className="flex h-full flex-col overflow-hidden rounded-none bg-card shadow-sm transition-all hover:shadow-md lg:rounded-none">
-          <div className="aspect-[4/3] w-full overflow-hidden bg-muted">
-            {post.thumbnail?.url ? (
-              <img
-                src={post.thumbnail.url}
-                alt={post.title ?? ""}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-            ) : (
-              <img
-                src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80"
-                alt={post.title ?? ""}
+          <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-secondary to-border">
+            {post.thumbnailUrl && (
+              <Image
+                src={post.thumbnailUrl}
+                alt={post.title}
+                fill
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
             )}
@@ -36,12 +32,14 @@ function PostCard({ post, delay = 0 }: { post: Post; delay?: number }) {
 
           <div className="flex flex-1 flex-col p-5 lg:p-6">
             <h3 className="font-display text-lg font-semibold text-foreground transition-colors group-hover:text-primary lg:text-xl">
-              {post.title ?? ""}
+              {post.title}
             </h3>
 
-            <p className="mt-3 line-clamp-3 text-sm text-muted-foreground lg:text-base">
-              {post.excerpt ?? ""}
-            </p>
+            {post.excerpt && (
+              <p className="mt-3 line-clamp-3 text-sm text-muted-foreground lg:text-base">
+                {post.excerpt}
+              </p>
+            )}
 
             <div className="mt-auto pt-4">
               <span className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
@@ -74,13 +72,7 @@ export function AllPostsSection({ posts }: AllPostsSectionProps) {
   const t = useTranslations("blog");
   const [showAll, setShowAll] = useState(false);
 
-  const sortedPosts = [...posts].sort((a, b) => {
-    const dateA = new Date(a.publishedDate ?? 0).getTime();
-    const dateB = new Date(b.publishedDate ?? 0).getTime();
-    return dateB - dateA;
-  });
-
-  const visiblePosts = showAll ? sortedPosts : sortedPosts.slice(0, 4);
+  const visiblePosts = showAll ? posts : posts.slice(0, 4);
 
   if (posts.length === 0) {
     return (
@@ -110,11 +102,11 @@ export function AllPostsSection({ posts }: AllPostsSectionProps) {
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {visiblePosts.map((post, index) => (
-            <PostCard key={post._id} post={post} delay={0.05 * index} />
+            <PostCard key={post.id} post={post} delay={0.05 * index} />
           ))}
         </div>
 
-        {sortedPosts.length > 4 && (
+        {posts.length > 4 && (
           <div className="mt-10 text-center">
             <button
               onClick={() => setShowAll(!showAll)}

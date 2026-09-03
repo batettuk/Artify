@@ -1,23 +1,30 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getStaticApolloClient } from "@/lib/apollo/server-client";
-import { CP_PAGES, CP_PAGE } from "@/graphql/cms/queries/page";
+import { getPageDetail } from "@/api/cms/server/queries/get-page-detail";
+import { getPageSlugs } from "@/api/cms/server/queries/get-pages";
 import { routing } from "@/i18n/routing";
 import { FadeIn } from "@/components/motion/FadeIn";
-import type { CpPagesData, CpPageData, Page } from "@/graphql/cms/queries/page";
+import { CmsContent } from "@/components/common/CmsContent";
+
+const DEDICATED_ROUTE_SLUGS = new Set([
+  "home",
+  "about",
+  "blog",
+  "contact",
+  "products",
+  "ceo",
+  "/ceo",
+  "partners",
+  "testimonials",
+]);
 
 export async function generateStaticParams() {
   const results = await Promise.all(
     routing.locales.map(async (locale) => {
-      const client = getStaticApolloClient();
-      const { data } = await client.query<CpPagesData>({
-        query: CP_PAGES,
-        variables: { language: locale },
-        context: { fetchOptions: { next: { revalidate: 60 } } },
-      });
-      return (data?.cpPages ?? [])
-        .filter((p: Page) => p.slug)
-        .map((p: Page) => ({ locale, slug: p.slug as string }));
+      const slugs = await getPageSlugs(locale);
+      return slugs
+        .filter((slug) => !DEDICATED_ROUTE_SLUGS.has(slug))
+        .map((slug) => ({ locale, slug }));
     })
   );
   return results.flat();
@@ -29,14 +36,7 @@ export async function generateMetadata({
   params: { locale: string; slug: string };
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const client = getStaticApolloClient();
-  const { data } = await client.query<CpPageData>({
-    query: CP_PAGE,
-    variables: { language: locale },
-    context: { fetchOptions: { next: { revalidate: 60 } } },
-  });
-
-  const page = data?.cpPages?.find((p) => p.slug === slug) ?? null;
+  const page = await getPageDetail({ slug, language: locale });
   if (!page) return {};
 
   return {
@@ -51,14 +51,7 @@ export default async function CmsPage({
   params: { locale: string; slug: string };
 }) {
   const { locale, slug } = await params;
-  const client = getStaticApolloClient();
-  const { data } = await client.query<CpPageData>({
-    query: CP_PAGE,
-    variables: { language: locale },
-    context: { fetchOptions: { next: { revalidate: 60 } } },
-  });
-
-  const page = data?.cpPages?.find((p) => p.slug === slug) ?? null;
+  const page = await getPageDetail({ slug, language: locale });
   if (!page) notFound();
 
   return (
@@ -78,9 +71,9 @@ export default async function CmsPage({
 
         {page.content && (
           <FadeIn delay={0.2}>
-            <div
+            <CmsContent
+              html={page.content}
               className="prose prose-invert mt-12 max-w-none"
-              dangerouslySetInnerHTML={{ __html: page.content }}
             />
           </FadeIn>
         )}

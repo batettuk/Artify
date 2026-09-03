@@ -3,8 +3,10 @@ import { gql } from "@apollo/client";
 export type CategoryStatus = "active" | "inactive";
 
 export type PageInfo = {
-  cursor?: string;
-  totalCount?: number;
+  hasNextPage?: boolean;
+  hasPreviousPage?: boolean;
+  endCursor?: string;
+  startCursor?: string;
 };
 
 export type PostCategory = {
@@ -57,8 +59,10 @@ export const CP_CATEGORIES = gql`
       }
       totalCount
       pageInfo {
-        cursor
-        totalCount
+        hasNextPage
+        hasPreviousPage
+        endCursor
+        startCursor
       }
     }
   }

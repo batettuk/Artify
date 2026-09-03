@@ -1,16 +1,7 @@
-export const metadata = {
-  title: "Artify",
-};
+import { redirect } from "next/navigation";
+
+import { routing } from "@/i18n/routing";
 
 export default function RootPage() {
-  return (
-    <html lang="mn">
-      <head>
-        <meta httpEquiv="refresh" content="0;url=/mn" />
-      </head>
-      <body>
-        <p>Redirecting to <a href="/mn">/mn</a>...</p>
-      </body>
-    </html>
-  );
+  redirect(`/${routing.defaultLocale}`);
 }

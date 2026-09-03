@@ -3,6 +3,8 @@ import { Montserrat, Nunito_Sans } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import ApolloClientProvider from "@/lib/apollo/provider";
+import { getMenu } from "@/api/cms/server/queries/get-menu";
+import { getContactInfo } from "@/api/cms/server/queries/get-contact-info";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { routing } from "@/i18n/routing";
@@ -36,7 +38,12 @@ export default async function LocaleLayout({
 }: LayoutProps<"/[locale]">) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const messages = await getMessages();
+  const [messages, headerMenu, footerMenu, contactInfo] = await Promise.all([
+    getMessages(),
+    getMenu({ kind: "header", language: locale }),
+    getMenu({ kind: "footer", language: locale }),
+    getContactInfo(locale),
+  ]);
 
   return (
     <html
@@ -46,9 +53,9 @@ export default async function LocaleLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <NextIntlClientProvider messages={messages}>
           <ApolloClientProvider>
-            <Header locale={locale} />
+            <Header locale={locale} navItems={headerMenu} />
             <main className="flex-1">{children}</main>
-            <Footer locale={locale} />
+            <Footer locale={locale} navItems={footerMenu} contactInfo={contactInfo} />
           </ApolloClientProvider>
         </NextIntlClientProvider>
       </body>

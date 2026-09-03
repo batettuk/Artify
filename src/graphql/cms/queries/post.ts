@@ -32,6 +32,11 @@ export type PageInfo = {
 export type Post = {
   _id: string;
   type?: string;
+  customPostType?: {
+    _id: string;
+    code: string;
+    clientPortalId: string;
+  };
   webId?: string;
   clientPortalId: string;
   title?: string;
@@ -69,6 +74,11 @@ const POST_FRAGMENT = gql`
   fragment PostFields on Post {
     _id
     type
+    customPostType {
+      _id
+      code
+      clientPortalId
+    }
     webId
     clientPortalId
     title

@@ -9,9 +9,16 @@ function getFileUrl(url: string): string {
   if (!url) return "";
   if (url.startsWith("http")) return url;
   if (url.startsWith("/")) return url;
-  const endpoint = process.env.NEXT_PUBLIC_ERXES_ENDPOINT || "";
-  const apiDomain = endpoint.replace(/\/gateway\/graphql$/, "");
-  return apiDomain ? `${apiDomain}/read-file?key=${url}` : url;
+  const assetOrigin = process.env.NEXT_PUBLIC_ERXES_ASSET_ORIGIN || "";
+  if (!assetOrigin) return "";
+
+  const fileUrl = new URL("/gateway/pl:core/read-file", assetOrigin);
+  fileUrl.searchParams.set("key", url);
+  return fileUrl.toString();
+}
+
+function isSvg(src: string): boolean {
+  return src.split("?")[0].toLowerCase().endsWith(".svg");
 }
 
 type ImageProps = Omit<NextImageProps, "src"> & {
@@ -23,17 +30,20 @@ export default function Image({
   src,
   fallback = PLACEHOLDER,
   alt = "",
+  unoptimized,
   ...props
 }: ImageProps) {
   const resolved = getFileUrl(src || "") || fallback;
-  const [imgSrc, setImgSrc] = useState(resolved);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const imgSrc = failedSrc === resolved ? fallback : resolved;
 
   return (
     <NextImage
       {...props}
       src={imgSrc}
       alt={alt}
-      onError={() => setImgSrc(fallback)}
+      unoptimized={unoptimized ?? (isSvg(src || "") || isSvg(imgSrc))}
+      onError={() => setFailedSrc(resolved)}
     />
   );
 }

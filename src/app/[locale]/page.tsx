@@ -1,6 +1,7 @@
-import { getTranslations } from "next-intl/server";
-import { getStaticApolloClient } from "@/lib/apollo/server-client";
-import { CP_POSTS } from "@/graphql/cms/queries/post";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { getPageDetail } from "@/api/cms/server/queries/get-page-detail";
+import { getHomeContent } from "@/features/home/server/get-home-content";
 import { Hero } from "@/components/sections/Hero";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { CeoSection } from "@/components/sections/CeoSection";
@@ -8,45 +9,46 @@ import { CompletedWorkSection } from "@/components/sections/CompletedWorkSection
 import { MarqueeSection } from "@/components/sections/MarqueeSection";
 import { BlogSection } from "@/components/sections/BlogSection";
 import { ContactForm } from "@/components/sections/ContactForm";
-import type { CpPostsData } from "@/graphql/cms/queries/post";
-import type { Metadata } from "next";
 
 export async function generateMetadata({
   params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
+}: PageProps<"/[locale]">): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "hero" });
-  return {
-    title: `Artify | ${t("label")}`,
-    description: t("body"),
-  };
+  const page = await getPageDetail({ slug: "home", language: locale });
+
+  return page
+    ? { title: `${page.name} | Artify`, description: page.description ?? undefined }
+    : { title: "Artify" };
 }
 
-export default async function HomePage({
-  params,
-}: {
-  params: { locale: string };
-}) {
+export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
+  const { page, sectionPages, blogPosts, projects, partners } =
+    await getHomeContent(locale);
 
-  const client = getStaticApolloClient();
-  const { data } = await client.query<CpPostsData>({
-    query: CP_POSTS,
-    variables: { language: locale, status: "published", limit: 3 },
-    context: { fetchOptions: { next: { revalidate: 60 } } },
-  });
+  if (!page) notFound();
 
   return (
     <>
-      <Hero />
-      <AboutSection />
-      <CeoSection />
-      <CompletedWorkSection />
-      <MarqueeSection />
-      <BlogSection posts={data?.cpPosts ?? []} />
-      <ContactForm locale={locale} />
+      <Hero heading={page.name} body={page.description} />
+      <AboutSection page={sectionPages.about} />
+      <CeoSection page={sectionPages.ceo} />
+      <CompletedWorkSection
+        page={sectionPages.completedWork}
+        projects={projects}
+        locale={locale}
+      />
+      <MarqueeSection
+        page={sectionPages.partners}
+        partners={partners}
+        locale={locale}
+      />
+      <BlogSection page={sectionPages.blog} posts={blogPosts} locale={locale} />
+      <ContactForm
+        page={sectionPages.contact}
+        textPage={sectionPages.contactText}
+        locale={locale}
+      />
     </>
   );
 }

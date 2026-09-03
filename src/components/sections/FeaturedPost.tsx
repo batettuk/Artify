@@ -1,17 +1,19 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { FadeIn } from "@/components/motion/FadeIn";
+import Image from "@/components/common/Image";
 import { ArrowRight, Calendar } from "lucide-react";
-import type { Post } from "@/graphql/cms/queries/post";
+import type { BlogCardDto } from "@/api/cms/types/public";
 
 interface FeaturedPostProps {
-  post: Post | null;
+  post: BlogCardDto | null;
 }
 
 export function FeaturedPost({ post }: FeaturedPostProps) {
   const t = useTranslations("blog");
+  const locale = useLocale();
 
   if (!post) return null;
 
@@ -30,20 +32,15 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
         </FadeIn>
 
         <FadeIn delay={0.1}>
-          <Link href={`/blog/${post.slug ?? post._id}`} className="group block">
+          <Link href={`/blog/${post.slug}`} className="group block">
             <article className="overflow-hidden rounded-none bg-card shadow-md transition-all hover:shadow-lg lg:rounded-none">
               <div className="grid lg:grid-cols-2">
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted lg:aspect-auto lg:min-h-[400px]">
-                  {post.thumbnail?.url ? (
-                    <img
-                      src={post.thumbnail.url}
-                      alt={post.title ?? ""}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  ) : (
-                    <img
-                      src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80"
-                      alt={post.title ?? ""}
+                <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-secondary to-border lg:aspect-auto lg:min-h-[400px]">
+                  {post.thumbnailUrl && (
+                    <Image
+                      src={post.thumbnailUrl}
+                      alt={post.title}
+                      fill
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   )}
@@ -53,7 +50,7 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Calendar size={16} />
                     {post.publishedDate
-                      ? new Date(post.publishedDate).toLocaleDateString("mn-MN", {
+                      ? new Date(post.publishedDate).toLocaleDateString(locale, {
                           year: "numeric",
                           month: "long",
                           day: "numeric",
@@ -62,12 +59,14 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
                   </div>
 
                   <h3 className="mt-4 font-display text-2xl font-semibold leading-tight text-foreground transition-colors group-hover:text-primary lg:text-4xl">
-                    {post.title ?? ""}
+                    {post.title}
                   </h3>
 
-                  <p className="mt-4 line-clamp-4 text-base leading-relaxed text-muted-foreground lg:text-lg">
-                    {post.excerpt ?? ""}
-                  </p>
+                  {post.excerpt && (
+                    <p className="mt-4 line-clamp-4 text-base leading-relaxed text-muted-foreground lg:text-lg">
+                      {post.excerpt}
+                    </p>
+                  )}
 
                   <div className="mt-8">
                     <span className="inline-flex items-center gap-2 rounded-none bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-transform group-hover:scale-105">

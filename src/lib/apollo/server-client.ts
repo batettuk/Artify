@@ -1,18 +1,23 @@
+import "server-only";
+
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import { cookies } from "next/headers";
 
 function makeClient(token?: string, staticBuild = false) {
+  const uri = process.env.GRAPHQL_URL;
+  const appToken = process.env.ERXES_APP_TOKEN;
+
+  if (!uri || !appToken) {
+    throw new Error(
+      "GRAPHQL_URL and ERXES_APP_TOKEN are required for server-side erxes access",
+    );
+  }
+
   return new ApolloClient({
     link: new HttpLink({
-      uri:
-        process.env.GRAPHQL_URL ??
-        process.env.NEXT_PUBLIC_GRAPHQL_URL ??
-        "/graphql",
+      uri,
       headers: {
-        "x-app-token":
-          process.env.ERXES_APP_TOKEN ??
-          process.env.NEXT_PUBLIC_ERXES_APP_TOKEN ??
-          "",
+        "x-app-token": appToken,
         ...(token ? { authorization: `Bearer ${token}` } : {}),
       },
       fetchOptions: staticBuild

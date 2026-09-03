@@ -52,34 +52,30 @@
     "role": "Founder & Chief Executive Officer"
   },
   "products": {
-    "label": "03 — Products",
-    "heading": "Products",
-    "viewAll": "View All",
-    "blockAcademy": {
-      "title": "Block Academy",
-      "description": "A training platform combining construction education, certification, and hands-on practice."
-    },
-    "techInvent": {
-      "title": "Tech Invent",
-      "description": "Explore construction technology and innovation solutions through the Tech Invent project."
-    },
-    "customMaterials": {
-      "title": "Custom Materials",
-      "description": "We provide the defining, creative fabrication solutions that shape your project's character and look. Imagine it your way."
-    },
     "cta": "Learn More",
-    "order": "Order Now",
     "visitWebsite": "Visit Website",
-    "backToProducts": "Back to Products"
+    "backToProducts": "Back to Products",
+    "detailLabel": "Product",
+    "details": "Product details",
+    "emptyTitle": "No published products",
+    "emptyDescription": "Products published in erxes CMS will appear here."
   },
   "completedWork": {
     "title": "Completed Work Experience",
     "subtitle": "Successfully delivered projects",
     "showAll": "View All Projects",
-    "showLess": "Show Less"
+    "showLess": "Show Less",
+    "emptyTitle": "Project content is not configured",
+    "emptyDescription": "Projects will appear after the Project post type is verified in erxes CMS.",
+    "noProjectsTitle": "No published projects",
+    "noProjectsDescription": "Published projects will appear here."
   },
   "partners": {
-    "label": "Partner Organizations"
+    "label": "Partner Organizations",
+    "emptyTitle": "Partner content is not configured",
+    "emptyDescription": "Partners will appear after the Partner post type is verified in erxes CMS.",
+    "noPartnersTitle": "No published partners",
+    "noPartnersDescription": "Published partners will appear here."
   },
   "blog": {
     "label": "04 — Blog",
@@ -102,7 +98,12 @@
     "email": "Email",
     "message": "Message",
     "submit": "Send",
+    "submitting": "Sending...",
     "success": "Thank you, your message has been received.",
+    "error": "Your message could not be sent. Please try again.",
+    "invalidName": "Enter your name.",
+    "invalidEmail": "Enter a valid email address.",
+    "invalidMessage": "Enter your message.",
     "address": "Ulaanbaatar, Mongolia",
     "phone": "+976 7771 0155",
     "emailAddress": "info@artifybrand.com"
@@ -117,7 +118,7 @@
     "training": "Training & Development",
     "cleanAir": "Clean Air",
     "customFabrication": "Custom Fabrication",
-    "rights": "© 2024 Artify. All rights reserved.",
+    "rights": "© 2026 Artify. All rights reserved.",
     "copyright": "All rights reserved."
   }
 }

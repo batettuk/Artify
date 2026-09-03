@@ -7,7 +7,7 @@
   "sections": ["hero", "about", "products", "testimonials", "blog", "contact"],
   "client_portal_id": "zT-scbXDlh_netwVQv30X",
   "erxes_endpoint": "https://artifynew.next.erxes.io/gateway/graphql",
-  "erxes_app_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRQb3J0YWxJZCI6InpULXNjYlhEbGhfbmV0d1ZRdjMwWCIsImlhdCI6MTc4Mjk2NDg2OH0.NHW9faZ_S3ZNZobMA9NSLN9yKUfs9m7cvC8cxI7F74c",
+  "erxes_app_token": "<server-only ERXES_APP_TOKEN>",
   "erxes_cms_id": "6a45e648d9f0b662ce0b94cd",
   "color_hint": "dark-navy-gold",
   "extra_notes": null,

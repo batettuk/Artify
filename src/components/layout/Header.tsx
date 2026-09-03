@@ -1,28 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
 import { Menu, X, Search } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import Image from "@/components/common/Image";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { routing } from "@/i18n/routing";
+import type { MenuItemDto } from "@/api/cms/types/public";
 
 interface HeaderProps {
   locale: string;
+  navItems: MenuItemDto[];
 }
 
-export default function Header({ locale }: HeaderProps) {
-  const t = useTranslations("nav");
+export default function Header({ locale, navItems }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
-  const links = [
-    { href: "/", label: t("home") },
-    { href: "/products", label: t("products") },
-    { href: "/blog", label: t("blog") },
-    { href: "/contact", label: t("contact") },
-  ];
+  const links = navItems.map((item) => ({ href: item.url, label: item.label }));
 
   return (
     <header className="fixed top-0 left-1/2 z-50 w-full max-w-[1920px] -translate-x-1/2 bg-background/95 backdrop-blur">

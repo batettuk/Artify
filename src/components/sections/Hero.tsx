@@ -6,7 +6,7 @@ import { Link } from "@/i18n/routing";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { ArrowRight } from "lucide-react";
 
-export function Hero() {
+export function Hero({ heading, body }: { heading: string; body: string | null }) {
   const t = useTranslations("hero");
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -48,13 +48,13 @@ export function Hero() {
 
           <FadeIn delay={0.1}>
             <h1 className="mt-6 font-display text-2xl font-semibold leading-tight text-white lg:text-4xl xl:text-5xl">
-              {t("heading")}
+              {heading}
             </h1>
           </FadeIn>
 
           <FadeIn delay={0.2}>
             <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/90 lg:text-lg">
-              {t("body")}
+              {body}
             </p>
           </FadeIn>
 

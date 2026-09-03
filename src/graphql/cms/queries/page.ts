@@ -128,19 +128,39 @@ export type CpPageListVariables = {
   limit?: number;
 };
 
-export const CP_PAGE = gql`
-  ${PAGE_FRAGMENT}
-  query CpPage($language: String) {
-    cpPages(language: $language) {
-      ...PageFields
+export const CP_PAGE_DETAIL = gql`
+  query CpPageDetail($slug: String, $language: String) {
+    cpCmsPageDetail(slug: $slug, language: $language) {
+      _id
+      name
+      slug
+      description
+      content
+      thumbnail {
+        url
+      }
+      customFieldsData
+      customFieldsMap
     }
   }
 `;
 
-export type CpPageVariables = {
+export type PageDetail = {
+  _id: string;
+  name?: string;
+  slug?: string;
+  description?: string;
+  content?: string;
+  thumbnail?: Pick<Attachment, "url"> | null;
+  customFieldsData?: unknown;
+  customFieldsMap?: unknown;
+};
+
+export type CpPageDetailVariables = {
+  slug?: string;
   language?: string;
 };
 
-export type CpPageData = {
-  cpPages: Page[];
+export type CpPageDetailData = {
+  cpCmsPageDetail: PageDetail | null;
 };

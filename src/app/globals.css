@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import "tailwindcss" source("../");
 @plugin "@tailwindcss/typography";
 @import "./marquee.css";
 
@@ -58,6 +58,10 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-nunito), system-ui, sans-serif;
+}
+
+.project-grid[data-expanded="false"] > :nth-child(n + 5) {
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
