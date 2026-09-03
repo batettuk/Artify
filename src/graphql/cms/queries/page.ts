@@ -139,6 +139,7 @@ export const CP_PAGE_DETAIL = gql`
       thumbnail {
         url
       }
+      videoUrl
       customFieldsData
       customFieldsMap
     }
@@ -152,6 +153,7 @@ export type PageDetail = {
   description?: string;
   content?: string;
   thumbnail?: Pick<Attachment, "url"> | null;
+  videoUrl?: string | null;
   customFieldsData?: unknown;
   customFieldsMap?: unknown;
 };

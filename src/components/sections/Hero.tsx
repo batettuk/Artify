@@ -6,7 +6,15 @@ import { Link } from "@/i18n/routing";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { ArrowRight } from "lucide-react";
 
-export function Hero({ heading, body }: { heading: string; body: string | null }) {
+export function Hero({
+  heading,
+  body,
+  videoUrl,
+}: {
+  heading: string;
+  body: string | null;
+  videoUrl: string | null;
+}) {
   const t = useTranslations("hero");
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -33,10 +41,7 @@ export function Hero({ heading, body }: { heading: string; body: string | null }
           className="absolute inset-0 h-full w-full object-cover"
           poster="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1920&q=80"
         >
-          <source
-            src="https://videos.pexels.com/video-files/3209828/3209828-hd_1920_1080_25fps.mp4"
-            type="video/mp4"
-          />
+          {videoUrl && <source src={videoUrl} type="video/mp4" />}
         </video>
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 mx-auto max-w-4xl text-center">

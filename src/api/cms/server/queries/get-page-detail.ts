@@ -37,6 +37,7 @@ export const getPageDetail = cache(
       description: page.description ?? null,
       content: page.content ?? null,
       thumbnailUrl: page.thumbnail?.url ?? null,
+      videoUrl: page.videoUrl ?? null,
       customFieldsData: page.customFieldsData ?? null,
       customFieldsMap: page.customFieldsMap ?? null,
     };

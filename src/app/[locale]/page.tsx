@@ -30,7 +30,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 
   return (
     <>
-      <Hero heading={page.name} body={page.description} />
+      <Hero heading={page.name} body={page.description} videoUrl={page.videoUrl} />
       <AboutSection page={sectionPages.about} />
       <CeoSection page={sectionPages.ceo} />
       <CompletedWorkSection

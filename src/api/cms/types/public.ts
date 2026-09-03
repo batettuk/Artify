@@ -5,6 +5,7 @@ export type CmsPageDto = {
   description: string | null;
   content: string | null;
   thumbnailUrl: string | null;
+  videoUrl: string | null;
   customFieldsData: unknown;
   customFieldsMap: unknown;
 };
