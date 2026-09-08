@@ -56,36 +56,8 @@ export function CeoSection({
           </div>
 
           <div className="grid items-stretch lg:grid-cols-12">
-            {/* CEO Portrait Column */}
-            <div className="relative flex flex-col justify-end overflow-hidden bg-gradient-to-b from-slate-50 via-slate-100 to-slate-200/70 p-4 sm:p-8 lg:col-span-5 lg:p-10 lg:pb-0 border-b lg:border-b-0 lg:border-r border-slate-200/80">
-              {/* Soft radial backdrop behind the CEO */}
-              <div className="pointer-events-none absolute inset-0 bg-radial from-sky-400/15 via-transparent to-transparent opacity-70" />
-              
-              <FadeIn direction="up" className="relative z-10 mx-auto flex w-full flex-col items-center justify-end">
-                <div className="relative h-[440px] w-full max-w-[420px] sm:h-[520px] lg:h-[580px] xl:h-[620px] drop-shadow-[0_25px_35px_rgba(13,26,70,0.18)]">
-                  <Image
-                    src={imageSrc}
-                    alt={page.name || "Artify CEO"}
-                    fill
-                    priority
-                    sizes="(max-width: 1024px) 100vw, 40vw"
-                    className="h-full w-full object-contain object-bottom transition-transform duration-700 hover:scale-[1.03]"
-                  />
-                </div>
-
-                {/* Grounding frame bar & badge */}
-                <div className="w-full border-t border-[#0d1a46]/10 py-3.5 flex items-center justify-between text-[11px] font-bold tracking-[0.2em] text-[#0d1a46]/70 uppercase">
-                  <span className="flex items-center gap-1.5">
-                    <Award className="h-3.5 w-3.5 text-[#0d1a46]" />
-                    ARTIFY LEADERSHIP
-                  </span>
-                  <span>EST. 2014</span>
-                </div>
-              </FadeIn>
-            </div>
-
-            {/* CEO Editorial Quote & Vision Column */}
-            <div className="relative flex flex-col justify-between p-8 sm:p-12 lg:col-span-7 lg:p-16">
+            {/* CEO Editorial Quote & Vision Column (LEFT) */}
+            <div className="relative flex flex-col justify-between p-8 sm:p-12 lg:col-span-7 lg:p-16 border-b lg:border-b-0 lg:border-r border-slate-200/80">
               {/* Huge subtle watermarked quotation mark */}
               <div className="pointer-events-none absolute right-8 top-8 text-[#0d1a46]/[0.05] lg:right-12 lg:top-10 select-none">
                 <Quote size={160} strokeWidth={1.2} />
@@ -134,6 +106,34 @@ export function CeoSection({
                   </div>
                 </FadeIn>
               </div>
+            </div>
+
+            {/* CEO Portrait Column (RIGHT) */}
+            <div className="relative flex flex-col justify-end overflow-hidden bg-gradient-to-b from-slate-50 via-slate-100 to-slate-200/70 p-4 sm:p-8 lg:col-span-5 lg:p-10 lg:pb-0">
+              {/* Soft radial backdrop behind the CEO */}
+              <div className="pointer-events-none absolute inset-0 bg-radial from-sky-400/15 via-transparent to-transparent opacity-70" />
+              
+              <FadeIn direction="up" className="relative z-10 mx-auto flex w-full flex-col items-center justify-end">
+                <div className="relative h-[440px] w-full max-w-[420px] sm:h-[520px] lg:h-[580px] xl:h-[620px] drop-shadow-[0_25px_35px_rgba(13,26,70,0.18)]">
+                  <Image
+                    src={imageSrc}
+                    alt={page.name || "Artify CEO"}
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 40vw"
+                    className="h-full w-full object-contain object-bottom transition-transform duration-700 hover:scale-[1.03]"
+                  />
+                </div>
+
+                {/* Grounding frame bar & badge */}
+                <div className="w-full border-t border-[#0d1a46]/10 py-3.5 flex items-center justify-between text-[11px] font-bold tracking-[0.2em] text-[#0d1a46]/70 uppercase">
+                  <span className="flex items-center gap-1.5">
+                    <Award className="h-3.5 w-3.5 text-[#0d1a46]" />
+                    ARTIFY LEADERSHIP
+                  </span>
+                  <span>EST. 2014</span>
+                </div>
+              </FadeIn>
             </div>
           </div>
         </div>
