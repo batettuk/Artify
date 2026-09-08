@@ -53,75 +53,90 @@ export default async function PostPage({
       })
     : "";
 
+  const heroImage = post.thumbnailUrl || "/images/about-2.jpg";
+
   return (
     <article className="bg-background">
-      {/* Hero Section with Dark Background */}
-      <div className="relative bg-gradient-to-br from-[#0a0a0a] to-[#1a1a2e] px-3 pt-28 lg:px-6 lg:pt-32">
-        <div className="mx-auto max-w-[1280px] pb-16 lg:pb-24">
-          <FadeIn delay={0.1}>
-            <div className="flex items-center gap-2 text-sm text-[#f97316]">
-              <Calendar size={16} />
-              {formattedDate}
-            </div>
-          </FadeIn>
-
-          <FadeIn delay={0.2}>
-            <h1 className="mt-4 font-display text-xl font-semibold leading-tight text-white lg:text-3xl xl:text-4xl">
-              {post.title}
-            </h1>
-          </FadeIn>
+      {/* Full-bleed Edge-to-Edge Hero Banner */}
+      <section className="relative flex min-h-[460px] w-full items-end overflow-hidden bg-[#070e24] pt-32 pb-16 lg:min-h-[540px] lg:pt-40 lg:pb-20">
+        <div className="absolute inset-0">
+          <Image
+            src={heroImage}
+            alt={post.title}
+            fill
+            priority
+            sizes="100vw"
+            className="h-full w-full object-cover object-center scale-[1.01]"
+          />
+          {/* Subtle cinematic gradient overlay preserving image clarity */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#070e24] via-[#070e24]/65 to-[#070e24]/35" />
         </div>
 
-        {/* Subtle overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-      </div>
+        <div className="relative z-10 mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-12">
+          <FadeIn>
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-2 border border-white/25 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-md transition-all hover:bg-white/20 hover:text-white"
+            >
+              <ArrowLeft size={14} />
+              {t("backToAll")}
+            </Link>
+          </FadeIn>
 
-      {/* Content Section */}
-      <div className="px-3 py-10 lg:px-6 lg:py-16">
-        <div className="mx-auto max-w-[1280px]">
-          {/* Featured Image */}
-          {post.thumbnailUrl && (
-            <FadeIn delay={0.3}>
-              <div className="relative aspect-[21/9] w-full overflow-hidden rounded-none bg-muted shadow-lg lg:rounded-none">
-                <Image
-                  src={post.thumbnailUrl}
-                  alt={post.title}
-                  fill
-                  className="h-full w-full object-cover"
-                />
+          <div className="mt-6 max-w-4xl">
+            <FadeIn delay={0.1}>
+              <div className="flex flex-wrap items-center gap-3 text-xs font-bold uppercase tracking-[0.2em]">
+                <span className="border border-sky-400/30 bg-sky-400/10 px-3.5 py-1 text-sky-300 backdrop-blur-sm">
+                  04 — {locale === "mn" ? "Мэдээ, Нийтлэл" : "News & Insights"}
+                </span>
+                {formattedDate && (
+                  <span className="flex items-center gap-1.5 border border-white/20 bg-white/10 px-3 py-1 text-white/90 backdrop-blur-sm">
+                    <Calendar size={13} className="text-sky-300" />
+                    {formattedDate}
+                  </span>
+                )}
               </div>
             </FadeIn>
-          )}
 
-          {post.excerpt && (
-            <FadeIn delay={0.4}>
-              <div className="mx-auto mt-8 max-w-2xl">
-                <p className="text-base leading-relaxed text-muted-foreground lg:text-lg">
+            <FadeIn delay={0.15}>
+              <h1 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                {post.title}
+              </h1>
+            </FadeIn>
+
+            {post.excerpt && (
+              <FadeIn delay={0.2}>
+                <p className="mt-4 max-w-3xl text-base leading-relaxed text-slate-200 lg:text-lg">
                   {post.excerpt}
                 </p>
-              </div>
-            </FadeIn>
-          )}
+              </FadeIn>
+            )}
+          </div>
+        </div>
+      </section>
 
+      {/* Article Content Section */}
+      <div className="px-4 py-16 sm:px-6 lg:px-12 lg:py-24">
+        <div className="mx-auto max-w-4xl">
           {post.content && (
-            <FadeIn delay={0.5}>
-              <div className="mx-auto mt-8 max-w-2xl">
+            <FadeIn delay={0.1}>
+              <div className="border border-slate-200/80 bg-white p-6 shadow-sm sm:p-10 lg:p-14">
                 <CmsContent
                   html={post.content}
-                  className="prose prose-base max-w-none text-foreground prose-headings:font-display prose-headings:font-semibold prose-headings:text-foreground prose-p:text-muted-foreground prose-p:leading-relaxed prose-a:text-primary prose-strong:text-foreground prose-ul:text-muted-foreground prose-li:marker:text-primary"
+                  className="prose max-w-none text-slate-700 prose-headings:font-display prose-headings:font-bold prose-headings:text-[#0d1a46] prose-p:text-base prose-p:leading-relaxed prose-p:text-slate-600 prose-a:text-primary prose-strong:text-[#0d1a46] prose-ul:text-slate-600 prose-li:marker:text-primary"
                 />
               </div>
             </FadeIn>
           )}
 
-          {/* Back to all news link at bottom */}
-          <FadeIn delay={0.6}>
-            <div className="mt-16 border-t border-border pt-8 text-center">
+          {/* Back to all news button */}
+          <FadeIn delay={0.2}>
+            <div className="mt-12 flex justify-center">
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-2 rounded-none border border-border bg-card px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
+                className="inline-flex items-center gap-2 border border-slate-300 bg-white px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-[#0d1a46] shadow-sm transition-all hover:bg-[#0d1a46] hover:text-white"
               >
-                <ArrowLeft size={16} />
+                <ArrowLeft size={15} />
                 {t("backToAll")}
               </Link>
             </div>

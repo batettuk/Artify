@@ -46,87 +46,141 @@ export default async function ProductDetailPage({
   ]);
   if (!product) notFound();
 
-  return (
-    <article className="bg-background px-3 pb-20 pt-28 lg:px-6 lg:pb-28 lg:pt-36">
-      <div className="mx-auto max-w-[1400px]">
-        <FadeIn>
-          <Link
-            href="/products"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            <ArrowLeft size={16} />
-            {t("backToProducts")}
-          </Link>
-        </FadeIn>
+  const heroImage = product.thumbnailUrl || "/images/consulting-1.jpg";
 
-        <div className="mt-10 grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+  return (
+    <article className="bg-background">
+      {/* Full-bleed Edge-to-Edge Hero Banner */}
+      <section className="relative flex min-h-[460px] w-full items-end overflow-hidden bg-[#070e24] pt-32 pb-16 lg:min-h-[540px] lg:pt-40 lg:pb-20">
+        <div className="absolute inset-0">
+          <Image
+            src={heroImage}
+            alt={product.title}
+            fill
+            priority
+            sizes="100vw"
+            className="h-full w-full object-cover object-center scale-[1.01]"
+          />
+          {/* Subtle cinematic gradient overlay preserving image clarity */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#070e24] via-[#070e24]/65 to-[#070e24]/35" />
+        </div>
+
+        <div className="relative z-10 mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-12">
           <FadeIn>
-            <div>
-              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-                {t("detailLabel")}
-              </span>
-              <h1 className="mt-4 text-balance font-display text-3xl font-semibold leading-[1.1] tracking-[-0.02em] text-[#0d1a46] lg:text-5xl">
-                {product.title}
-              </h1>
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-2 border border-white/25 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-md transition-all hover:bg-white/20 hover:text-white"
+            >
+              <ArrowLeft size={14} />
+              {t("backToProducts")}
+            </Link>
+          </FadeIn>
+
+          <div className="mt-6 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+            <div className="max-w-3xl">
+              <FadeIn delay={0.1}>
+                <span className="inline-block border border-sky-400/30 bg-sky-400/10 px-3.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-sky-300 backdrop-blur-sm">
+                  02 — {t("detailLabel")}
+                </span>
+              </FadeIn>
+
+              <FadeIn delay={0.15}>
+                <h1 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                  {product.title}
+                </h1>
+              </FadeIn>
+
               {product.excerpt && (
-                <p className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground lg:text-lg">
-                  {product.excerpt}
-                </p>
+                <FadeIn delay={0.2}>
+                  <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-200 lg:text-lg">
+                    {product.excerpt}
+                  </p>
+                </FadeIn>
               )}
+            </div>
+
+            <FadeIn delay={0.25} className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+              {product.logoUrl && (
+                <div className="flex h-12 items-center border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md">
+                  <Image
+                    src={product.logoUrl}
+                    alt={`${product.title} logo`}
+                    width={200}
+                    height={60}
+                    className="h-8 w-auto object-contain"
+                  />
+                </div>
+              )}
+
               {product.websiteUrl && (
                 <a
                   href={product.websiteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-8 inline-flex items-center gap-2 bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 active:translate-y-0"
+                  className="inline-flex h-12 items-center gap-2 bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg transition-transform hover:-translate-y-0.5 active:translate-y-0"
                 >
                   {t("visitWebsite")}
                   <ArrowUpRight size={17} />
                 </a>
               )}
-            </div>
-          </FadeIn>
-
-          <FadeIn delay={0.1} direction="left">
-            <div className="relative aspect-[4/3] overflow-hidden bg-muted shadow-sm">
-              <Image
-                src={product.thumbnailUrl}
-                alt={product.title}
-                fill
-                priority
-                className="object-cover"
-              />
-              {product.logoUrl && (
-                <>
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/70 to-transparent lg:h-32" />
-                  <Image
-                    src={product.logoUrl}
-                    alt={`${product.title} logo`}
-                    width={240}
-                    height={80}
-                    className="absolute bottom-4 left-4 h-10 w-auto object-contain object-left lg:bottom-6 lg:left-6 lg:h-12"
-                  />
-                </>
-              )}
-            </div>
-          </FadeIn>
+            </FadeIn>
+          </div>
         </div>
+      </section>
 
-        {product.content && (
-          <section id="details" className="grid gap-8 py-16 lg:grid-cols-12 lg:py-24">
-            <FadeIn className="lg:col-span-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-                {t("details")}
-              </p>
-            </FadeIn>
-            <FadeIn delay={0.1} className="lg:col-span-7 lg:col-start-6">
-              <CmsContent
-                html={product.content}
-                className="prose max-w-none text-foreground prose-headings:font-display prose-headings:text-foreground prose-p:leading-relaxed prose-p:text-muted-foreground prose-a:text-primary prose-strong:text-foreground prose-li:text-muted-foreground prose-li:marker:text-primary"
-              />
-            </FadeIn>
-          </section>
-        )}
+      {/* Main Details & Content Section */}
+      <div className="px-4 py-16 sm:px-6 lg:px-12 lg:py-24">
+        <div className="mx-auto max-w-[1400px]">
+          {product.content ? (
+            <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+              <FadeIn className="lg:col-span-4">
+                <div className="sticky top-28 space-y-6 border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+                    {t("details")}
+                  </span>
+                  <h3 className="font-display text-xl font-bold text-[#0d1a46]">
+                    {product.title}
+                  </h3>
+                  {product.excerpt && (
+                    <p className="text-sm leading-relaxed text-muted-foreground">
+                      {product.excerpt}
+                    </p>
+                  )}
+                  {product.websiteUrl && (
+                    <a
+                      href={product.websiteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex w-full items-center justify-center gap-2 bg-[#0d1a46] px-4 py-3 text-xs font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
+                    >
+                      {t("visitWebsite")}
+                      <ArrowUpRight size={15} />
+                    </a>
+                  )}
+                </div>
+              </FadeIn>
+
+              <FadeIn delay={0.1} className="lg:col-span-8">
+                <div className="border border-slate-200/80 bg-white p-6 shadow-sm sm:p-10 lg:p-12">
+                  <CmsContent
+                    html={product.content}
+                    className="prose max-w-none text-slate-700 prose-headings:font-display prose-headings:font-bold prose-headings:text-[#0d1a46] prose-p:leading-relaxed prose-p:text-slate-600 prose-a:text-primary prose-strong:text-[#0d1a46] prose-li:text-slate-600 prose-li:marker:text-primary"
+                  />
+                </div>
+              </FadeIn>
+            </div>
+          ) : (
+            <div className="border border-slate-200/80 bg-white p-8 text-center sm:p-12">
+              <FadeIn>
+                <p className="text-base text-muted-foreground">
+                  {locale === "mn"
+                    ? "Дэлгэрэнгүй мэдээлэл удахгүй нийтлэгдэнэ."
+                    : "Detailed information will be published soon."}
+                </p>
+              </FadeIn>
+            </div>
+          )}
+        </div>
       </div>
     </article>
   );

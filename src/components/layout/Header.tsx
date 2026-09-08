@@ -31,10 +31,10 @@ export default function Header({ locale, navItems }: HeaderProps) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ease-out ${
+      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ease-out ${
         scrolled
-          ? "border-b border-[#0d1a46]/10 bg-white/75 py-3 shadow-[0_4px_30px_rgba(13,26,70,0.08),inset_0_1px_1px_0_rgba(255,255,255,0.7)] backdrop-blur-xl backdrop-saturate-[180%] before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-white/80 before:to-transparent lg:py-4"
-          : "bg-gradient-to-b from-white/70 via-white/20 to-transparent py-4 backdrop-blur-[2px] lg:py-6"
+          ? "border-b border-[#0d1a46]/10 bg-white/85 py-3 shadow-[0_4px_30px_rgba(13,26,70,0.08),inset_0_1px_1px_0_rgba(255,255,255,0.7)] backdrop-blur-xl backdrop-saturate-[180%] lg:py-3.5"
+          : "border-b border-white/25 bg-white/65 py-4 shadow-[0_2px_24px_rgba(13,26,70,0.06),inset_0_1px_1px_0_rgba(255,255,255,0.8)] backdrop-blur-lg backdrop-saturate-[160%] lg:py-5"
       }`}
     >
       <div className="mx-auto flex max-w-[1800px] items-center justify-between px-4 sm:px-6 lg:px-12">

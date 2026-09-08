@@ -18,36 +18,39 @@ function PostCard({ post, delay = 0 }: { post: BlogCardDto; delay?: number }) {
   return (
     <FadeIn delay={delay} direction="up">
       <Link href={`/blog/${post.slug}`} className="group block h-full">
-        <article className="flex h-full flex-col overflow-hidden rounded-none bg-card shadow-sm transition-all hover:shadow-md lg:rounded-none">
-          <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-secondary to-border">
+        <article className="flex h-full flex-col overflow-hidden border border-slate-200/80 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-slate-300 hover:shadow-lg">
+          <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
             {post.thumbnailUrl && (
               <Image
                 src={post.thumbnailUrl}
                 alt={post.title}
                 fill
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
             )}
           </div>
 
-          <div className="flex flex-1 flex-col p-5 lg:p-6">
-            <h3 className="font-display text-lg font-semibold text-[#0d1a46] transition-colors group-hover:text-primary lg:text-xl">
-              {post.title}
-            </h3>
+          <div className="flex flex-1 flex-col justify-between p-5 lg:p-6">
+            <div>
+              <h3 className="font-display text-lg font-bold text-[#0d1a46] transition-colors group-hover:text-primary">
+                {post.title}
+              </h3>
 
-            {post.excerpt && (
-              <p className="mt-3 line-clamp-3 text-sm text-muted-foreground lg:text-base">
-                {post.excerpt}
-              </p>
-            )}
+              {post.excerpt && (
+                <p className="mt-2.5 line-clamp-3 text-xs leading-relaxed text-slate-600 sm:text-sm">
+                  {post.excerpt}
+                </p>
+              )}
+            </div>
 
-            <div className="mt-auto pt-4">
-              <span className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
+            <div className="mt-5 pt-3 border-t border-slate-100">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#0d1a46] group-hover:text-primary">
                 {t("readMore")}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
+                  width="14"
+                  height="14"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -76,10 +79,10 @@ export function AllPostsSection({ posts }: AllPostsSectionProps) {
 
   if (posts.length === 0) {
     return (
-      <section className="bg-secondary px-3 py-10 lg:px-6 lg:py-16">
+      <section className="bg-[#f8fafc] px-4 py-12 sm:px-6 lg:px-12 lg:py-16">
         <div className="mx-auto max-w-[1400px]">
           <FadeIn>
-            <p className="text-center text-muted-foreground">{t("noPosts")}</p>
+            <p className="text-center text-slate-500">{t("noPosts")}</p>
           </FadeIn>
         </div>
       </section>
@@ -87,40 +90,40 @@ export function AllPostsSection({ posts }: AllPostsSectionProps) {
   }
 
   return (
-    <section className="bg-secondary px-3 py-10 lg:px-6 lg:py-16">
+    <section className="bg-[#f8fafc] border-t border-slate-200/80 px-4 py-16 sm:px-6 lg:px-12 lg:py-20">
       <div className="mx-auto max-w-[1400px]">
         <FadeIn>
-          <div className="mb-8 text-center lg:mb-12">
-            <h2 className="font-display text-2xl font-semibold text-[#0d1a46] lg:text-4xl">
+          <div className="mb-10 text-center lg:mb-14">
+            <span className="inline-block border border-[#0d1a46]/20 bg-[#0d1a46]/[0.04] px-3.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-[#0d1a46] mb-3">
               {t("allPosts")}
-            </h2>
-            <p className="mt-2 text-muted-foreground">
+            </span>
+            <h2 className="font-display text-2xl font-bold text-[#0d1a46] lg:text-3xl">
               {t("allPostsSubtitle")}
-            </p>
+            </h2>
           </div>
         </FadeIn>
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {visiblePosts.map((post, index) => (
             <PostCard key={post.id} post={post} delay={0.05 * index} />
           ))}
         </div>
 
         {posts.length > 4 && (
-          <div className="mt-10 text-center">
+          <div className="mt-12 text-center">
             <button
               onClick={() => setShowAll(!showAll)}
-              className="inline-flex items-center gap-2 rounded-none bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
+              className="inline-flex items-center gap-2 bg-[#0d1a46] px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition-opacity hover:opacity-90 shadow-sm"
             >
               {showAll ? (
                 <>
                   {t("showLess")}
-                  <ChevronUp size={16} />
+                  <ChevronUp size={15} />
                 </>
               ) : (
                 <>
                   {t("viewAll")}
-                  <ChevronDown size={16} />
+                  <ChevronDown size={15} />
                 </>
               )}
             </button>

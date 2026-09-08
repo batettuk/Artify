@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "nav" });
@@ -22,7 +22,7 @@ export async function generateMetadata({
 export default async function ContactPage({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
   const [page, textPage] = await Promise.all([
@@ -32,40 +32,41 @@ export default async function ContactPage({
 
   return (
     <>
-      <section className="px-3 pt-28 lg:px-6 lg:pt-32">
-        <div className="relative overflow-hidden rounded-none px-6 py-16 text-center text-white lg:rounded-none lg:py-24">
-          {/* Background Image (presentation asset — media manifest: reference) */}
-          <div className="absolute inset-0">
-            <Image
-              src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80"
-              alt="Contact background"
-              fill
-              className="h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/90 to-accent/80" />
-          </div>
+      {/* Full-bleed Edge-to-Edge Hero Banner */}
+      <section className="relative flex min-h-[460px] w-full items-center justify-center overflow-hidden bg-[#070e24] pt-32 pb-20 lg:min-h-[540px] lg:pt-40 lg:pb-28">
+        <div className="absolute inset-0">
+          <Image
+            src="/images/consulting-2.jpg"
+            alt="Artify Contact & Consultation"
+            fill
+            priority
+            sizes="100vw"
+            className="h-full w-full object-cover object-center scale-[1.01]"
+          />
+          {/* Subtle cinematic gradient overlay preserving image clarity */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#070e24] via-[#070e24]/55 to-[#070e24]/30" />
+        </div>
 
-          <div className="relative z-10">
-            <FadeIn>
-              <span className="text-xs font-semibold uppercase tracking-wider text-white/80">
-                05 — Contact
-              </span>
+        <div className="relative z-10 mx-auto max-w-5xl px-6 text-center text-white lg:px-12">
+          <FadeIn>
+            <span className="inline-block border border-sky-400/30 bg-sky-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.22em] text-sky-300 backdrop-blur-sm">
+              05 — {locale === "mn" ? "Холбоо Барих" : "Get In Touch"}
+            </span>
+          </FadeIn>
+
+          <FadeIn delay={0.1}>
+            <h1 className="mt-6 font-display text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
+              {page?.name || (locale === "mn" ? "Төсөл Эхлүүлэхэд Бэлэн Үү?" : "Ready to Start Your Project?")}
+            </h1>
+          </FadeIn>
+
+          {page?.description && (
+            <FadeIn delay={0.2}>
+              <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-200 lg:text-lg">
+                {page.description}
+              </p>
             </FadeIn>
-
-            <FadeIn delay={0.1}>
-              <h1 className="mt-4 font-display text-3xl font-semibold leading-tight lg:text-5xl">
-                {page?.name}
-              </h1>
-            </FadeIn>
-
-            {page?.description && (
-              <FadeIn delay={0.2}>
-                <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/90 lg:text-lg">
-                  {page.description}
-                </p>
-              </FadeIn>
-            )}
-          </div>
+          )}
         </div>
       </section>
 
