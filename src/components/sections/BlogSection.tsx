@@ -21,7 +21,7 @@ export async function BlogSection({
       <div className="mx-auto max-w-[1400px]">
         <FadeIn>
           <div className="mb-8 text-center lg:mb-12">
-            <h2 className="font-display text-2xl font-semibold text-foreground lg:text-4xl">
+            <h2 className="font-display text-2xl font-semibold text-[#0d1a46] lg:text-4xl">
               {page?.name ?? ""}
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
@@ -63,7 +63,7 @@ export async function BlogSection({
                           ? new Date(post.publishedDate).toLocaleDateString(locale)
                           : ""}
                       </p>
-                      <h3 className="mt-2 font-display text-lg font-semibold text-foreground transition-colors group-hover:text-primary">
+                      <h3 className="mt-2 font-display text-lg font-semibold text-[#0d1a46] transition-colors group-hover:text-primary">
                         {post.title}
                       </h3>
                       {post.excerpt && (

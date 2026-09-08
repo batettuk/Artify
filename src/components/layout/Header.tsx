@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, Search } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import Image from "@/components/common/Image";
@@ -16,55 +16,68 @@ interface HeaderProps {
 export default function Header({ locale, navItems }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const links = navItems.map((item) => ({ href: item.url, label: item.label }));
 
   return (
-    <header className="fixed top-0 left-1/2 z-50 w-full max-w-[1920px] -translate-x-1/2 bg-background/95 backdrop-blur">
-      <div className="relative mx-3 flex h-16 items-center justify-between border border-border bg-card px-4 shadow-sm lg:mx-6 lg:h-20 lg:px-6">
-        <Link
-          href="/"
-          className="flex items-center justify-start"
-        >
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ease-out ${
+        scrolled
+          ? "border-b border-[#0d1a46]/10 bg-white/75 py-3 shadow-[0_4px_30px_rgba(13,26,70,0.08),inset_0_1px_1px_0_rgba(255,255,255,0.7)] backdrop-blur-xl backdrop-saturate-[180%] before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-white/80 before:to-transparent lg:py-4"
+          : "bg-gradient-to-b from-white/70 via-white/20 to-transparent py-4 backdrop-blur-[2px] lg:py-6"
+      }`}
+    >
+      <div className="mx-auto flex max-w-[1800px] items-center justify-between px-4 sm:px-6 lg:px-12">
+        <Link href="/" className="flex items-center justify-start">
           <Image
-            src="/images/artify-logo-black.png"
+            src="/images/artify-logo-navy.png"
             alt="Artify"
             width={4351}
             height={472}
             priority
-            className="h-6 w-auto lg:h-8"
+            className="h-8 w-auto transition-transform hover:opacity-90 lg:h-10"
           />
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:absolute lg:left-1/2 lg:flex lg:-translate-x-1/2">
+        <nav className="hidden items-center gap-1.5 lg:absolute lg:left-1/2 lg:flex lg:-translate-x-1/2">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+              className="flex h-[42px] items-center px-5 text-base font-semibold tracking-tight text-[#0d1a46] transition-all hover:bg-[#0d1a46]/10 hover:text-[#0d1a46] lg:text-[17px]"
             >
               {link.label}
             </Link>
           ))}
         </nav>
 
-        <div className="flex items-center gap-1 lg:gap-2">
+        <div className="flex items-center gap-2 sm:gap-3">
           <div
-            className={`flex items-center overflow-hidden border border-border bg-background transition-all duration-300 ${
-              searchOpen ? "w-48 px-2" : "w-10"
+            className={`flex h-[42px] items-center overflow-hidden border border-[#0d1a46]/20 bg-white/40 shadow-[0_4px_24px_0_rgba(13,26,70,0.08),inset_0_1px_2px_0_rgba(255,255,255,0.7)] backdrop-blur-md transition-all duration-300 ${
+              searchOpen ? "w-56 px-2" : "w-[42px]"
             }`}
           >
             <button
               onClick={() => setSearchOpen(!searchOpen)}
-              className="flex h-10 w-10 shrink-0 items-center justify-center text-muted-foreground hover:bg-secondary"
+              className="flex h-[42px] w-[42px] shrink-0 items-center justify-center text-[#0d1a46] hover:text-[#0d1a46]/80"
               aria-label="Search"
             >
               <Search size={18} />
             </button>
             <input
               type="text"
-              placeholder={locale === "mn" ? "Хайх" : "Search"}
-              className={`h-8 w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground ${
+              placeholder={locale === "mn" ? "Хайх..." : "Search..."}
+              className={`h-full w-full bg-transparent px-1 text-sm font-medium text-[#0d1a46] outline-none placeholder:text-[#0d1a46]/60 ${
                 searchOpen ? "opacity-100" : "w-0 opacity-0"
               }`}
             />
@@ -75,7 +88,7 @@ export default function Header({ locale, navItems }: HeaderProps) {
           </div>
 
           <button
-            className="flex h-10 w-10 items-center justify-center text-foreground lg:hidden"
+            className="flex h-[42px] w-[42px] items-center justify-center border border-[#0d1a46]/20 bg-white/40 shadow-[0_4px_24px_0_rgba(13,26,70,0.08),inset_0_1px_2px_0_rgba(255,255,255,0.7)] backdrop-blur-md text-[#0d1a46] hover:bg-[#0d1a46]/10 lg:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
@@ -85,20 +98,20 @@ export default function Header({ locale, navItems }: HeaderProps) {
       </div>
 
       {mobileOpen && (
-        <div className="mx-3 mt-2 border border-border bg-card p-4 shadow-sm lg:hidden">
+        <div className="mx-4 mt-3 border border-[#0d1a46]/15 bg-white/95 p-5 shadow-2xl backdrop-blur-xl lg:hidden">
           <nav className="flex flex-col gap-2">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="px-4 py-3 text-base font-medium text-foreground hover:bg-secondary"
+                className="px-4 py-3 text-lg font-semibold text-[#0d1a46] transition-colors hover:bg-[#0d1a46]/10"
                 onClick={() => setMobileOpen(false)}
               >
                 {link.label}
               </Link>
             ))}
           </nav>
-          <div className="mt-4 border-t border-border pt-4">
+          <div className="mt-4 border-t border-[#0d1a46]/10 pt-4">
             <LanguageSwitcher locales={[...routing.locales]} />
           </div>
         </div>
@@ -106,3 +119,5 @@ export default function Header({ locale, navItems }: HeaderProps) {
     </header>
   );
 }
+
+

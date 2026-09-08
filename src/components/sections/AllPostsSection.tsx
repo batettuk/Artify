@@ -31,7 +31,7 @@ function PostCard({ post, delay = 0 }: { post: BlogCardDto; delay?: number }) {
           </div>
 
           <div className="flex flex-1 flex-col p-5 lg:p-6">
-            <h3 className="font-display text-lg font-semibold text-foreground transition-colors group-hover:text-primary lg:text-xl">
+            <h3 className="font-display text-lg font-semibold text-[#0d1a46] transition-colors group-hover:text-primary lg:text-xl">
               {post.title}
             </h3>
 
@@ -91,7 +91,7 @@ export function AllPostsSection({ posts }: AllPostsSectionProps) {
       <div className="mx-auto max-w-[1400px]">
         <FadeIn>
           <div className="mb-8 text-center lg:mb-12">
-            <h2 className="font-display text-2xl font-semibold text-foreground lg:text-4xl">
+            <h2 className="font-display text-2xl font-semibold text-[#0d1a46] lg:text-4xl">
               {t("allPosts")}
             </h2>
             <p className="mt-2 text-muted-foreground">

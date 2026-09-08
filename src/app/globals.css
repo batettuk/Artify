@@ -60,6 +60,15 @@ body {
   font-family: var(--font-nunito), system-ui, sans-serif;
 }
 
+h1:not(.text-white),
+h2:not(.text-white),
+h3:not(.text-white),
+h4:not(.text-white),
+h5:not(.text-white),
+h6:not(.text-white) {
+  color: #0d1a46;
+}
+
 .project-grid[data-expanded="false"] > :nth-child(n + 5) {
   display: none;
 }

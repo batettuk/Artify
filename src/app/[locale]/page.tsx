@@ -5,8 +5,6 @@ import { getHomeContent } from "@/features/home/server/get-home-content";
 import { Hero } from "@/components/sections/Hero";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { CeoSection } from "@/components/sections/CeoSection";
-import { CompletedWorkSection } from "@/components/sections/CompletedWorkSection";
-import { MarqueeSection } from "@/components/sections/MarqueeSection";
 import { BlogSection } from "@/components/sections/BlogSection";
 import { ContactForm } from "@/components/sections/ContactForm";
 
@@ -23,7 +21,7 @@ export async function generateMetadata({
 
 export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
-  const { page, sectionPages, blogPosts, projects, partners } =
+  const { page, sectionPages, blogPosts } =
     await getHomeContent(locale);
 
   if (!page) notFound();
@@ -32,17 +30,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
     <>
       <Hero heading={page.name} body={page.description} videoUrl={page.videoUrl} />
       <AboutSection page={sectionPages.about} />
-      <CeoSection page={sectionPages.ceo} />
-      <CompletedWorkSection
-        page={sectionPages.completedWork}
-        projects={projects}
-        locale={locale}
-      />
-      <MarqueeSection
-        page={sectionPages.partners}
-        partners={partners}
-        locale={locale}
-      />
+      <CeoSection page={sectionPages.ceo} locale={locale} />
       <BlogSection page={sectionPages.blog} posts={blogPosts} locale={locale} />
       <ContactForm
         page={sectionPages.contact}

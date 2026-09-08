@@ -65,7 +65,7 @@ export default async function ProductDetailPage({
               <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
                 {t("detailLabel")}
               </span>
-              <h1 className="mt-4 text-balance font-display text-3xl font-semibold leading-[1.1] tracking-[-0.02em] text-foreground lg:text-5xl">
+              <h1 className="mt-4 text-balance font-display text-3xl font-semibold leading-[1.1] tracking-[-0.02em] text-[#0d1a46] lg:text-5xl">
                 {product.title}
               </h1>
               {product.excerpt && (

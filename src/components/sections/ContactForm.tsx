@@ -23,7 +23,7 @@ export async function ContactForm({ page, textPage, locale }: ContactFormProps) 
       <div className="mx-auto max-w-[1400px]">
         <FadeIn>
           <div className="mb-8 text-center lg:mb-12">
-            <h2 className="font-display text-2xl font-semibold text-foreground lg:text-4xl">
+            <h2 className="font-display text-2xl font-semibold text-[#0d1a46] lg:text-4xl">
               {page?.name ?? ""}
             </h2>
           </div>

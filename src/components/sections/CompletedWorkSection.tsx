@@ -23,7 +23,7 @@ function ProjectCard({ project, delay = 0 }: { project: ProjectCardDto; delay?: 
           />
         </div>
         <div className="flex flex-1 flex-col p-5 lg:p-6">
-          <h3 className="font-display text-lg font-semibold text-foreground lg:text-xl">
+          <h3 className="font-display text-lg font-semibold text-[#0d1a46] lg:text-xl">
             {project.title}
           </h3>
           {project.tags.length > 0 && (
@@ -60,7 +60,7 @@ export async function CompletedWorkSection({
       <div className="mx-auto max-w-[1600px]">
         <FadeIn>
           <div className="mb-10 text-center lg:mb-16">
-            <h2 className="font-display text-2xl font-semibold lg:text-4xl">
+            <h2 className="font-display text-2xl font-semibold text-[#0d1a46] lg:text-4xl">
               {page?.name ?? ""}
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">

@@ -12,12 +12,12 @@ export function AboutSection({ page }: { page: CmsPageDto | null }) {
         <div className="grid items-stretch gap-8 lg:grid-cols-2 lg:gap-16">
           <FadeIn className="h-full">
             <div className="h-full bg-card p-6 shadow-sm lg:p-12">
-              <h2 className="font-display text-2xl font-semibold leading-tight text-foreground lg:text-4xl">
+              <h2 className="font-display text-2xl font-semibold leading-tight text-[#0d1a46] lg:text-4xl">
                 {page.name}
               </h2>
               <CmsContent
                 html={page.description}
-                className="text-sm leading-relaxed text-muted-foreground lg:text-base [&_h3]:mt-8 [&_h3]:font-display [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-foreground [&_h3]:lg:text-xl [&_p]:mt-3 [&_p:empty]:hidden [&_strong]:font-semibold [&_strong]:text-foreground [&_p:first-of-type]:mt-4"
+                className="text-sm leading-relaxed text-muted-foreground lg:text-base [&_h3]:mt-8 [&_h3]:font-display [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-[#0d1a46] [&_h3]:lg:text-xl [&_p]:mt-3 [&_p:empty]:hidden [&_strong]:font-semibold [&_strong]:text-[#0d1a46] [&_p:first-of-type]:mt-4"
               />
             </div>
           </FadeIn>

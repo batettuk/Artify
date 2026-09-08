@@ -25,7 +25,7 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
             <span className="text-xs font-semibold uppercase tracking-wider text-primary">
               {t("featured")}
             </span>
-            <h2 className="mt-2 font-display text-2xl font-semibold text-foreground lg:text-4xl">
+            <h2 className="mt-2 font-display text-2xl font-semibold text-[#0d1a46] lg:text-4xl">
               {t("featuredHeading")}
             </h2>
           </div>
@@ -58,7 +58,7 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
                       : ""}
                   </div>
 
-                  <h3 className="mt-4 font-display text-2xl font-semibold leading-tight text-foreground transition-colors group-hover:text-primary lg:text-4xl">
+                  <h3 className="mt-4 font-display text-2xl font-semibold leading-tight text-[#0d1a46] transition-colors group-hover:text-primary lg:text-4xl">
                     {post.title}
                   </h3>
 
