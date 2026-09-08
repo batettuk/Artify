@@ -23,17 +23,26 @@ export function getProductWebsite(data: unknown): string | null {
   }
 }
 
-const defaultProductAssets: Record<string, { thumbnail: string; logo?: string }> = {
-  "blok-akademi": {
-    thumbnail: "/images/masterclass.jpg",
-    logo: "/images/block-academy-white.png",
+const defaultProductAssets: Record<string, { thumbnail: string; logo?: string; websiteUrl?: string }> = {
+  "consulting": {
+    thumbnail: "/images/consulting-1.jpg",
+    logo: "/images/artify-logo-white.png",
+    websiteUrl: "/products",
   },
   "custom-materials": {
-    thumbnail: "/images/consulting-1.jpg",
+    thumbnail: "/images/about-1.jpg",
+    logo: "/images/artify-logo-white.png",
+    websiteUrl: "/products/custom-materials",
   },
   "tech-invent": {
     thumbnail: "/images/consulting-2.jpg",
     logo: "/images/zehnder-logo.png",
+    websiteUrl: "https://www.techinvent.mn/en",
+  },
+  "blok-akademi": {
+    thumbnail: "/images/masterclass.jpg",
+    logo: "/images/block-academy-white.png",
+    websiteUrl: "https://www.facebook.com/artify.mn",
   },
 };
 
@@ -58,7 +67,7 @@ export async function getProducts(language: string): Promise<ProductCardDto[]> {
       excerpt: post.excerpt ?? null,
       thumbnailUrl: post.thumbnail?.url || fallback?.thumbnail || null,
       logoUrl: post.images?.[0]?.url || fallback?.logo || null,
-      websiteUrl: getProductWebsite(post.customFieldsData),
+      websiteUrl: getProductWebsite(post.customFieldsData) || fallback?.websiteUrl || null,
     };
   });
 }

@@ -28,7 +28,10 @@ export async function submitContactForm(
 
   const name = readText(formData, "name");
   const email = readText(formData, "email");
-  const message = readText(formData, "message");
+  const rawMessage = readText(formData, "message");
+  const phone = typeof formData.get("phone") === "string" ? String(formData.get("phone")).trim().slice(0, 50) : "";
+  const service = typeof formData.get("service") === "string" ? String(formData.get("service")).trim().slice(0, 100) : "";
+
   const fieldErrors: ContactFormState["fieldErrors"] = {};
 
   if (!name || name.length > 120 || /[\r\n]/.test(name) || CONTROL_CHARACTERS.test(name)) {
@@ -42,7 +45,7 @@ export async function submitContactForm(
   ) {
     fieldErrors.email = true;
   }
-  if (!message || message.length > 4000 || CONTROL_CHARACTERS.test(message)) {
+  if (!rawMessage || rawMessage.length > 4000 || CONTROL_CHARACTERS.test(rawMessage)) {
     fieldErrors.message = true;
   }
   if (!routing.locales.includes(locale as (typeof routing.locales)[number])) {
@@ -51,6 +54,12 @@ export async function submitContactForm(
   if (Object.keys(fieldErrors).length > 0) {
     return { status: "invalid", fieldErrors };
   }
+
+  const messageParts: string[] = [];
+  if (service) messageParts.push(`[Service / Inquiry: ${service}]`);
+  if (phone) messageParts.push(`[Phone: ${phone}]`);
+  messageParts.push(rawMessage);
+  const message = messageParts.join("\n\n");
 
   const requestHeaders = await headers();
   const origin = requestHeaders.get("origin")?.slice(0, 300) ?? "";

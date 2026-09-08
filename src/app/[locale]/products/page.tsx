@@ -74,19 +74,6 @@ export default async function ProductsPage({
       </section>
 
       <ProductsSection page={page} products={products} locale={locale} />
-
-      {page?.content && (
-        <section className="px-4 py-12 sm:px-6 lg:px-12">
-          <div className="mx-auto max-w-[1400px] border border-slate-200/80 bg-white p-6 shadow-sm sm:p-10 lg:p-12">
-            <FadeIn>
-              <CmsContent
-                html={page.content}
-                className="prose max-w-none text-slate-700"
-              />
-            </FadeIn>
-          </div>
-        </section>
-      )}
     </>
   );
 }

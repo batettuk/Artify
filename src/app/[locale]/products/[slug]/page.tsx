@@ -40,18 +40,20 @@ export default async function ProductDetailPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const [product, t] = await Promise.all([
+  const [product, allProducts, t] = await Promise.all([
     getProductDetail({ slug, language: locale }),
+    getProducts(locale),
     getTranslations({ locale, namespace: "products" }),
   ]);
   if (!product) notFound();
 
+  const otherProducts = allProducts.filter((p) => p.slug !== slug);
   const heroImage = product.thumbnailUrl || "/images/consulting-1.jpg";
 
   return (
     <article className="bg-background">
       {/* Full-bleed Edge-to-Edge Hero Banner */}
-      <section className="relative flex min-h-[460px] w-full items-end overflow-hidden bg-[#070e24] pt-32 pb-16 lg:min-h-[540px] lg:pt-40 lg:pb-20">
+      <section className="relative flex min-h-[480px] w-full items-end overflow-hidden bg-[#070e24] pt-32 pb-16 lg:min-h-[560px] lg:pt-40 lg:pb-24">
         <div className="absolute inset-0">
           <Image
             src={heroImage}
@@ -99,15 +101,15 @@ export default async function ProductDetailPage({
               )}
             </div>
 
-            <FadeIn delay={0.25} className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <FadeIn delay={0.25} className="flex flex-wrap items-center gap-4">
               {product.logoUrl && (
-                <div className="flex h-12 items-center border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md">
+                <div className="flex h-12 items-center">
                   <Image
                     src={product.logoUrl}
                     alt={`${product.title} logo`}
                     width={200}
                     height={60}
-                    className="h-8 w-auto object-contain"
+                    className="h-8 w-auto max-w-[160px] object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]"
                   />
                 </div>
               )}
@@ -117,13 +119,44 @@ export default async function ProductDetailPage({
                   href={product.websiteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex h-12 items-center gap-2 bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg transition-transform hover:-translate-y-0.5 active:translate-y-0"
+                  className="inline-flex h-12 items-center gap-2 bg-primary px-6 text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-lg transition-transform hover:-translate-y-0.5 active:translate-y-0"
                 >
                   {t("visitWebsite")}
-                  <ArrowUpRight size={17} />
+                  <ArrowUpRight size={16} />
                 </a>
               )}
+
+              <Link
+                href="/contact"
+                className="inline-flex h-12 items-center gap-2 border border-white/40 bg-white/15 px-6 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-sm transition-all hover:bg-white hover:text-[#0d1a46]"
+              >
+                {locale === "mn" ? "Зөвлөгөө авах" : "Get Consultation"}
+              </Link>
             </FadeIn>
+          </div>
+        </div>
+      </section>
+
+      {/* Technical Specifications Bar */}
+      <section className="border-y border-slate-200 bg-[#f8fafc] px-4 py-8 sm:px-6 lg:px-12">
+        <div className="mx-auto max-w-[1400px]">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:gap-8">
+            <div className="border border-slate-200/80 bg-white p-4 shadow-sm">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">01 / СТАНДАРТ</span>
+              <p className="mt-1 font-display text-sm font-bold text-[#0d1a46]">MNS & Европын норм</p>
+            </div>
+            <div className="border border-slate-200/80 bg-white p-4 shadow-sm">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">02 / ЧАНАР</span>
+              <p className="mt-1 font-display text-sm font-bold text-[#0d1a46]">Мэргэшсэн инженерчлэл</p>
+            </div>
+            <div className="border border-slate-200/80 bg-white p-4 shadow-sm">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">03 / БАТАЛГАА</span>
+              <p className="mt-1 font-display text-sm font-bold text-[#0d1a46]">100% Найдвартай шийдэл</p>
+            </div>
+            <div className="border border-slate-200/80 bg-white p-4 shadow-sm">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">04 / ЗОРИУЛАЛТ</span>
+              <p className="mt-1 font-display text-sm font-bold text-[#0d1a46]">Бүх төрлийн барилга</p>
+            </div>
           </div>
         </div>
       </section>
@@ -131,57 +164,185 @@ export default async function ProductDetailPage({
       {/* Main Details & Content Section */}
       <div className="px-4 py-16 sm:px-6 lg:px-12 lg:py-24">
         <div className="mx-auto max-w-[1400px]">
-          {product.content ? (
-            <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-              <FadeIn className="lg:col-span-4">
-                <div className="sticky top-28 space-y-6 border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+          <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+            {/* Sticky Left Architectural Control Card */}
+            <FadeIn className="lg:col-span-4">
+              <div className="sticky top-28 relative space-y-6 border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                {/* Corner Crosshairs */}
+                <div className="pointer-events-none absolute left-2 top-2 font-mono text-[10px] text-slate-300 select-none">+</div>
+                <div className="pointer-events-none absolute right-2 top-2 font-mono text-[10px] text-slate-300 select-none">+</div>
+                <div className="pointer-events-none absolute left-2 bottom-2 font-mono text-[10px] text-slate-300 select-none">+</div>
+                <div className="pointer-events-none absolute right-2 bottom-2 font-mono text-[10px] text-slate-300 select-none">+</div>
+
+                <div className="border-b border-slate-100 pb-4">
+                  <span className="inline-block border border-[#0d1a46]/20 bg-[#0d1a46]/[0.04] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[#0d1a46]">
                     {t("details")}
                   </span>
-                  <h3 className="font-display text-xl font-bold text-[#0d1a46]">
+                  <h3 className="mt-4 font-display text-2xl font-bold text-[#0d1a46]">
                     {product.title}
                   </h3>
-                  {product.excerpt && (
-                    <p className="text-sm leading-relaxed text-muted-foreground">
-                      {product.excerpt}
-                    </p>
-                  )}
+                </div>
+
+                {product.excerpt && (
+                  <p className="text-sm leading-relaxed text-slate-600">
+                    {product.excerpt}
+                  </p>
+                )}
+
+                <div className="space-y-3 pt-2">
+                  <Link
+                    href="/contact"
+                    className="flex w-full items-center justify-center gap-2 bg-[#0d1a46] px-5 py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-sm transition-all hover:bg-primary hover:text-primary-foreground"
+                  >
+                    <span>{locale === "mn" ? "Төслийн зөвлөгөө авах" : "Inquire for Consultation"}</span>
+                    <ArrowUpRight size={15} />
+                  </Link>
+
                   {product.websiteUrl && (
                     <a
                       href={product.websiteUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex w-full items-center justify-center gap-2 bg-[#0d1a46] px-4 py-3 text-xs font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
+                      className="flex w-full items-center justify-center gap-2 border border-slate-300 bg-white px-5 py-3 text-xs font-bold uppercase tracking-widest text-[#0d1a46] transition-all hover:bg-slate-50"
                     >
-                      {t("visitWebsite")}
+                      <span>{t("visitWebsite")}</span>
                       <ArrowUpRight size={15} />
                     </a>
                   )}
                 </div>
-              </FadeIn>
+              </div>
+            </FadeIn>
 
-              <FadeIn delay={0.1} className="lg:col-span-8">
-                <div className="border border-slate-200/80 bg-white p-6 shadow-sm sm:p-10 lg:p-12">
+            {/* Right Detailed Solution Prose */}
+            <FadeIn delay={0.1} className="lg:col-span-8">
+              <div className="border border-slate-200/90 bg-white p-6 shadow-sm sm:p-10 lg:p-14">
+                {product.content ? (
                   <CmsContent
                     html={product.content}
-                    className="prose max-w-none text-slate-700 prose-headings:font-display prose-headings:font-bold prose-headings:text-[#0d1a46] prose-p:leading-relaxed prose-p:text-slate-600 prose-a:text-primary prose-strong:text-[#0d1a46] prose-li:text-slate-600 prose-li:marker:text-primary"
+                    className="prose max-w-none text-slate-700 prose-headings:font-display prose-headings:font-bold prose-headings:text-[#0d1a46] prose-p:text-base prose-p:leading-relaxed prose-p:text-slate-600 prose-a:text-primary prose-strong:text-[#0d1a46] prose-li:text-slate-600 prose-li:marker:text-primary"
                   />
-                </div>
-              </FadeIn>
-            </div>
-          ) : (
-            <div className="border border-slate-200/80 bg-white p-8 text-center sm:p-12">
-              <FadeIn>
-                <p className="text-base text-muted-foreground">
-                  {locale === "mn"
-                    ? "Дэлгэрэнгүй мэдээлэл удахгүй нийтлэгдэнэ."
-                    : "Detailed information will be published soon."}
-                </p>
-              </FadeIn>
-            </div>
-          )}
+                ) : (
+                  <div className="space-y-6">
+                    <h2 className="font-display text-2xl font-bold text-[#0d1a46] sm:text-3xl">
+                      {product.title}
+                    </h2>
+                    <p className="text-base leading-relaxed text-slate-600">
+                      {product.excerpt}
+                    </p>
+                    <div className="mt-8 border-t border-slate-100 pt-6">
+                      <h4 className="font-display text-lg font-bold text-[#0d1a46]">
+                        {locale === "mn" ? "Шийдлийн давуу талууд" : "Key Solution Features"}
+                      </h4>
+                      <ul className="mt-4 space-y-3 text-sm text-slate-600">
+                        <li className="flex items-start gap-2.5">
+                          <span className="mt-1 h-1.5 w-1.5 shrink-0 bg-primary" />
+                          <span>Инженерчлэлийн нарийн тооцоолол, стандартад бүрэн нийцсэн шийдэл</span>
+                        </li>
+                        <li className="flex items-start gap-2.5">
+                          <span className="mt-1 h-1.5 w-1.5 shrink-0 bg-primary" />
+                          <span>Эрчим хүчний хэмнэлт, эрүүл аюулгүй амьдрах орчны чанарын баталгаа</span>
+                        </li>
+                        <li className="flex items-start gap-2.5">
+                          <span className="mt-1 h-1.5 w-1.5 shrink-0 bg-primary" />
+                          <span>Мэргэжлийн инженер, зөвлөхүүдийн цогц дэмжлэг ба угсралт</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </FadeIn>
+          </div>
         </div>
       </div>
+
+      {/* Related Products / Solutions Section */}
+      {otherProducts.length > 0 && (
+        <section className="border-t border-slate-200 bg-[#f8fafc] px-4 py-16 sm:px-6 lg:px-12 lg:py-20">
+          <div className="mx-auto max-w-[1400px]">
+            <FadeIn>
+              <div className="mb-10 flex flex-col justify-between gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-end">
+                <div>
+                  <span className="font-mono text-xs uppercase tracking-widest text-[#0d1a46]/70">ARTIFY ECOSYSTEM</span>
+                  <h2 className="mt-2 font-display text-2xl font-bold text-[#0d1a46] lg:text-3xl">
+                    {locale === "mn" ? "Бусад бүтээгдэхүүн, үйлчилгээ" : "Explore Other Solutions"}
+                  </h2>
+                </div>
+                <Link
+                  href="/products"
+                  className="inline-flex items-center gap-2 border border-[#0d1a46] bg-white px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-[#0d1a46] transition-all hover:bg-[#0d1a46] hover:text-white"
+                >
+                  <span>{t("backToProducts")}</span>
+                  <ArrowUpRight size={14} />
+                </Link>
+              </div>
+            </FadeIn>
+
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 items-stretch">
+              {otherProducts.map((other, idx) => (
+                <FadeIn key={other.id} delay={0.1 * (idx + 1)} direction="up" className="flex h-full flex-col">
+                  {/* Outer container with 45-degree top-left chamfer border */}
+                  <div className="group relative flex h-full flex-col bg-slate-200/90 p-[1px] transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#0d1a46]/50 hover:shadow-2xl [clip-path:polygon(22px_0,100%_0,100%_100%,0_100%,0_22px)]">
+                    {/* Inner Card */}
+                    <div className="relative flex h-full flex-col justify-between bg-white p-6 [clip-path:polygon(21px_0,100%_0,100%_100%,0_100%,0_21px)]">
+                      <div className="pointer-events-none absolute left-0 top-0 h-6 w-6 border-b border-r border-[#0d1a46]/15 bg-slate-100/80 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
+                      <div className="pointer-events-none absolute right-2.5 top-2.5 font-mono text-[10px] text-slate-300 select-none">+</div>
+                      <div className="pointer-events-none absolute left-2.5 bottom-2.5 font-mono text-[10px] text-slate-300 select-none">+</div>
+                      <div className="pointer-events-none absolute right-2.5 bottom-2.5 font-mono text-[10px] text-slate-300 select-none">+</div>
+
+                      <div>
+                        <div className="mb-4 flex items-center justify-between pl-3 text-xs font-bold uppercase tracking-widest text-[#0d1a46]/70">
+                          <span className="font-mono text-[#0d1a46]">0{idx + 1} / PRODUCT</span>
+                          <span className="border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[10px] font-semibold text-slate-600">
+                            ARTIFY
+                          </span>
+                        </div>
+
+                        <Link
+                          href={`/products/${other.slug}`}
+                          className="block overflow-hidden bg-slate-200/80 p-[1px] [clip-path:polygon(16px_0,100%_0,100%_100%,0_100%,0_16px)]"
+                        >
+                          <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 [clip-path:polygon(15px_0,100%_0,100%_100%,0_100%,0_15px)]">
+                            {other.thumbnailUrl && (
+                              <Image
+                                src={other.thumbnailUrl}
+                                alt={other.title}
+                                fill
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                              />
+                            )}
+                          </div>
+                        </Link>
+
+                        <Link href={`/products/${other.slug}`} className="block">
+                          <h3 className="mt-5 flex h-[3.5rem] items-center font-display text-xl font-bold leading-tight text-[#0d1a46] transition-colors group-hover:text-primary">
+                            <span className="line-clamp-2">{other.title}</span>
+                          </h3>
+                        </Link>
+
+                        <p className="mt-3 flex h-[4.25rem] items-start text-sm leading-relaxed text-slate-600">
+                          <span className="line-clamp-3">{other.excerpt}</span>
+                        </p>
+                      </div>
+
+                      <div className="mt-6 border-t border-slate-100 pt-4">
+                        <Link
+                          href={`/products/${other.slug}`}
+                          className="flex w-full items-center justify-between bg-[#0d1a46] px-5 py-3 text-xs font-bold uppercase tracking-widest text-white shadow-sm transition-all group-hover:bg-primary group-hover:text-primary-foreground"
+                        >
+                          <span>{t("cta")}</span>
+                          <ArrowUpRight size={16} />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </FadeIn>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </article>
   );
 }

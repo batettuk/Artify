@@ -15,17 +15,26 @@ import { getVerifiedPostType } from "@/api/cms/server/post-types";
 import { getProductWebsite } from "@/api/cms/server/queries/get-products";
 import type { ProductDetailDto } from "@/api/cms/types/public";
 
-const defaultProductAssets: Record<string, { thumbnail: string; logo?: string }> = {
-  "blok-akademi": {
-    thumbnail: "/images/masterclass.jpg",
-    logo: "/images/block-academy-white.png",
+const defaultProductAssets: Record<string, { thumbnail: string; logo?: string; websiteUrl?: string }> = {
+  "consulting": {
+    thumbnail: "/images/consulting-1.jpg",
+    logo: "/images/artify-logo-white.png",
+    websiteUrl: "/products",
   },
   "custom-materials": {
-    thumbnail: "/images/consulting-1.jpg",
+    thumbnail: "/images/about-1.jpg",
+    logo: "/images/artify-logo-white.png",
+    websiteUrl: "/products/custom-materials",
   },
   "tech-invent": {
     thumbnail: "/images/consulting-2.jpg",
     logo: "/images/zehnder-logo.png",
+    websiteUrl: "https://www.techinvent.mn/en",
+  },
+  "blok-akademi": {
+    thumbnail: "/images/masterclass.jpg",
+    logo: "/images/block-academy-white.png",
+    websiteUrl: "https://www.facebook.com/artify.mn",
   },
 };
 
@@ -74,7 +83,7 @@ export const getProductDetail = cache(
       content: product.content ?? null,
       thumbnailUrl: product.thumbnail?.url || fallback?.thumbnail || null,
       logoUrl: product.images?.[0]?.url || fallback?.logo || null,
-      websiteUrl: getProductWebsite(product.customFieldsData),
+      websiteUrl: getProductWebsite(product.customFieldsData) || fallback?.websiteUrl || null,
     };
   },
 );

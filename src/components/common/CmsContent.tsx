@@ -49,7 +49,7 @@ export function CmsContent({
   return (
     <Component
       {...props}
-      className={cn("cms-html", className)}
+      className={cn("cms-html whitespace-pre-line", className)}
       dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
     />
   );

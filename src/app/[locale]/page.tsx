@@ -6,7 +6,7 @@ import { Hero } from "@/components/sections/Hero";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { CeoSection } from "@/components/sections/CeoSection";
 import { BlogSection } from "@/components/sections/BlogSection";
-import { ContactForm } from "@/components/sections/ContactForm";
+import { HomeCtaSection } from "@/components/sections/HomeCtaSection";
 
 export async function generateMetadata({
   params,
@@ -32,11 +32,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       <AboutSection page={sectionPages.about} />
       <CeoSection page={sectionPages.ceo} locale={locale} />
       <BlogSection page={sectionPages.blog} posts={blogPosts} locale={locale} />
-      <ContactForm
-        page={sectionPages.contact}
-        textPage={sectionPages.contactText}
-        locale={locale}
-      />
+      <HomeCtaSection locale={locale} />
     </>
   );
 }
