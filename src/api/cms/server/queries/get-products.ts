@@ -23,6 +23,20 @@ export function getProductWebsite(data: unknown): string | null {
   }
 }
 
+const defaultProductAssets: Record<string, { thumbnail: string; logo?: string }> = {
+  "blok-akademi": {
+    thumbnail: "/images/masterclass.jpg",
+    logo: "/images/block-academy-white.png",
+  },
+  "custom-materials": {
+    thumbnail: "/images/consulting-1.jpg",
+  },
+  "tech-invent": {
+    thumbnail: "/images/consulting-2.jpg",
+    logo: "/images/zehnder-logo.png",
+  },
+};
+
 export async function getProducts(language: string): Promise<ProductCardDto[]> {
   const posts = await getVerifiedPosts({
     postType: getVerifiedPostType("buteegdekhuun"),
@@ -35,13 +49,15 @@ export async function getProducts(language: string): Promise<ProductCardDto[]> {
       throw new Error(`Published product ${post._id} is missing title or slug`);
     }
 
+    const fallback = defaultProductAssets[post.slug];
+
     return {
       id: post._id,
       title: post.title,
       slug: post.slug,
       excerpt: post.excerpt ?? null,
-      thumbnailUrl: post.thumbnail?.url ?? null,
-      logoUrl: post.images?.[0]?.url ?? null,
+      thumbnailUrl: post.thumbnail?.url || fallback?.thumbnail || null,
+      logoUrl: post.images?.[0]?.url || fallback?.logo || null,
       websiteUrl: getProductWebsite(post.customFieldsData),
     };
   });

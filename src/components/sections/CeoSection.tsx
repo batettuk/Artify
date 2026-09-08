@@ -25,6 +25,10 @@ export function CeoSection({
   const imageSrc = page.thumbnailUrl || "/images/ceo.png";
 
   const displayBadge = isEn ? "FOUNDER'S STATEMENT" : "ҮҮСГЭН БАЙГУУЛАГЧИЙН ҮГ";
+  const ceoName = isEn ? "Munkhchuluun S." : "Мөнхчулуун С.";
+  const ceoCredentials = isEn
+    ? "Certified Civil Engineer • Certified Cost Estimator"
+    : "Иргэний барилгын мэргэшсэн инженер, мэргэшсэн төсөвчин";
 
   return (
     <section className="relative overflow-hidden bg-[#f8fafc] px-4 py-16 sm:px-6 lg:px-12 lg:py-24 border-y border-slate-200/80">
@@ -108,13 +112,21 @@ export function CeoSection({
               {/* Author Credentials Block */}
               <div className="relative z-10 mt-10 border-t border-slate-200/80 pt-6 lg:mt-14">
                 <FadeIn delay={0.2}>
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-[3px] bg-gradient-to-b from-[#0d1a46] to-sky-500" />
+                  <div className="flex items-start gap-4">
+                    <div className="h-14 w-[3px] shrink-0 bg-gradient-to-b from-[#0d1a46] to-sky-500 mt-1" />
                     <div>
-                      <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#0d1a46] sm:text-base">
-                        {bottomText}
+                      <div className="flex flex-wrap items-baseline gap-2">
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                          {bottomText}:
+                        </span>
+                        <span className="text-base font-bold text-[#0d1a46] sm:text-lg">
+                          {ceoName}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-xs font-medium text-slate-600 sm:text-sm">
+                        {ceoCredentials}
                       </p>
-                      <p className="mt-0.5 text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                      <p className="mt-0.5 text-xs font-semibold tracking-wider text-slate-400 uppercase">
                         Artify Brand LLC
                       </p>
                     </div>

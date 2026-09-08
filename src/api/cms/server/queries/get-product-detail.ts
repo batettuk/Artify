@@ -15,6 +15,20 @@ import { getVerifiedPostType } from "@/api/cms/server/post-types";
 import { getProductWebsite } from "@/api/cms/server/queries/get-products";
 import type { ProductDetailDto } from "@/api/cms/types/public";
 
+const defaultProductAssets: Record<string, { thumbnail: string; logo?: string }> = {
+  "blok-akademi": {
+    thumbnail: "/images/masterclass.jpg",
+    logo: "/images/block-academy-white.png",
+  },
+  "custom-materials": {
+    thumbnail: "/images/consulting-1.jpg",
+  },
+  "tech-invent": {
+    thumbnail: "/images/consulting-2.jpg",
+    logo: "/images/zehnder-logo.png",
+  },
+};
+
 export const getProductDetail = cache(
   async ({
     slug,
@@ -50,14 +64,16 @@ export const getProductDetail = cache(
       throw new Error(`Product detail returned an unexpected post for ${product._id}`);
     }
 
+    const fallback = defaultProductAssets[product.slug];
+
     return {
       id: product._id,
       title: product.title,
       slug: product.slug,
       excerpt: product.excerpt ?? null,
       content: product.content ?? null,
-      thumbnailUrl: product.thumbnail?.url ?? null,
-      logoUrl: product.images?.[0]?.url ?? null,
+      thumbnailUrl: product.thumbnail?.url || fallback?.thumbnail || null,
+      logoUrl: product.images?.[0]?.url || fallback?.logo || null,
       websiteUrl: getProductWebsite(product.customFieldsData),
     };
   },

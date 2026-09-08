@@ -38,9 +38,8 @@ export function Hero({
         playsInline
         preload="metadata"
         className="absolute inset-0 h-full w-full object-cover"
-        poster="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1920&q=80"
       >
-        {videoUrl && <source src={videoUrl} type="video/mp4" />}
+        <source src={videoUrl || "/videos/hero.mp4"} type="video/mp4" />
       </video>
       {/* Cinematic dark overlay gradient for readability and seamless transparent header */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80" />
