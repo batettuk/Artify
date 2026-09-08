@@ -38,6 +38,7 @@ export function AboutSection({ page }: { page: CmsPageDto | null }) {
                 alt="Artify Construction & Engineering"
                 fill
                 priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
@@ -52,6 +53,7 @@ export function AboutSection({ page }: { page: CmsPageDto | null }) {
                 src="/images/about-2.jpg"
                 alt="Artify Modern Living Space"
                 fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />

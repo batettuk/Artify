@@ -68,6 +68,7 @@ export function CeoSection({
                     alt={page.name || "Artify CEO"}
                     fill
                     priority
+                    sizes="(max-width: 1024px) 100vw, 40vw"
                     className="h-full w-full object-contain object-bottom transition-transform duration-700 hover:scale-[1.03]"
                   />
                 </div>
