@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, X, Search, ArrowUpRight, Phone, Mail, Clock, MapPin } from "lucide-react";
+import { Menu, X, Search, ArrowUpRight, Phone, Mail, Clock, Globe } from "lucide-react";
 import { Link, usePathname } from "@/i18n/routing";
 import Image from "@/components/common/Image";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -67,7 +67,7 @@ export default function Header({ locale, navItems }: HeaderProps) {
               width={4351}
               height={472}
               priority
-              className="h-8 w-auto transition-transform hover:opacity-90 lg:h-10"
+              className="h-7 sm:h-8 w-auto transition-transform hover:opacity-90 lg:h-10"
             />
           </Link>
 
@@ -120,7 +120,7 @@ export default function Header({ locale, navItems }: HeaderProps) {
 
             {/* Desktop Language Switcher */}
             <div className="hidden lg:block">
-              <LanguageSwitcher locales={[...routing.locales]} scrolled={scrolled} />
+              <LanguageSwitcher locales={[...routing.locales]} scrolled={scrolled} id="desktop" />
             </div>
 
             {/* Mobile Hamburger Trigger */}
@@ -153,28 +153,25 @@ export default function Header({ locale, navItems }: HeaderProps) {
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,#1b3175_0%,transparent_60%)] opacity-40" />
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,#0d1a46_0%,transparent_50%)] opacity-30" />
 
-            {/* Top Navigation Bar inside Drawer */}
+            {/* Top Navigation Bar inside Drawer - Clean and completely uncrowded */}
             <div className="relative z-10 flex h-20 items-center justify-between border-b border-white/10 px-5 sm:px-7">
-              <Link href="/" onClick={() => setMobileOpen(false)}>
+              <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center">
                 <Image
                   src="/images/artify-logo-white.png"
                   alt="Artify Brand"
                   width={200}
                   height={32}
-                  className="h-7 w-auto object-contain"
+                  className="h-6 sm:h-7 w-auto max-w-[140px] sm:max-w-[180px] object-contain"
                 />
               </Link>
 
-              <div className="flex items-center gap-2">
-                <LanguageSwitcher locales={[...routing.locales]} scrolled={false} />
-                <button
-                  onClick={() => setMobileOpen(false)}
-                  className="flex h-10 w-10 items-center justify-center border border-white/20 bg-white/5 text-white transition-colors hover:bg-white/15 active:scale-95"
-                  aria-label="Close mobile menu"
-                >
-                  <X size={20} />
-                </button>
-              </div>
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="flex h-10 w-10 items-center justify-center border border-white/20 bg-white/5 text-white transition-colors hover:bg-white/15 active:scale-95"
+                aria-label="Close mobile menu"
+              >
+                <X size={20} />
+              </button>
             </div>
 
             {/* Scrollable Content Container */}
@@ -195,12 +192,12 @@ export default function Header({ locale, navItems }: HeaderProps) {
                         key={link.href}
                         initial={{ opacity: 0, x: -16 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.05 * (index + 1), duration: 0.25 }}
+                        transition={{ delay: 0.04 * (index + 1), duration: 0.2 }}
                       >
                         <Link
                           href={link.href}
                           onClick={() => setMobileOpen(false)}
-                          className={`group flex items-center justify-between py-4 transition-all ${
+                          className={`group flex items-center justify-between py-3.5 transition-all ${
                             isActive ? "text-sky-300" : "text-white hover:text-sky-200"
                           }`}
                         >
@@ -208,7 +205,7 @@ export default function Header({ locale, navItems }: HeaderProps) {
                             <span className="font-mono text-xs font-bold text-sky-400/60">
                               {num}
                             </span>
-                            <span className="font-display text-2xl font-bold tracking-tight uppercase sm:text-3xl">
+                            <span className="font-display text-xl sm:text-2xl font-bold tracking-tight uppercase">
                               {link.label}
                             </span>
                           </div>
@@ -227,10 +224,40 @@ export default function Header({ locale, navItems }: HeaderProps) {
                     );
                   })}
                 </nav>
+
+                {/* Dedicated Mobile Language Switcher Segmented Control */}
+                <div className="mt-6">
+                  <span className="mb-2 block font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-sky-400/80">
+                    {locale === "mn" ? "Хэл сонгох" : "Language"}
+                  </span>
+                  <div className="border border-white/15 bg-white/[0.04] p-1 backdrop-blur-sm">
+                    <div className="grid grid-cols-2 gap-1">
+                      {routing.locales.map((l) => {
+                        const isActive = l === locale;
+                        return (
+                          <Link
+                            key={l}
+                            href={pathname}
+                            locale={l}
+                            onClick={() => setMobileOpen(false)}
+                            className={`flex items-center justify-center gap-2 py-2.5 text-xs font-bold uppercase tracking-wider transition-all ${
+                              isActive
+                                ? "bg-white text-[#070e24] shadow-sm font-extrabold"
+                                : "text-slate-300 hover:text-white hover:bg-white/10"
+                            }`}
+                          >
+                            <Globe size={13} className={isActive ? "text-[#070e24]" : "text-sky-400"} />
+                            <span>{l === "mn" ? "Монгол (MN)" : "English (EN)"}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Quick Contact & Consultation Request */}
-              <div className="mt-8 space-y-5">
+              <div className="mt-8 space-y-4">
                 {/* Consultation Direct Button */}
                 <Link
                   href="/contact"
@@ -242,8 +269,8 @@ export default function Header({ locale, navItems }: HeaderProps) {
                 </Link>
 
                 {/* Direct Hotline Strip */}
-                <div className="border border-white/10 bg-white/[0.03] p-4 backdrop-blur-sm">
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 text-xs">
+                <div className="border border-white/10 bg-white/[0.03] p-3.5 backdrop-blur-sm">
+                  <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 text-xs">
                     <a
                       href="tel:+97677710155"
                       className="flex items-center gap-2.5 text-slate-300 transition-colors hover:text-white"
@@ -265,14 +292,14 @@ export default function Header({ locale, navItems }: HeaderProps) {
                     </a>
                   </div>
 
-                  <div className="mt-3 flex items-center gap-2 border-t border-white/5 pt-2.5 text-[11px] text-slate-400">
+                  <div className="mt-2.5 flex items-center gap-2 border-t border-white/5 pt-2 text-[11px] text-slate-400">
                     <Clock size={12} className="text-sky-400/80" />
                     <span>{locale === "mn" ? "Даваа – Баасан: 09:00 – 18:00 (GMT+8)" : "Mon – Fri: 09:00 – 18:00 (GMT+8)"}</span>
                   </div>
                 </div>
 
                 {/* Brand Footnote */}
-                <div className="flex items-center justify-between text-[11px] text-slate-500 font-mono">
+                <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono">
                   <span>ARTIFY BRAND © 2026</span>
                   <span>CRAFTING QUALITY OF LIFE</span>
                 </div>

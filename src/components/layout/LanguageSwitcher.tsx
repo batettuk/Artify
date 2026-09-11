@@ -13,9 +13,11 @@ const LABELS: Record<string, string> = {
 export function LanguageSwitcher({
   locales,
   scrolled = true,
+  id = "desktop",
 }: {
   locales: string[];
   scrolled?: boolean;
+  id?: string;
 }) {
   const locale = useLocale();
   const pathname = usePathname();
@@ -52,7 +54,7 @@ export function LanguageSwitcher({
             >
               {isActive && (
                 <motion.span
-                  layoutId="activeLangIndicator"
+                  layoutId={`activeLangIndicator_${id}`}
                   className={`absolute inset-0 -z-10 shadow-sm ${
                     scrolled
                       ? "bg-gradient-to-br from-[#0d1a46] via-[#1a2e6e] to-[#0d1a46] before:pointer-events-none before:absolute before:inset-0 before:border before:border-sky-300/30"
@@ -73,8 +75,3 @@ export function LanguageSwitcher({
     </div>
   );
 }
-
-
-
-
-

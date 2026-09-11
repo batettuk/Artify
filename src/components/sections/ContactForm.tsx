@@ -2,8 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { getContactInfo } from "@/api/cms/server/queries/get-contact-info";
 import { CmsContent } from "@/components/common/CmsContent";
 import { FadeIn } from "@/components/motion/FadeIn";
-import { ContactFormIsland } from "@/components/sections/client/ContactFormIsland";
-import { submitContactForm } from "@/app/[locale]/contact/actions";
+import { ErxesFormEmbed } from "@/components/sections/client/ErxesFormEmbed";
 import { MapPin, Phone, Mail, Clock, ShieldCheck, ArrowUpRight, HelpCircle } from "lucide-react";
 import type { CmsPageDto } from "@/api/cms/types/public";
 
@@ -34,7 +33,6 @@ interface ContactFormProps {
 export async function ContactForm({ page, textPage, locale }: ContactFormProps) {
   const t = await getTranslations({ locale, namespace: "contact" });
   const contact = await getContactInfo(locale);
-  const action = submitContactForm.bind(null, locale);
 
   const phone = contact.phone || "+976 7771 0155";
   const email = contact.email || "info@artifybrand.com";
@@ -209,34 +207,10 @@ export async function ContactForm({ page, textPage, locale }: ContactFormProps) 
               </FadeIn>
             </div>
 
-            {/* Right Column: Architectural Interactive Consultation Form */}
+            {/* Right Column: erxes Embedded Consultation Form */}
             <div className="lg:col-span-7">
               <FadeIn direction="up" delay={0.1}>
-                <ContactFormIsland
-                  action={action}
-                  labels={{
-                    name: t("name"),
-                    email: t("email"),
-                    phone: t("phone"),
-                    phonePlaceholder: t("phonePlaceholder"),
-                    service: t("service"),
-                    serviceSelect: t("serviceSelect"),
-                    serviceConsulting: t("serviceConsulting"),
-                    serviceCustom: t("serviceCustom"),
-                    serviceCleanAir: t("serviceCleanAir"),
-                    serviceMasterclass: t("serviceMasterclass"),
-                    serviceGeneral: t("serviceGeneral"),
-                    message: t("message"),
-                    messagePlaceholder: t("messagePlaceholder"),
-                    submit: t("submit"),
-                    submitting: t("submitting"),
-                    success: t("success"),
-                    error: t("error"),
-                    invalidName: t("invalidName"),
-                    invalidEmail: t("invalidEmail"),
-                    invalidMessage: t("invalidMessage"),
-                  }}
-                />
+                <ErxesFormEmbed locale={locale} />
               </FadeIn>
             </div>
           </div>
