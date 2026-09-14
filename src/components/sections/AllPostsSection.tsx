@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { FadeIn } from "@/components/motion/FadeIn";
 import Image from "@/components/common/Image";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, ArrowRight } from "lucide-react";
 import type { BlogCardDto } from "@/api/cms/types/public";
 
 interface AllPostsSectionProps {
@@ -16,56 +16,48 @@ function PostCard({ post, delay = 0 }: { post: BlogCardDto; delay?: number }) {
   const t = useTranslations("blog");
 
   return (
-    <FadeIn delay={delay} direction="up">
+    <FadeIn delay={delay} direction="up" className="h-full">
       <Link href={`/blog/${post.slug}`} className="group block h-full">
-        <article className="flex h-full flex-col overflow-hidden border border-slate-200/80 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-slate-300 hover:shadow-lg">
-          <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
-            {post.thumbnailUrl && (
-              <Image
-                src={post.thumbnailUrl}
-                alt={post.title}
-                fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-            )}
-          </div>
+        <div className="group relative flex h-full flex-col bg-slate-200/90 p-[1px] shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#0d1a46]/50 hover:shadow-xl [clip-path:polygon(22px_0,100%_0,100%_100%,0_100%,0_22px)]">
+          <article className="relative flex h-full flex-col justify-between bg-white [clip-path:polygon(21px_0,100%_0,100%_100%,0_100%,0_21px)]">
+            <div className="pointer-events-none absolute left-0 top-0 z-10 h-6 w-6 border-b border-r border-[#0d1a46]/15 bg-slate-100/80 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
 
-          <div className="flex flex-1 flex-col justify-between p-5 lg:p-6">
             <div>
-              <h3 className="font-display text-lg font-bold text-[#0d1a46] transition-colors group-hover:text-primary">
-                {post.title}
-              </h3>
+              <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
+                {post.thumbnailUrl && (
+                  <Image
+                    src={post.thumbnailUrl}
+                    alt={post.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                )}
+              </div>
 
-              {post.excerpt && (
-                <p className="mt-2.5 line-clamp-3 text-xs leading-relaxed text-slate-600 sm:text-sm">
-                  {post.excerpt}
-                </p>
-              )}
+              <div className="p-5 lg:p-6">
+                <h3 className="font-display text-base font-bold text-[#0d1a46] transition-colors group-hover:text-primary sm:text-lg">
+                  {post.title}
+                </h3>
+
+                {post.excerpt && (
+                  <p className="mt-2.5 line-clamp-3 text-xs leading-relaxed text-slate-600 sm:text-sm">
+                    {post.excerpt}
+                  </p>
+                )}
+              </div>
             </div>
 
-            <div className="mt-5 pt-3 border-t border-slate-100">
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#0d1a46] group-hover:text-primary">
-                {t("readMore")}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="transition-transform group-hover:translate-x-1"
-                >
-                  <path d="M5 12h14" />
-                  <path d="m12 5 7 7-7 7" />
-                </svg>
-              </span>
+            <div className="p-5 pt-0 lg:p-6 lg:pt-0">
+              <div className="pt-3 border-t border-slate-100">
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#0d1a46] group-hover:text-primary">
+                  {t("readMore")}
+                  <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+                </span>
+              </div>
             </div>
-          </div>
-        </article>
+          </article>
+        </div>
       </Link>
     </FadeIn>
   );

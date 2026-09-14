@@ -27,8 +27,8 @@ export function CeoSection({
   const displayBadge = isEn ? "FOUNDER'S STATEMENT" : "ҮҮСГЭН БАЙГУУЛАГЧИЙН ҮГ";
   const ceoName = isEn ? "Munkhchuluun S." : "Мөнхчулуун С.";
   const ceoCredentials = isEn
-    ? "Certified Civil Engineer • Certified Cost Estimator"
-    : "Иргэний барилгын мэргэшсэн инженер, мэргэшсэн төсөвчин";
+    ? "Certified Civil Engineer • Certified Cost Estimator (+15 Years Exp.)"
+    : "Иргэний барилгын мэргэшсэн инженер, мэргэшсэн төсөвчин (+15 жилийн туршлага)";
 
   return (
     <section className="relative overflow-hidden bg-[#f8fafc] px-4 py-16 sm:px-6 lg:px-12 lg:py-24 border-y border-slate-200/80">
@@ -39,101 +39,103 @@ export function CeoSection({
       />
 
       <div className="relative mx-auto max-w-[1400px]">
-        {/* Main Executive Editorial Card */}
-        <div className="relative overflow-hidden border border-slate-200/90 bg-white shadow-[0_20px_50px_-15px_rgba(13,26,70,0.07)]">
-          {/* Architectural corner crosshair accents */}
-          <div className="pointer-events-none absolute left-3 top-3 text-[#0d1a46]/20 font-mono text-xs select-none">
-            +
-          </div>
-          <div className="pointer-events-none absolute right-3 top-3 text-[#0d1a46]/20 font-mono text-xs select-none">
-            +
-          </div>
-          <div className="pointer-events-none absolute left-3 bottom-3 text-[#0d1a46]/20 font-mono text-xs select-none">
-            +
-          </div>
-          <div className="pointer-events-none absolute right-3 bottom-3 text-[#0d1a46]/20 font-mono text-xs select-none">
-            +
-          </div>
+        {/* Main Executive Editorial Card with 45-Degree Angle Cut */}
+        <div className="group relative flex h-full flex-col bg-slate-200/90 p-[1px] shadow-[0_20px_50px_-15px_rgba(13,26,70,0.07)] transition-all duration-300 hover:bg-[#0d1a46]/40 [clip-path:polygon(28px_0,100%_0,100%_100%,0_100%,0_28px)]">
+          <div className="relative overflow-hidden bg-white [clip-path:polygon(27px_0,100%_0,100%_100%,0_100%,0_27px)]">
+            {/* Top-left chamfer accent overlay */}
+            <div className="pointer-events-none absolute left-0 top-0 h-8 w-8 border-b border-r border-[#0d1a46]/20 bg-slate-100/90 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
 
-          <div className="grid items-stretch lg:grid-cols-12">
-            {/* CEO Editorial Quote & Vision Column (LEFT) */}
-            <div className="relative flex flex-col justify-between p-8 sm:p-12 lg:col-span-7 lg:p-16 border-b lg:border-b-0 lg:border-r border-slate-200/80">
-              {/* Huge subtle watermarked quotation mark */}
-              <div className="pointer-events-none absolute right-8 top-8 text-[#0d1a46]/[0.05] lg:right-12 lg:top-10 select-none">
-                <Quote size={160} strokeWidth={1.2} />
-              </div>
-
-              <div className="relative z-10">
-                <FadeIn delay={0.1}>
-                  {/* Category Pill */}
-                  <div className="inline-flex items-center gap-2 border border-[#0d1a46]/20 bg-[#0d1a46]/[0.04] px-4 py-1.5 text-xs font-bold uppercase tracking-[0.22em] text-[#0d1a46]">
-                    <Sparkles className="h-3.5 w-3.5 text-[#0d1a46]" />
-                    {displayBadge}
-                  </div>
-
-                  {/* Statement Quote */}
-                  <div className="relative mt-8 lg:mt-10">
-                    <Quote className="mb-4 text-[#0d1a46]/40" size={36} />
-                    <CmsContent
-                      html={page.description}
-                      className="text-balance font-display text-2xl font-bold leading-relaxed text-[#0d1a46] sm:text-3xl lg:text-[32px] lg:leading-[1.4] [&_p]:leading-relaxed"
-                    />
-                  </div>
-                </FadeIn>
-              </div>
-
-              {/* Author Credentials Block */}
-              <div className="relative z-10 mt-10 border-t border-slate-200/80 pt-6 lg:mt-14">
-                <FadeIn delay={0.2}>
-                  <div className="flex items-start gap-4">
-                    <div className="h-14 w-[3px] shrink-0 bg-gradient-to-b from-[#0d1a46] to-sky-500 mt-1" />
-                    <div>
-                      <div className="flex flex-wrap items-baseline gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                          {bottomText}:
-                        </span>
-                        <span className="text-base font-bold text-[#0d1a46] sm:text-lg">
-                          {ceoName}
-                        </span>
-                      </div>
-                      <p className="mt-1 text-xs font-medium text-slate-600 sm:text-sm">
-                        {ceoCredentials}
-                      </p>
-                      <p className="mt-0.5 text-xs font-semibold tracking-wider text-slate-400 uppercase">
-                        Artify Brand LLC
-                      </p>
-                    </div>
-                  </div>
-                </FadeIn>
-              </div>
+            {/* Architectural corner crosshair accents */}
+            <div className="pointer-events-none absolute right-4 top-4 text-[#0d1a46]/20 font-mono text-xs select-none">
+              +
+            </div>
+            <div className="pointer-events-none absolute left-4 bottom-4 text-[#0d1a46]/20 font-mono text-xs select-none">
+              +
+            </div>
+            <div className="pointer-events-none absolute right-4 bottom-4 text-[#0d1a46]/20 font-mono text-xs select-none">
+              +
             </div>
 
-            {/* CEO Portrait Column (RIGHT) */}
-            <div className="relative flex flex-col justify-end overflow-hidden bg-gradient-to-b from-slate-50 via-slate-100 to-slate-200/70 p-4 sm:p-8 lg:col-span-5 lg:p-10 lg:pb-0">
-              {/* Soft radial backdrop behind the CEO */}
-              <div className="pointer-events-none absolute inset-0 bg-radial from-sky-400/15 via-transparent to-transparent opacity-70" />
-              
-              <FadeIn direction="up" className="relative z-10 mx-auto flex w-full flex-col items-center justify-end">
-                <div className="relative h-[440px] w-full max-w-[420px] sm:h-[520px] lg:h-[580px] xl:h-[620px] drop-shadow-[0_25px_35px_rgba(13,26,70,0.18)]">
-                  <Image
-                    src={imageSrc}
-                    alt={page.name || "Artify CEO"}
-                    fill
-                    priority
-                    sizes="(max-width: 1024px) 100vw, 40vw"
-                    className="h-full w-full object-contain object-bottom transition-transform duration-700 hover:scale-[1.03]"
-                  />
+            <div className="grid items-stretch lg:grid-cols-12">
+              {/* CEO Editorial Quote & Vision Column (LEFT) */}
+              <div className="relative flex flex-col justify-between p-8 sm:p-12 lg:col-span-7 lg:p-16 border-b lg:border-b-0 lg:border-r border-slate-200/80">
+                {/* Huge subtle watermarked quotation mark */}
+                <div className="pointer-events-none absolute right-8 top-8 text-[#0d1a46]/[0.05] lg:right-12 lg:top-10 select-none">
+                  <Quote size={160} strokeWidth={1.2} />
                 </div>
 
-                {/* Grounding frame bar & badge */}
-                <div className="w-full border-t border-[#0d1a46]/10 py-3.5 flex items-center justify-between text-[11px] font-bold tracking-[0.2em] text-[#0d1a46]/70 uppercase">
-                  <span className="flex items-center gap-1.5">
-                    <Award className="h-3.5 w-3.5 text-[#0d1a46]" />
-                    ARTIFY LEADERSHIP
-                  </span>
-                  <span>EST. 2014</span>
+                <div className="relative z-10">
+                  <FadeIn delay={0.1}>
+                    {/* Category Pill */}
+                    <div className="inline-flex items-center gap-2 border border-[#0d1a46]/20 bg-[#0d1a46]/[0.04] px-4 py-1.5 text-xs font-bold uppercase tracking-[0.22em] text-[#0d1a46]">
+                      <Sparkles className="h-3.5 w-3.5 text-[#0d1a46]" />
+                      {displayBadge}
+                    </div>
+
+                    {/* Statement Quote */}
+                    <div className="relative mt-8 lg:mt-10">
+                      <Quote className="mb-4 text-[#0d1a46]/40" size={36} />
+                      <CmsContent
+                        html={page.description}
+                        className="text-balance font-display text-2xl font-bold leading-relaxed text-[#0d1a46] sm:text-3xl lg:text-[32px] lg:leading-[1.4] [&_p]:leading-relaxed"
+                      />
+                    </div>
+                  </FadeIn>
                 </div>
-              </FadeIn>
+
+                {/* Author Credentials Block */}
+                <div className="relative z-10 mt-10 border-t border-slate-200/80 pt-6 lg:mt-14">
+                  <FadeIn delay={0.2}>
+                    <div className="flex items-start gap-4">
+                      <div className="h-14 w-[3px] shrink-0 bg-gradient-to-b from-[#0d1a46] to-sky-500 mt-1" />
+                      <div>
+                        <div className="flex flex-wrap items-baseline gap-2">
+                          <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                            {bottomText}:
+                          </span>
+                          <span className="text-base font-bold text-[#0d1a46] sm:text-lg">
+                            {ceoName}
+                          </span>
+                        </div>
+                        <p className="mt-1 text-xs font-medium text-slate-600 sm:text-sm">
+                          {ceoCredentials}
+                        </p>
+                        <p className="mt-0.5 text-xs font-semibold tracking-wider text-slate-400 uppercase">
+                          Artify Brand LLC
+                        </p>
+                      </div>
+                    </div>
+                  </FadeIn>
+                </div>
+              </div>
+
+              {/* CEO Portrait Column (RIGHT) */}
+              <div className="relative flex flex-col justify-end overflow-hidden bg-gradient-to-b from-slate-50 via-slate-100 to-slate-200/70 p-4 sm:p-8 lg:col-span-5 lg:p-10 lg:pb-0">
+                {/* Soft radial backdrop behind the CEO */}
+                <div className="pointer-events-none absolute inset-0 bg-radial from-sky-400/15 via-transparent to-transparent opacity-70" />
+                
+                <FadeIn direction="up" className="relative z-10 mx-auto flex w-full flex-col items-center justify-end">
+                  <div className="relative h-[440px] w-full max-w-[420px] sm:h-[520px] lg:h-[580px] xl:h-[620px] drop-shadow-[0_25px_35px_rgba(13,26,70,0.18)]">
+                    <Image
+                      src={imageSrc}
+                      alt={page.name || "Artify CEO"}
+                      fill
+                      priority
+                      sizes="(max-width: 1024px) 100vw, 40vw"
+                      className="h-full w-full object-contain object-bottom transition-transform duration-700 hover:scale-[1.03]"
+                    />
+                  </div>
+
+                  {/* Grounding frame bar & badge */}
+                  <div className="w-full border-t border-[#0d1a46]/10 py-3.5 flex items-center justify-between text-[11px] font-bold tracking-[0.2em] text-[#0d1a46]/70 uppercase">
+                    <span className="flex items-center gap-1.5">
+                      <Award className="h-3.5 w-3.5 text-[#0d1a46]" />
+                      ARTIFY LEADERSHIP
+                    </span>
+                    <span>EST. 2014</span>
+                  </div>
+                </FadeIn>
+              </div>
             </div>
           </div>
         </div>

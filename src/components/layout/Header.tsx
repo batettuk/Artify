@@ -11,8 +11,23 @@ import type { MenuItemDto } from "@/api/cms/types/public";
 
 interface HeaderProps {
   locale: string;
-  navItems: MenuItemDto[];
+  navItems?: MenuItemDto[];
 }
+
+const FALLBACK_NAV: Record<string, { href: string; label: string }[]> = {
+  mn: [
+    { href: "/", label: "Нүүр" },
+    { href: "/products", label: "Бүтээгдэхүүн" },
+    { href: "/blog", label: "Мэдээ" },
+    { href: "/contact", label: "Холбоо барих" },
+  ],
+  en: [
+    { href: "/", label: "Home" },
+    { href: "/products", label: "Products" },
+    { href: "/blog", label: "Blog" },
+    { href: "/contact", label: "Contact" },
+  ],
+};
 
 export default function Header({ locale, navItems }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -47,14 +62,18 @@ export default function Header({ locale, navItems }: HeaderProps) {
     setMobileOpen(false);
   }, [pathname]);
 
-  const links = navItems.map((item) => ({ href: item.url, label: item.label }));
+  const fallbackLinks = FALLBACK_NAV[locale] || FALLBACK_NAV.mn;
+  const links =
+    navItems && navItems.length > 0
+      ? navItems.map((item) => ({ href: item.url, label: item.label }))
+      : fallbackLinks;
 
   return (
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-40 w-full transition-all duration-300 ease-out ${
           scrolled
-            ? "border-b border-[#0d1a46]/10 bg-white/90 py-3 shadow-[0_4px_30px_rgba(13,26,70,0.08),inset_0_1px_1px_0_rgba(255,255,255,0.7)] backdrop-blur-xl backdrop-saturate-[180%] lg:py-3.5"
+            ? "border-b border-[#0d1a46]/10 bg-white/95 py-3 shadow-[0_4px_30px_rgba(13,26,70,0.08),inset_0_1px_1px_0_rgba(255,255,255,0.7)] backdrop-blur-xl backdrop-saturate-[180%] lg:py-3.5"
             : "border-b border-transparent bg-transparent py-5 shadow-none lg:py-6"
         }`}
       >
@@ -73,19 +92,26 @@ export default function Header({ locale, navItems }: HeaderProps) {
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-1.5 lg:absolute lg:left-1/2 lg:flex lg:-translate-x-1/2">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex h-[42px] items-center px-5 text-base font-semibold tracking-tight transition-all lg:text-[17px] ${
-                  scrolled
-                    ? "text-[#0d1a46] hover:bg-[#0d1a46]/10 hover:text-[#0d1a46]"
-                    : "text-white hover:bg-white/15 hover:text-white"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {links.map((link) => {
+              const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`flex h-[42px] items-center px-5 text-base font-bold tracking-tight transition-all lg:text-[17px] ${
+                    scrolled
+                      ? isActive
+                        ? "text-[#0d1a46] bg-[#0d1a46]/10"
+                        : "text-[#0d1a46] hover:bg-[#0d1a46]/10 hover:text-[#0d1a46]"
+                      : isActive
+                      ? "text-white bg-white/20"
+                      : "text-white hover:bg-white/15 hover:text-white"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Desktop & Mobile Actions */}
@@ -139,21 +165,17 @@ export default function Header({ locale, navItems }: HeaderProps) {
         </div>
       </header>
 
-      {/* Luxury Fullscreen Mobile Navigation Drawer */}
+      {/* Fullscreen Mobile Drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "100%" }}
+            transition={{ type: "tween", duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
             className="fixed inset-0 z-50 flex flex-col bg-[#070e24] text-white lg:hidden"
           >
-            {/* Background Ambient Glow & Architectural Grid */}
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,#1b3175_0%,transparent_60%)] opacity-40" />
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,#0d1a46_0%,transparent_50%)] opacity-30" />
-
-            {/* Top Navigation Bar inside Drawer - Clean and completely uncrowded */}
+            {/* Top Navigation Bar inside Drawer */}
             <div className="relative z-10 flex h-20 items-center justify-between border-b border-white/10 px-5 sm:px-7">
               <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center">
                 <Image
@@ -198,7 +220,7 @@ export default function Header({ locale, navItems }: HeaderProps) {
                           href={link.href}
                           onClick={() => setMobileOpen(false)}
                           className={`group flex items-center justify-between py-3.5 transition-all ${
-                            isActive ? "text-sky-300" : "text-white hover:text-sky-200"
+                            isActive ? "text-sky-300 font-bold" : "text-white hover:text-sky-200 font-medium"
                           }`}
                         >
                           <div className="flex items-baseline gap-3">

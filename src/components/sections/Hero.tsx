@@ -45,14 +45,8 @@ export function Hero({
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80" />
 
       <div className="relative z-10 mx-auto max-w-5xl px-6 py-28 text-center lg:px-12 lg:py-36">
-        <FadeIn>
-          <span className="inline-block border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-sm">
-            {t("label")}
-          </span>
-        </FadeIn>
-
         <FadeIn delay={0.1}>
-          <h1 className="mt-6 font-display text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl xl:text-6xl">
+          <h1 className="font-display text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl xl:text-6xl">
             {heading}
           </h1>
         </FadeIn>
@@ -87,4 +81,3 @@ export function Hero({
     </section>
   );
 }
-
