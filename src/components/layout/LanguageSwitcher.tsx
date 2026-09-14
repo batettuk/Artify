@@ -4,6 +4,8 @@ import { useLocale } from "next-intl";
 import { Link, usePathname } from "@/i18n/routing";
 import { motion } from "framer-motion";
 import { Globe } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useState, useEffect } from "react";
 
 const LABELS: Record<string, string> = {
   en: "EN",
@@ -21,16 +23,34 @@ export function LanguageSwitcher({
 }) {
   const locale = useLocale();
   const pathname = usePathname();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   return (
     <div
       className={`relative flex h-[42px] items-center gap-1 border p-1 backdrop-blur-md transition-all duration-300 ${
-        scrolled
+        isDark
+          ? "border-white/20 bg-white/10 shadow-none"
+          : scrolled
           ? "border-[#0d1a46]/20 bg-white/50 shadow-[0_4px_24px_0_rgba(13,26,70,0.08),inset_0_1px_2px_0_rgba(255,255,255,0.7)]"
           : "border-white/30 bg-black/25 shadow-none"
       }`}
     >
-      <div className={`flex h-full items-center pl-2 pr-1 transition-colors ${scrolled ? "text-[#0d1a46]/70" : "text-white/80"}`}>
+      <div
+        className={`flex h-full items-center pl-2 pr-1 transition-colors ${
+          isDark
+            ? "text-sky-300"
+            : scrolled
+            ? "text-[#0d1a46]/70"
+            : "text-white/80"
+        }`}
+      >
         <Globe size={15} className="opacity-80" />
       </div>
 
@@ -42,11 +62,15 @@ export function LanguageSwitcher({
               key={l}
               href={pathname}
               locale={l}
-              className={`relative z-10 flex h-full items-center justify-center px-3.5 text-xs font-bold tracking-wider transition-colors duration-200 ${
+              className={`relative z-10 flex h-full items-center justify-center px-3 text-xs font-bold tracking-wider transition-colors duration-200 ${
                 isActive
-                  ? scrolled
+                  ? isDark
+                    ? "text-[#070e24] font-extrabold"
+                    : scrolled
                     ? "text-white"
                     : "text-[#0d1a46]"
+                  : isDark
+                  ? "text-slate-300 hover:text-white"
                   : scrolled
                   ? "text-[#0d1a46]/75 hover:text-[#0d1a46]"
                   : "text-white/80 hover:text-white"
@@ -56,7 +80,9 @@ export function LanguageSwitcher({
                 <motion.span
                   layoutId={`activeLangIndicator_${id}`}
                   className={`absolute inset-0 -z-10 shadow-sm ${
-                    scrolled
+                    isDark
+                      ? "bg-white"
+                      : scrolled
                       ? "bg-gradient-to-br from-[#0d1a46] via-[#1a2e6e] to-[#0d1a46] before:pointer-events-none before:absolute before:inset-0 before:border before:border-sky-300/30"
                       : "bg-white"
                   }`}

@@ -5,8 +5,11 @@ import { Menu, X, Search, ArrowUpRight, Phone, Mail, Clock, Globe } from "lucide
 import { Link, usePathname } from "@/i18n/routing";
 import Image from "@/components/common/Image";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { routing } from "@/i18n/routing";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 import type { MenuItemDto } from "@/api/cms/types/public";
 
 interface HeaderProps {
@@ -14,26 +17,20 @@ interface HeaderProps {
   navItems?: MenuItemDto[];
 }
 
-const FALLBACK_NAV: Record<string, { href: string; label: string }[]> = {
-  mn: [
-    { href: "/", label: "Нүүр" },
-    { href: "/products", label: "Бүтээгдэхүүн" },
-    { href: "/blog", label: "Мэдээ" },
-    { href: "/contact", label: "Холбоо барих" },
-  ],
-  en: [
-    { href: "/", label: "Home" },
-    { href: "/products", label: "Products" },
-    { href: "/blog", label: "Blog" },
-    { href: "/contact", label: "Contact" },
-  ],
-};
-
 export default function Header({ locale, navItems }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  const { resolvedTheme } = useTheme();
+  const t = useTranslations("nav");
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   // Scroll detection for sticky header transition
   useEffect(() => {
@@ -62,17 +59,32 @@ export default function Header({ locale, navItems }: HeaderProps) {
     setMobileOpen(false);
   }, [pathname]);
 
-  const fallbackLinks = FALLBACK_NAV[locale] || FALLBACK_NAV.mn;
+  const staticNav = [
+    { href: "/", label: t("home") || (locale === "mn" ? "Нүүр" : "Home") },
+    { href: "/products", label: t("products") || (locale === "mn" ? "Бүтээгдэхүүн" : "Products") },
+    { href: "/blog", label: t("blog") || (locale === "mn" ? "Мэдээ" : "Blog") },
+    { href: "/contact", label: t("contact") || (locale === "mn" ? "Холбоо барих" : "Contact") },
+  ];
+
   const links =
     navItems && navItems.length > 0
       ? navItems.map((item) => ({ href: item.url, label: item.label }))
-      : fallbackLinks;
+      : staticNav;
+
+  // In dark mode -> ALWAYS white logo. In light mode -> white logo on hero, navy when scrolled
+  const logoSrc = isDark || !scrolled
+    ? "/images/artify-logo-white.png"
+    : "/images/artify-logo-navy.png";
 
   return (
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-40 w-full transition-all duration-300 ease-out ${
-          scrolled
+          isDark
+            ? scrolled
+              ? "border-b border-white/10 bg-[#070e24]/95 py-3 shadow-[0_4px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl backdrop-saturate-[180%] lg:py-3.5"
+              : "border-b border-transparent bg-transparent py-5 shadow-none lg:py-6"
+            : scrolled
             ? "border-b border-[#0d1a46]/10 bg-white/95 py-3 shadow-[0_4px_30px_rgba(13,26,70,0.08),inset_0_1px_1px_0_rgba(255,255,255,0.7)] backdrop-blur-xl backdrop-saturate-[180%] lg:py-3.5"
             : "border-b border-transparent bg-transparent py-5 shadow-none lg:py-6"
         }`}
@@ -81,30 +93,38 @@ export default function Header({ locale, navItems }: HeaderProps) {
           {/* Logo */}
           <Link href="/" className="flex items-center justify-start">
             <Image
-              src={scrolled ? "/images/artify-logo-navy.png" : "/images/artify-logo-white.png"}
-              alt="Artify"
+              src={logoSrc}
+              alt="Artify Brand"
               width={4351}
               height={472}
               priority
-              className="h-7 sm:h-8 w-auto transition-transform hover:opacity-90 lg:h-10"
+              className="h-7 sm:h-8 w-auto transition-transform hover:opacity-90 lg:h-10 object-contain"
             />
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-1.5 lg:absolute lg:left-1/2 lg:flex lg:-translate-x-1/2">
             {links.map((link) => {
-              const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
+              const isHome = link.href === "/" || link.href === "";
+              const isActive = isHome
+                ? pathname === "/" || pathname === ""
+                : pathname === link.href || pathname.startsWith(link.href + "/");
+
               return (
                 <Link
                   key={link.href}
                   href={link.href}
                   className={`flex h-[42px] items-center px-5 text-base font-bold tracking-tight transition-all lg:text-[17px] ${
-                    scrolled
+                    isDark
                       ? isActive
-                        ? "text-[#0d1a46] bg-[#0d1a46]/10"
+                        ? "text-sky-300 bg-white/10 shadow-sm"
+                        : "text-slate-200 hover:bg-white/10 hover:text-white"
+                      : scrolled
+                      ? isActive
+                        ? "text-[#0d1a46] bg-[#0d1a46]/10 shadow-sm"
                         : "text-[#0d1a46] hover:bg-[#0d1a46]/10 hover:text-[#0d1a46]"
                       : isActive
-                      ? "text-white bg-white/20"
+                      ? "text-white bg-white/20 shadow-sm"
                       : "text-white hover:bg-white/15 hover:text-white"
                   }`}
                 >
@@ -119,7 +139,9 @@ export default function Header({ locale, navItems }: HeaderProps) {
             {/* Desktop Search */}
             <div
               className={`hidden md:flex h-[42px] items-center overflow-hidden border backdrop-blur-md transition-all duration-300 ${
-                scrolled
+                isDark
+                  ? "border-white/20 bg-white/10 text-white shadow-none"
+                  : scrolled
                   ? "border-[#0d1a46]/20 bg-white/50 shadow-[0_4px_24px_0_rgba(13,26,70,0.08),inset_0_1px_2px_0_rgba(255,255,255,0.7)]"
                   : "border-white/30 bg-black/25 shadow-none"
               } ${searchOpen ? "w-56 px-2" : "w-[42px]"}`}
@@ -127,7 +149,11 @@ export default function Header({ locale, navItems }: HeaderProps) {
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
                 className={`flex h-[42px] w-[42px] shrink-0 items-center justify-center transition-colors ${
-                  scrolled ? "text-[#0d1a46] hover:text-[#0d1a46]/80" : "text-white hover:text-white/80"
+                  isDark
+                    ? "text-white hover:text-white/80"
+                    : scrolled
+                    ? "text-[#0d1a46] hover:text-[#0d1a46]/80"
+                    : "text-white hover:text-white/80"
                 }`}
                 aria-label="Search"
               >
@@ -137,12 +163,17 @@ export default function Header({ locale, navItems }: HeaderProps) {
                 type="text"
                 placeholder={locale === "mn" ? "Хайх..." : "Search..."}
                 className={`h-full w-full bg-transparent px-1 text-sm font-medium outline-none transition-colors ${
-                  scrolled
+                  isDark
+                    ? "text-white placeholder:text-white/60"
+                    : scrolled
                     ? "text-[#0d1a46] placeholder:text-[#0d1a46]/60"
                     : "text-white placeholder:text-white/70"
                 } ${searchOpen ? "opacity-100" : "w-0 opacity-0"}`}
               />
             </div>
+
+            {/* Dark Mode Theme Toggle */}
+            <ThemeToggle scrolled={scrolled} />
 
             {/* Desktop Language Switcher */}
             <div className="hidden lg:block">
@@ -152,7 +183,9 @@ export default function Header({ locale, navItems }: HeaderProps) {
             {/* Mobile Hamburger Trigger */}
             <button
               className={`flex h-10 w-10 items-center justify-center border backdrop-blur-md transition-all lg:hidden ${
-                scrolled
+                isDark
+                  ? "border-white/20 bg-white/10 text-white hover:bg-white/20 active:scale-95"
+                  : scrolled
                   ? "border-[#0d1a46]/20 bg-white/80 text-[#0d1a46] hover:bg-[#0d1a46]/10 active:scale-95"
                   : "border-white/30 bg-black/35 text-white hover:bg-white/20 active:scale-95"
               }`}
@@ -187,13 +220,16 @@ export default function Header({ locale, navItems }: HeaderProps) {
                 />
               </Link>
 
-              <button
-                onClick={() => setMobileOpen(false)}
-                className="flex h-10 w-10 items-center justify-center border border-white/20 bg-white/5 text-white transition-colors hover:bg-white/15 active:scale-95"
-                aria-label="Close mobile menu"
-              >
-                <X size={20} />
-              </button>
+              <div className="flex items-center gap-2">
+                <ThemeToggle scrolled={false} />
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="flex h-10 w-10 items-center justify-center border border-white/20 bg-white/5 text-white transition-colors hover:bg-white/15 active:scale-95"
+                  aria-label="Close mobile menu"
+                >
+                  <X size={20} />
+                </button>
+              </div>
             </div>
 
             {/* Scrollable Content Container */}
@@ -206,7 +242,10 @@ export default function Header({ locale, navItems }: HeaderProps) {
 
                 <nav className="flex flex-col divide-y divide-white/10 border-y border-white/10">
                   {links.map((link, index) => {
-                    const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
+                    const isHome = link.href === "/" || link.href === "";
+                    const isActive = isHome
+                      ? pathname === "/" || pathname === ""
+                      : pathname === link.href || pathname.startsWith(link.href + "/");
                     const num = String(index + 1).padStart(2, "0");
 
                     return (

@@ -2,6 +2,8 @@
 @plugin "@tailwindcss/typography";
 @import "./marquee.css";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #FFFFFF;
   --foreground: #0A0A0A;
@@ -23,6 +25,26 @@
   --success: #10B981;
   --warning: #F59E0B;
   --destructive: #EF4444;
+}
+
+.dark {
+  --background: #060b18;
+  --foreground: #F8FAFC;
+  --card: #0b132b;
+  --card-foreground: #F8FAFC;
+  --popover: #0b132b;
+  --popover-foreground: #F8FAFC;
+  --primary: #38bdf8;
+  --primary-foreground: #070e24;
+  --secondary: #0d1a46;
+  --secondary-foreground: #F8FAFC;
+  --muted: #0d1a46;
+  --muted-foreground: #94A3B8;
+  --accent: #38bdf8;
+  --accent-foreground: #070e24;
+  --border: rgba(255, 255, 255, 0.12);
+  --input: rgba(255, 255, 255, 0.15);
+  --ring: #38bdf8;
 }
 
 @theme inline {
@@ -60,13 +82,70 @@ body {
   font-family: var(--font-nunito), system-ui, sans-serif;
 }
 
-h1:not(.text-white),
-h2:not(.text-white),
-h3:not(.text-white),
-h4:not(.text-white),
-h5:not(.text-white),
-h6:not(.text-white) {
+/* Light mode headings default */
+html:not(.dark) h1:not(.text-white),
+html:not(.dark) h2:not(.text-white),
+html:not(.dark) h3:not(.text-white),
+html:not(.dark) h4:not(.text-white),
+html:not(.dark) h5:not(.text-white),
+html:not(.dark) h6:not(.text-white) {
   color: #0d1a46;
+}
+
+/* Dark mode headings default */
+.dark h1:not(.text-white):not([class*="text-sky"]),
+.dark h2:not(.text-white):not([class*="text-sky"]),
+.dark h3:not(.text-white):not([class*="text-sky"]),
+.dark h4:not(.text-white):not([class*="text-sky"]),
+.dark h5:not(.text-white):not([class*="text-sky"]),
+.dark h6:not(.text-white):not([class*="text-sky"]) {
+  color: #f8fafc;
+}
+
+/* Dark mode utility styling helpers for rich dark aesthetics */
+.dark .bg-white {
+  background-color: #0b132b !important;
+}
+
+.dark .bg-\[\#f8fafc\] {
+  background-color: #060b18 !important;
+}
+
+.dark .bg-slate-50 {
+  background-color: #070e24 !important;
+}
+
+.dark .bg-slate-100 {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.dark .bg-slate-200\/90,
+.dark .bg-slate-200\/80 {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark .text-\[\#0d1a46\] {
+  color: #f1f5f9 !important;
+}
+
+.dark .text-slate-600,
+.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+.dark .border-slate-200,
+.dark .border-slate-200\/80,
+.dark .border-slate-200\/90,
+.dark .border-slate-100 {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark .bg-\[\#0d1a46\]\/\[0\.04\] {
+  background-color: rgba(56, 189, 248, 0.1) !important;
+}
+
+.dark .border-\[\#0d1a46\]\/20 {
+  border-color: rgba(56, 189, 248, 0.25) !important;
 }
 
 .project-grid[data-expanded="false"] > :nth-child(n + 5) {
