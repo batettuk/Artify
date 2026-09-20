@@ -13,11 +13,11 @@ import type {
 function ProjectCard({ project, delay = 0 }: { project: ProjectCardDto; delay?: number }) {
   return (
     <FadeIn delay={delay} direction="up" className="h-full">
-      <div className="group relative flex h-full flex-col bg-slate-200/90 p-[1px] shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#0d1a46]/50 hover:shadow-2xl [clip-path:polygon(22px_0,100%_0,100%_100%,0_100%,0_22px)]">
-        <article className="relative flex h-full flex-col justify-between bg-white [clip-path:polygon(21px_0,100%_0,100%_100%,0_100%,0_21px)]">
-          <div className="pointer-events-none absolute left-0 top-0 z-10 h-6 w-6 border-b border-r border-[#0d1a46]/15 bg-slate-100/80 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
+      <div className="group relative flex h-full flex-col bg-slate-200/90 dark:bg-white/10 p-[1px] shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#0d1a46]/50 dark:hover:bg-white/25 hover:shadow-2xl [clip-path:polygon(22px_0,100%_0,100%_100%,0_100%,0_22px)]">
+        <article className="relative flex h-full flex-col justify-between bg-white dark:bg-[#070e24] [clip-path:polygon(21px_0,100%_0,100%_100%,0_100%,0_21px)]">
+          <div className="pointer-events-none absolute left-0 top-0 z-10 h-6 w-6 border-b border-r border-[#0d1a46]/15 bg-slate-100/80 dark:border-white/20 dark:bg-white/10 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
           <div>
-            <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
+            <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100 dark:bg-slate-900">
               <Image
                 src={project.thumbnailUrl}
                 alt={project.title}
@@ -27,18 +27,18 @@ function ProjectCard({ project, delay = 0 }: { project: ProjectCardDto; delay?: 
               />
             </div>
             <div className="p-5 lg:p-6">
-              <h3 className="font-display text-lg font-bold text-[#0d1a46] lg:text-xl">
+              <h3 className="font-display text-lg font-bold text-[#0d1a46] dark:text-white lg:text-xl">
                 {project.title}
               </h3>
               {project.tags.length > 0 && (
-                <ul className="mt-3 space-y-1 text-sm text-slate-500 font-medium">
+                <ul className="mt-3 space-y-1 text-sm text-slate-500 dark:text-slate-400 font-medium">
                   {project.tags.map((tag) => <li key={tag}>• {tag}</li>)}
                 </ul>
               )}
               {project.content && (
                 <CmsContent
                   html={project.content}
-                  className="mt-4 border-t border-slate-100 pt-4 text-xs sm:text-sm text-slate-600 [&_li]:flex [&_li]:items-start [&_li]:gap-2 [&_ul]:space-y-1"
+                  className="mt-4 border-t border-slate-100 dark:border-white/10 pt-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 [&_li]:flex [&_li]:items-start [&_li]:gap-2 [&_ul]:space-y-1"
                 />
               )}
             </div>
@@ -62,17 +62,14 @@ export async function CompletedWorkSection({
   const items = projects.status === "ready" ? projects.items : [];
 
   return (
-    <section className="bg-background px-4 py-16 text-foreground sm:px-6 lg:px-12 lg:py-24 border-t border-slate-200/80">
+    <section className="bg-background px-4 py-16 text-foreground sm:px-6 lg:px-12 lg:py-24 border-t border-slate-200/80 dark:border-white/10">
       <div className="mx-auto max-w-[1600px]">
         <FadeIn>
           <div className="mb-10 text-center lg:mb-16">
-            <span className="inline-block border border-[#0d1a46]/20 bg-[#0d1a46]/[0.04] px-3.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-[#0d1a46] mb-3">
-              03 — Portfolio
-            </span>
-            <h2 className="font-display text-2xl font-bold text-[#0d1a46] lg:text-4xl">
+            <h2 className="font-display text-2xl font-bold text-[#0d1a46] dark:text-white lg:text-4xl">
               {page?.name ?? ""}
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base text-slate-600">
+            <p className="mx-auto mt-4 max-w-2xl text-base text-slate-600 dark:text-slate-300">
               {page?.description ?? ""}
             </p>
           </div>

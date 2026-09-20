@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { getPageDetail } from "@/api/cms/server/queries/get-page-detail";
+import { getContactInfo } from "@/api/cms/server/queries/get-contact-info";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { FadeIn } from "@/components/motion/FadeIn";
 import Image from "@/components/common/Image";
@@ -11,11 +12,17 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "nav" });
+  const t = await getTranslations({ locale, namespace: "contact" });
   const page = await getPageDetail({ slug: "contact", language: locale });
+  const isEn = locale === "en";
+  const title = page?.name || (isEn ? "Contact & Inquiries" : "Холбоо барих");
+  let description = page?.description || t("body");
+  if (description.includes("<") || description.includes("Address:") || description.includes("Phone:")) {
+    description = t("body");
+  }
   return {
-    title: `${page?.name ?? t("contact")} | Artify`,
-    description: page?.description ?? undefined,
+    title: `${title} | Artify`,
+    description,
   };
 }
 
@@ -25,10 +32,19 @@ export default async function ContactPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const [page, textPage] = await Promise.all([
+  const t = await getTranslations({ locale, namespace: "contact" });
+  const [page, textPage, contactInfo] = await Promise.all([
     getPageDetail({ slug: "contact", language: locale }),
     getPageDetail({ slug: "contact-text", language: locale }),
+    getContactInfo(locale),
   ]);
+
+  const isEn = locale === "en";
+  const heroHeading = page?.name || (isEn ? "Contact & Inquiries" : "Холбоо барих");
+  let heroBody = page?.description || t("body");
+  if (heroBody.includes("<") || heroBody.includes("Address:") || heroBody.includes("Phone:")) {
+    heroBody = t("body");
+  }
 
   return (
     <>
@@ -44,33 +60,35 @@ export default async function ContactPage({
             className="h-full w-full object-cover object-center scale-[1.01]"
           />
           {/* Subtle cinematic gradient overlay preserving image clarity */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#070e24] via-[#070e24]/55 to-[#070e24]/30" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-[#070e24]/60 to-[#070e24]" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-5xl px-6 text-center text-white lg:px-12">
           <FadeIn>
-            <span className="inline-block border border-sky-400/30 bg-sky-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.22em] text-sky-300 backdrop-blur-sm">
-              05 — {locale === "mn" ? "Холбоо Барих" : "Get In Touch"}
-            </span>
-          </FadeIn>
-
-          <FadeIn delay={0.1}>
-            <h1 className="mt-6 font-display text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
-              {page?.name || (locale === "mn" ? "Төсөл Эхлүүлэхэд Бэлэн Үү?" : "Ready to Start Your Project?")}
+            <h1 className="font-display text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
+              {heroHeading}
             </h1>
           </FadeIn>
 
-          {page?.description && (
-            <FadeIn delay={0.2}>
-              <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-200 lg:text-lg">
-                {page.description}
-              </p>
-            </FadeIn>
-          )}
+          <FadeIn delay={0.2}>
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-200 lg:text-lg">
+              {heroBody}
+            </p>
+          </FadeIn>
         </div>
       </section>
 
-      <ContactForm page={page} textPage={textPage} locale={locale} />
+      <ContactForm
+        page={page}
+        textPage={textPage}
+        locale={locale}
+        phone={contactInfo.phone}
+        email={contactInfo.email}
+        address={contactInfo.address}
+        hours={contactInfo.hours}
+        facebookUrl={contactInfo.facebook || undefined}
+        instagramUrl={contactInfo.instagram || undefined}
+      />
     </>
   );
 }

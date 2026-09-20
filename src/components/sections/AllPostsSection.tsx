@@ -18,12 +18,12 @@ function PostCard({ post, delay = 0 }: { post: BlogCardDto; delay?: number }) {
   return (
     <FadeIn delay={delay} direction="up" className="h-full">
       <Link href={`/blog/${post.slug}`} className="group block h-full">
-        <div className="group relative flex h-full flex-col bg-slate-200/90 p-[1px] shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#0d1a46]/50 hover:shadow-xl [clip-path:polygon(22px_0,100%_0,100%_100%,0_100%,0_22px)]">
-          <article className="relative flex h-full flex-col justify-between bg-white [clip-path:polygon(21px_0,100%_0,100%_100%,0_100%,0_21px)]">
-            <div className="pointer-events-none absolute left-0 top-0 z-10 h-6 w-6 border-b border-r border-[#0d1a46]/15 bg-slate-100/80 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
+        <div className="group relative flex h-full flex-col bg-slate-200/90 dark:bg-white/10 p-[1px] shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#0d1a46]/50 dark:hover:bg-white/20 hover:shadow-xl [clip-path:polygon(22px_0,100%_0,100%_100%,0_100%,0_22px)]">
+          <article className="relative flex h-full flex-col justify-between bg-white dark:bg-[#070e24] [clip-path:polygon(21px_0,100%_0,100%_100%,0_100%,0_21px)]">
+            <div className="pointer-events-none absolute left-0 top-0 z-10 h-6 w-6 border-b border-r border-[#0d1a46]/15 bg-slate-100/80 dark:border-white/20 dark:bg-white/10 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
 
             <div>
-              <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
+              <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 dark:bg-slate-900">
                 {post.thumbnailUrl && (
                   <Image
                     src={post.thumbnailUrl}
@@ -36,12 +36,12 @@ function PostCard({ post, delay = 0 }: { post: BlogCardDto; delay?: number }) {
               </div>
 
               <div className="p-5 lg:p-6">
-                <h3 className="font-display text-base font-bold text-[#0d1a46] transition-colors group-hover:text-primary sm:text-lg">
+                <h3 className="font-display text-base font-bold text-[#0d1a46] dark:text-white transition-colors group-hover:text-primary dark:group-hover:text-slate-300 sm:text-lg">
                   {post.title}
                 </h3>
 
                 {post.excerpt && (
-                  <p className="mt-2.5 line-clamp-3 text-xs leading-relaxed text-slate-600 sm:text-sm">
+                  <p className="mt-2.5 line-clamp-3 text-xs leading-relaxed text-slate-600 dark:text-slate-300 sm:text-sm">
                     {post.excerpt}
                   </p>
                 )}
@@ -49,10 +49,10 @@ function PostCard({ post, delay = 0 }: { post: BlogCardDto; delay?: number }) {
             </div>
 
             <div className="p-5 pt-0 lg:p-6 lg:pt-0">
-              <div className="pt-3 border-t border-slate-100">
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#0d1a46] group-hover:text-primary">
-                  {t("readMore")}
-                  <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+              <div className="pt-3 border-t border-slate-100 dark:border-white/10">
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#0d1a46] dark:text-white group-hover:text-primary dark:group-hover:text-slate-300">
+                  <span className="text-[#0d1a46] dark:text-white group-hover:text-primary dark:group-hover:text-slate-300 font-bold">{t("readMore")}</span>
+                  <ArrowRight size={13} className="transition-transform group-hover:translate-x-1 text-[#0d1a46] dark:text-white" />
                 </span>
               </div>
             </div>
@@ -71,10 +71,10 @@ export function AllPostsSection({ posts }: AllPostsSectionProps) {
 
   if (posts.length === 0) {
     return (
-      <section className="bg-[#f8fafc] px-4 py-12 sm:px-6 lg:px-12 lg:py-16">
+      <section className="bg-[#f8fafc] dark:bg-[#060b18] px-4 py-12 sm:px-6 lg:px-12 lg:py-16">
         <div className="mx-auto max-w-[1400px]">
           <FadeIn>
-            <p className="text-center text-slate-500">{t("noPosts")}</p>
+            <p className="text-center text-slate-500 dark:text-slate-400">{t("noPosts")}</p>
           </FadeIn>
         </div>
       </section>
@@ -82,14 +82,14 @@ export function AllPostsSection({ posts }: AllPostsSectionProps) {
   }
 
   return (
-    <section className="bg-[#f8fafc] border-t border-slate-200/80 px-4 py-16 sm:px-6 lg:px-12 lg:py-20">
+    <section className="bg-[#f8fafc] dark:bg-[#060b18] border-t border-slate-200/80 dark:border-white/10 px-4 py-16 sm:px-6 lg:px-12 lg:py-20">
       <div className="mx-auto max-w-[1400px]">
         <FadeIn>
           <div className="mb-10 text-center lg:mb-14">
-            <span className="inline-block border border-[#0d1a46]/20 bg-[#0d1a46]/[0.04] px-3.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-[#0d1a46] mb-3">
+            <span className="inline-block border border-[#0d1a46]/20 dark:border-white/20 bg-[#0d1a46]/[0.04] dark:bg-white/10 px-3.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-[#0d1a46] dark:text-white mb-3">
               {t("allPosts")}
             </span>
-            <h2 className="font-display text-2xl font-bold text-[#0d1a46] lg:text-3xl">
+            <h2 className="font-display text-2xl font-bold text-[#0d1a46] dark:text-white lg:text-3xl">
               {t("allPostsSubtitle")}
             </h2>
           </div>
@@ -105,7 +105,7 @@ export function AllPostsSection({ posts }: AllPostsSectionProps) {
           <div className="mt-12 text-center">
             <button
               onClick={() => setShowAll(!showAll)}
-              className="inline-flex items-center gap-2 bg-[#0d1a46] px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition-opacity hover:opacity-90 shadow-sm"
+              className="inline-flex items-center gap-2 bg-[#0d1a46] px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition-opacity hover:opacity-90 shadow-sm dark:bg-white dark:text-[#070e24] dark:hover:bg-slate-200"
             >
               {showAll ? (
                 <>

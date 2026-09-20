@@ -4,7 +4,7 @@ import { useLocale } from "next-intl";
 import { Link, usePathname } from "@/i18n/routing";
 import { motion } from "framer-motion";
 import { Globe } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/theme/ThemeProvider";
 import { useState, useEffect } from "react";
 
 const LABELS: Record<string, string> = {
@@ -45,7 +45,7 @@ export function LanguageSwitcher({
       <div
         className={`flex h-full items-center pl-2 pr-1 transition-colors ${
           isDark
-            ? "text-sky-300"
+            ? "text-white"
             : scrolled
             ? "text-[#0d1a46]/70"
             : "text-white/80"
@@ -70,7 +70,7 @@ export function LanguageSwitcher({
                     ? "text-white"
                     : "text-[#0d1a46]"
                   : isDark
-                  ? "text-slate-300 hover:text-white"
+                  ? "text-white/80 hover:text-white"
                   : scrolled
                   ? "text-[#0d1a46]/75 hover:text-[#0d1a46]"
                   : "text-white/80 hover:text-white"

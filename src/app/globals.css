@@ -29,22 +29,22 @@
 
 .dark {
   --background: #060b18;
-  --foreground: #F8FAFC;
+  --foreground: #FFFFFF;
   --card: #0b132b;
-  --card-foreground: #F8FAFC;
+  --card-foreground: #FFFFFF;
   --popover: #0b132b;
-  --popover-foreground: #F8FAFC;
-  --primary: #38bdf8;
+  --popover-foreground: #FFFFFF;
+  --primary: #FFFFFF;
   --primary-foreground: #070e24;
   --secondary: #0d1a46;
-  --secondary-foreground: #F8FAFC;
+  --secondary-foreground: #FFFFFF;
   --muted: #0d1a46;
-  --muted-foreground: #94A3B8;
-  --accent: #38bdf8;
+  --muted-foreground: #FFFFFF;
+  --accent: #FFFFFF;
   --accent-foreground: #070e24;
   --border: rgba(255, 255, 255, 0.12);
   --input: rgba(255, 255, 255, 0.15);
-  --ring: #38bdf8;
+  --ring: #FFFFFF;
 }
 
 @theme inline {
@@ -68,84 +68,107 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-destructive: var(--destructive);
-  --font-sans: var(--font-nunito);
+  --font-sans: var(--font-montserrat);
   --font-display: var(--font-montserrat);
+  --font-signature: var(--font-signature);
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-body {
+body, html, button, input, select, textarea {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-nunito), system-ui, sans-serif;
+  font-family: var(--font-montserrat), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.font-signature {
+  font-family: var(--font-signature), cursive;
 }
 
 /* Light mode headings default */
-html:not(.dark) h1:not(.text-white),
-html:not(.dark) h2:not(.text-white),
-html:not(.dark) h3:not(.text-white),
-html:not(.dark) h4:not(.text-white),
-html:not(.dark) h5:not(.text-white),
-html:not(.dark) h6:not(.text-white) {
+:where(html:not(.dark)) h1:not(.text-white),
+:where(html:not(.dark)) h2:not(.text-white),
+:where(html:not(.dark)) h3:not(.text-white),
+:where(html:not(.dark)) h4:not(.text-white),
+:where(html:not(.dark)) h5:not(.text-white),
+:where(html:not(.dark)) h6:not(.text-white) {
   color: #0d1a46;
 }
 
-/* Dark mode headings default */
-.dark h1:not(.text-white):not([class*="text-sky"]),
-.dark h2:not(.text-white):not([class*="text-sky"]),
-.dark h3:not(.text-white):not([class*="text-sky"]),
-.dark h4:not(.text-white):not([class*="text-sky"]),
-.dark h5:not(.text-white):not([class*="text-sky"]),
-.dark h6:not(.text-white):not([class*="text-sky"]) {
-  color: #f8fafc;
+/* Dark mode typography defaults */
+:where(.dark) h1,
+:where(.dark) h2,
+:where(.dark) h3,
+:where(.dark) h4,
+:where(.dark) h5,
+:where(.dark) h6,
+:where(.dark) p,
+:where(.dark) li,
+:where(.dark) label,
+:where(.dark) strong,
+:where(.dark) b,
+:where(.dark) em,
+:where(.dark) small,
+:where(.dark) blockquote {
+  color: #ffffff;
 }
 
-/* Dark mode utility styling helpers for rich dark aesthetics */
-.dark .bg-white {
-  background-color: #0b132b !important;
+/* Dark mode prose variables for @tailwindcss/typography */
+.dark [class*="prose"],
+.dark .prose {
+  --tw-prose-body: #ffffff;
+  --tw-prose-headings: #ffffff;
+  --tw-prose-lead: #ffffff;
+  --tw-prose-links: #ffffff;
+  --tw-prose-bold: #ffffff;
+  --tw-prose-counters: #ffffff;
+  --tw-prose-bullets: #ffffff;
+  --tw-prose-hr: rgba(255, 255, 255, 0.2);
+  --tw-prose-quotes: #ffffff;
+  --tw-prose-quote-borders: rgba(255, 255, 255, 0.3);
+  --tw-prose-captions: #ffffff;
+  --tw-prose-code: #ffffff;
+  --tw-prose-pre-code: #ffffff;
+  --tw-prose-pre-bg: #070e24;
+  --tw-prose-th-borders: rgba(255, 255, 255, 0.2);
+  --tw-prose-td-borders: rgba(255, 255, 255, 0.1);
 }
 
-.dark .bg-\[\#f8fafc\] {
-  background-color: #060b18 !important;
+/* Dark mode placeholder text */
+.dark ::placeholder,
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
 
-.dark .bg-slate-50 {
-  background-color: #070e24 !important;
+/* Dark mode solid white CTA buttons */
+.dark button.bg-white,
+.dark a.bg-white {
+  background-color: #ffffff;
+  color: #070e24;
 }
 
-.dark .bg-slate-100 {
-  background-color: rgba(255, 255, 255, 0.05) !important;
+.dark button.bg-white *,
+.dark a.bg-white * {
+  color: #070e24;
 }
 
-.dark .bg-slate-200\/90,
-.dark .bg-slate-200\/80 {
-  background-color: rgba(255, 255, 255, 0.1) !important;
+/* Functional status & accent colors */
+.dark .text-emerald-500,
+.dark .text-emerald-400 {
+  color: #10b981;
 }
 
-.dark .text-\[\#0d1a46\] {
-  color: #f1f5f9 !important;
+.dark .text-red-500,
+.dark .text-red-400 {
+  color: #ef4444;
 }
 
-.dark .text-slate-600,
-.dark .text-slate-500 {
-  color: #94a3b8 !important;
-}
-
-.dark .border-slate-200,
-.dark .border-slate-200\/80,
-.dark .border-slate-200\/90,
-.dark .border-slate-100 {
-  border-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-.dark .bg-\[\#0d1a46\]\/\[0\.04\] {
-  background-color: rgba(56, 189, 248, 0.1) !important;
-}
-
-.dark .border-\[\#0d1a46\]\/20 {
-  border-color: rgba(56, 189, 248, 0.25) !important;
+.dark .text-amber-400,
+.dark .text-amber-500 {
+  color: #f59e0b;
 }
 
 .project-grid[data-expanded="false"] > :nth-child(n + 5) {
@@ -159,4 +182,9 @@ html:not(.dark) h6:not(.text-white) {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Square geometry for all interactive elements */
+button, input, select, textarea {
+  border-radius: 0;
 }

@@ -5,7 +5,7 @@ import Image from "@/components/common/Image";
 
 export function HomeCtaSection({ locale }: { locale: string }) {
   return (
-    <section className="relative overflow-hidden bg-[#070e24] px-4 py-16 text-white sm:px-6 lg:px-12 lg:py-24 border-t border-[#0d1a46]/40">
+    <section className="relative overflow-hidden bg-[#070e24] px-4 py-16 text-white sm:px-6 lg:px-12 lg:py-24 border-t border-white/10">
       <div className="absolute inset-0">
         <Image
           src="/images/consulting-1.jpg"
@@ -20,11 +20,7 @@ export function HomeCtaSection({ locale }: { locale: string }) {
       <div className="relative z-10 mx-auto max-w-[1400px]">
         <div className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-end">
           <div className="max-w-2xl">
-            <FadeIn>
-              <span className="inline-block border border-sky-400/30 bg-sky-400/10 px-3.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-sky-300 backdrop-blur-sm">
-                04 — {locale === "mn" ? "Холбоо барих" : "Get In Touch"}
-              </span>
-            </FadeIn>
+            
             <FadeIn delay={0.1}>
               <h2 className="mt-4 font-display text-2xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl">
                 {locale === "mn"
@@ -44,7 +40,7 @@ export function HomeCtaSection({ locale }: { locale: string }) {
           <FadeIn delay={0.2} className="flex flex-wrap items-center gap-4">
             <Link
               href="/contact"
-              className="inline-flex h-12 items-center gap-2 bg-primary px-6 text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-lg transition-transform hover:-translate-y-0.5 active:translate-y-0"
+              className="inline-flex h-12 items-center gap-2 bg-white px-6 text-xs font-bold uppercase tracking-widest text-[#070e24] shadow-lg transition-transform hover:-translate-y-0.5 active:translate-y-0 hover:bg-slate-100"
             >
               <span>{locale === "mn" ? "Зөвлөгөө авах" : "Get Consultation"}</span>
               <ArrowUpRight size={16} />

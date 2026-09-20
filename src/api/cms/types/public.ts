@@ -55,6 +55,7 @@ export type ContactInfoDto = {
   address: string;
   phone: string;
   email: string;
+  hours?: string;
   facebook: string | null;
   instagram: string | null;
 };

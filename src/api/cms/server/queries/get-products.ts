@@ -27,7 +27,7 @@ const defaultProductAssets: Record<string, { thumbnail: string; logo?: string; w
   "consulting": {
     thumbnail: "/images/consulting-1.jpg",
     logo: "/images/artify-logo-white.png",
-    websiteUrl: "/products",
+    websiteUrl: "/products/consulting",
   },
   "custom-materials": {
     thumbnail: "/images/about-1.jpg",
@@ -42,7 +42,7 @@ const defaultProductAssets: Record<string, { thumbnail: string; logo?: string; w
   "blok-akademi": {
     thumbnail: "/images/masterclass.jpg",
     logo: "/images/block-academy-white.png",
-    websiteUrl: "https://www.facebook.com/artify.mn",
+    websiteUrl: "https://www.facebook.com/block.mn",
   },
 };
 
@@ -53,7 +53,14 @@ export async function getProducts(language: string): Promise<ProductCardDto[]> {
     limit: 20,
     sortDirection: "asc",
   });
-  return posts.map((post) => {
+  const ORDER_MAP: Record<string, number> = {
+    "consulting": 1,
+    "custom-materials": 2,
+    "tech-invent": 3,
+    "blok-akademi": 4,
+  };
+
+  const mapped = posts.map((post) => {
     if (!post.title || !post.slug) {
       throw new Error(`Published product ${post._id} is missing title or slug`);
     }
@@ -69,5 +76,11 @@ export async function getProducts(language: string): Promise<ProductCardDto[]> {
       logoUrl: post.images?.[0]?.url || fallback?.logo || null,
       websiteUrl: getProductWebsite(post.customFieldsData) || fallback?.websiteUrl || null,
     };
+  });
+
+  return mapped.sort((a, b) => {
+    const orderA = ORDER_MAP[a.slug] ?? 99;
+    const orderB = ORDER_MAP[b.slug] ?? 99;
+    return orderA - orderB;
   });
 }

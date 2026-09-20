@@ -63,26 +63,23 @@ export function ErxesFormEmbed({ locale = "mn" }: { locale?: string }) {
         strategy="afterInteractive"
       />
 
-      <div className="relative border border-slate-200/90 bg-white p-6 sm:p-8 lg:p-10 shadow-[0_20px_50px_-15px_rgba(13,26,70,0.07)] [clip-path:polygon(22px_0,100%_0,100%_100%,0_100%,0_22px)]">
+      <div className="relative border border-slate-200/90 dark:border-white/10 bg-white dark:bg-[#070e24] p-6 sm:p-8 lg:p-10 shadow-[0_20px_50px_-15px_rgba(13,26,70,0.07)] [clip-path:polygon(22px_0,100%_0,100%_100%,0_100%,0_22px)]">
         {/* Top-left chamfer geometric accent */}
-        <div className="pointer-events-none absolute left-0 top-0 h-6 w-6 border-b border-r border-[#0d1a46]/20 bg-slate-100 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
+        <div className="pointer-events-none absolute left-0 top-0 h-6 w-6 border-b border-r border-[#0d1a46]/20 bg-slate-100 dark:border-white/20 dark:bg-white/10 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
 
         {/* Subtle Architectural Corner Accents */}
-        <div className="pointer-events-none absolute right-3 top-3 font-mono text-xs text-slate-300 select-none">+</div>
-        <div className="pointer-events-none absolute left-3 bottom-3 font-mono text-xs text-slate-300 select-none">+</div>
-        <div className="pointer-events-none absolute right-3 bottom-3 font-mono text-xs text-slate-300 select-none">+</div>
+        <div className="pointer-events-none absolute right-3 top-3 font-mono text-xs text-slate-300 dark:text-white/20 select-none">+</div>
+        <div className="pointer-events-none absolute left-3 bottom-3 font-mono text-xs text-slate-300 dark:text-white/20 select-none">+</div>
+        <div className="pointer-events-none absolute right-3 bottom-3 font-mono text-xs text-slate-300 dark:text-white/20 select-none">+</div>
 
         {/* Card Header */}
-        <div className="mb-6 flex items-center justify-between border-b border-slate-100 pb-4">
+        <div className="mb-6 flex items-center justify-between border-b border-slate-100 dark:border-white/10 pb-4">
           <div>
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#0d1a46]/70">
-              02 / {isEn ? "ONLINE INQUIRY" : "ЦАХИМ ХҮСЭЛТ"}
-            </span>
-            <h3 className="mt-1 font-display text-xl font-bold text-[#0d1a46] sm:text-2xl">
+            <h3 className="mt-1 font-display text-xl font-bold text-[#0d1a46] dark:text-white sm:text-2xl">
               {isEn ? "Request a Consultation" : "Зөвлөгөө авах хүсэлт"}
             </h3>
           </div>
-          <span className="border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-semibold text-slate-600 uppercase tracking-wider">
+          <span className="border border-slate-200 dark:border-white/20 bg-slate-50 dark:bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
             erxes CRM
           </span>
         </div>

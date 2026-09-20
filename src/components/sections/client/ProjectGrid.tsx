@@ -29,10 +29,10 @@ export function ProjectGrid({
           <button
             type="button"
             onClick={() => setShowAll((visible) => !visible)}
-            className="inline-flex items-center gap-2 bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
+            className="inline-flex items-center gap-2 rounded-none bg-[#0d1a46] px-8 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all hover:bg-primary dark:bg-white dark:text-[#070e24] dark:hover:bg-slate-200"
           >
-            {showAll ? showLessLabel : showAllLabel}
-            {showAll ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+            <span className="text-white dark:text-[#070e24] font-bold">{showAll ? showLessLabel : showAllLabel}</span>
+            {showAll ? <ChevronUp size={16} className="text-white dark:text-[#070e24]" /> : <ChevronDown size={16} className="text-white dark:text-[#070e24]" />}
           </button>
         </div>
       )}

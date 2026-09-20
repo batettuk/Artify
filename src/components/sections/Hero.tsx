@@ -29,7 +29,7 @@ export function Hero({
   }, []);
 
   return (
-    <section className="relative flex min-h-screen w-full items-center justify-center overflow-hidden">
+    <section className="relative flex min-h-[80vh] lg:h-[80vh] w-full items-center justify-center overflow-hidden">
       <video
         ref={videoRef}
         autoPlay
@@ -44,31 +44,31 @@ export function Hero({
       {/* Cinematic dark overlay gradient for readability and seamless transparent header */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80" />
 
-      <div className="relative z-10 mx-auto max-w-5xl px-6 py-28 text-center lg:px-12 lg:py-36">
+      <div className="relative z-10 mx-auto max-w-5xl px-6 py-20 text-center lg:px-12 lg:py-24">
         <FadeIn delay={0.1}>
-          <h1 className="font-display text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl xl:text-6xl">
+          <h1 className="font-display text-2xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl xl:text-5xl">
             {heading}
           </h1>
         </FadeIn>
 
         <FadeIn delay={0.2}>
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/90 sm:text-lg lg:text-xl">
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/90 sm:text-base lg:text-lg">
             {body}
           </p>
         </FadeIn>
 
         <FadeIn delay={0.3}>
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/products"
-              className="inline-flex h-12 items-center gap-2 bg-white px-8 text-sm font-semibold text-primary shadow-lg transition-all hover:scale-105 hover:bg-white/90"
+              className="inline-flex h-11 items-center gap-2 bg-white px-7 text-xs font-bold uppercase tracking-wider text-[#070e24] shadow-lg transition-all hover:scale-105 hover:bg-white/90"
             >
               {t("ctaPrimary")}
-              <ArrowRight size={16} />
+              <ArrowRight size={15} />
             </Link>
             <Link
               href="/contact"
-              className="inline-flex h-12 items-center justify-center border-2 border-white/60 bg-black/20 px-8 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/20 hover:border-white"
+              className="inline-flex h-11 items-center justify-center border-2 border-white/60 bg-black/20 px-7 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-sm transition-all hover:bg-white/20 hover:border-white"
             >
               {t("ctaSecondary")}
             </Link>

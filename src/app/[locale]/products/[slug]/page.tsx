@@ -1,23 +1,13 @@
-import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { getProductDetail } from "@/api/cms/server/queries/get-product-detail";
 import { getProducts } from "@/api/cms/server/queries/get-products";
 import { CmsContent } from "@/components/common/CmsContent";
-import Image from "@/components/common/Image";
 import { FadeIn } from "@/components/motion/FadeIn";
-import { Link, routing } from "@/i18n/routing";
-
-export async function generateStaticParams() {
-  const results = await Promise.all(
-    routing.locales.map(async (locale) => {
-      const products = await getProducts(locale);
-      return products.map(({ slug }) => ({ locale, slug }));
-    }),
-  );
-  return results.flat();
-}
+import { Link } from "@/i18n/routing";
+import { ArrowLeft, ArrowUpRight, Download, FileText, ExternalLink, Mail, CheckCircle2 } from "lucide-react";
+import Image from "@/components/common/Image";
+import type { Metadata } from "next";
 
 export async function generateMetadata({
   params,
@@ -40,309 +30,373 @@ export default async function ProductDetailPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const [product, allProducts, t] = await Promise.all([
+  const t = await getTranslations({ locale, namespace: "products" });
+
+  const [product, allProducts] = await Promise.all([
     getProductDetail({ slug, language: locale }),
     getProducts(locale),
-    getTranslations({ locale, namespace: "products" }),
   ]);
-  if (!product) notFound();
+
+  if (!product) {
+    notFound();
+  }
 
   const otherProducts = allProducts.filter((p) => p.slug !== slug);
-  const heroImage = product.thumbnailUrl || "/images/consulting-1.jpg";
+  const isEn = locale === "en";
+
+  // Product-specific metadata & catalog configs
+  const isCleanAir = slug === "tech-invent";
+  const isMasterclass = slug === "blok-akademi";
+
+  // Catalog items for Clean Air (Zehnder)
+  const cleanAirCatalogs = [
+    {
+      id: "radiator",
+      title: isEn ? "Radiators & Towel Dryers" : "Радиатор, алчуур хатаагч",
+      description: isEn
+        ? "Official Zehnder designer radiator & bathroom towel warmer technical specifications."
+        : "Германы Zehnder брэндийн дизайнер радиатор, алчуур хатаагчийн албан ёсны техникийн каталоги.",
+      fileUrl: "/catalogs/radiator-towel-warmer-catalog.pdf",
+      fileName: "Zehnder_Radiators_Catalog.pdf",
+      size: "4.8 MB",
+    },
+    {
+      id: "comfo-home",
+      title: isEn ? "Comfo home" : "Comfo home",
+      description: isEn
+        ? "Smart fresh air and climate control systems designed for luxury apartments and residences."
+        : "Орон сууц, хувийн сууцанд зориулсан эрчим хүчний хэмнэлттэй ухаалаг агааржуулалтын систем.",
+      fileUrl: "/catalogs/comfo-home-catalog.pdf",
+      fileName: "Zehnder_ComfoHome_Catalog.pdf",
+      size: "6.2 MB",
+    },
+    {
+      id: "comfo-house",
+      title: isEn ? "ComfoHouse" : "ComfoHouse",
+      description: isEn
+        ? "Whole-house decentralized & central ventilation systems with heat & humidity recovery."
+        : "Амины орон сууцны дулаан, чийг сэргээгчтэй төвлөрсөн агаар сэлгэлтийн цогц систем.",
+      fileUrl: "/catalogs/comfo-house-catalog.pdf",
+      fileName: "Zehnder_ComfoHouse_Catalog.pdf",
+      size: "5.5 MB",
+    },
+    {
+      id: "caw",
+      title: isEn ? "CAW100, CAW300 Series" : "CAW100, CAW300",
+      description: isEn
+        ? "Compact high-efficiency fresh air filtration and heat exchange ventilation units."
+        : "Өндөр үр ашигтай, авсаархан цэвэр агааржуулалт болон дулаан солилцуурын төхөөрөмжүүд.",
+      fileUrl: "/catalogs/caw100-caw300-catalog.pdf",
+      fileName: "Zehnder_CAW_Series_Catalog.pdf",
+      size: "3.9 MB",
+    },
+  ];
 
   return (
-    <article className="bg-background">
-      {/* Full-bleed Edge-to-Edge Hero Banner */}
-      <section className="relative flex min-h-[480px] w-full items-end overflow-hidden bg-[#070e24] pt-32 pb-16 lg:min-h-[560px] lg:pt-40 lg:pb-24">
+    <article className="min-h-screen bg-background text-foreground">
+      {/* Full-bleed Edge-to-Edge Clean Hero Banner */}
+      <section className="relative flex min-h-[380px] w-full items-center justify-center overflow-hidden bg-[#070e24] pt-32 pb-20 lg:min-h-[440px] lg:pt-36 lg:pb-24">
         <div className="absolute inset-0">
-          <Image
-            src={heroImage}
-            alt={product.title}
-            fill
-            priority
-            sizes="100vw"
-            className="h-full w-full object-cover object-center scale-[1.01]"
-          />
-          {/* Subtle cinematic gradient overlay preserving image clarity */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#070e24] via-[#070e24]/65 to-[#070e24]/35" />
+          {product.thumbnailUrl && (
+            <Image
+              src={product.thumbnailUrl}
+              alt={product.title}
+              fill
+              priority
+              sizes="100vw"
+              className="h-full w-full object-cover object-[center_35%] opacity-35"
+            />
+          )}
+          {/* Smooth cinematic gradient overlay for perfect readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-[#070e24]/75 to-[#070e24]" />
         </div>
 
-        <div className="relative z-10 mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-12">
+        <div className="relative z-10 mx-auto max-w-4xl px-6 text-center text-white lg:px-12">
           <FadeIn>
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 border border-white/25 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-md transition-all hover:bg-white/20 hover:text-white"
+              className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-300 transition-colors hover:text-white mb-6"
             >
               <ArrowLeft size={14} />
               {t("backToProducts")}
             </Link>
           </FadeIn>
 
-          <div className="mt-6 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-            <div className="max-w-3xl">
-              <FadeIn delay={0.1}>
-                <span className="inline-block border border-sky-400/30 bg-sky-400/10 px-3.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-sky-300 backdrop-blur-sm">
-                  02 — {t("detailLabel")}
+          <FadeIn delay={0.1}>
+            {(isCleanAir || isMasterclass) && (
+              <div className="flex justify-center mb-4">
+                <span className="inline-block border border-white/20 bg-white/10 px-3.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-white backdrop-blur-sm">
+                  {isCleanAir ? "Zehnder Group Partner" : "Block Academy"}
                 </span>
-              </FadeIn>
+              </div>
+            )}
+            <h1 className="font-display text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
+              {product.title}
+            </h1>
+          </FadeIn>
 
-              <FadeIn delay={0.15}>
-                <h1 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-                  {product.title}
-                </h1>
-              </FadeIn>
-
-              {product.excerpt && (
-                <FadeIn delay={0.2}>
-                  <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-200 lg:text-lg">
-                    {product.excerpt}
-                  </p>
-                </FadeIn>
-              )}
-            </div>
-
-            <FadeIn delay={0.25} className="flex flex-wrap items-center gap-4">
-              {product.logoUrl && (
-                <div className="flex h-12 items-center">
-                  <Image
-                    src={product.logoUrl}
-                    alt={`${product.title} logo`}
-                    width={200}
-                    height={60}
-                    className="h-8 w-auto max-w-[160px] object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]"
-                  />
-                </div>
-              )}
-
-              {product.websiteUrl && (
-                <a
-                  href={product.websiteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex h-12 items-center gap-2 bg-primary px-6 text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-lg transition-transform hover:-translate-y-0.5 active:translate-y-0"
-                >
-                  {t("visitWebsite")}
-                  <ArrowUpRight size={16} />
-                </a>
-              )}
-
-              <Link
-                href="/contact"
-                className="inline-flex h-12 items-center gap-2 border border-white/40 bg-white/15 px-6 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-sm transition-all hover:bg-white hover:text-[#0d1a46]"
-              >
-                {locale === "mn" ? "Зөвлөгөө авах" : "Get Consultation"}
-              </Link>
+          {product.excerpt && (
+            <FadeIn delay={0.2}>
+              <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white drop-shadow-sm lg:text-lg">
+                {product.excerpt}
+              </p>
             </FadeIn>
-          </div>
+          )}
         </div>
       </section>
 
-      {/* Technical Specifications Bar */}
-      <section className="border-y border-slate-200 bg-[#f8fafc] px-4 py-8 sm:px-6 lg:px-12">
-        <div className="mx-auto max-w-[1400px]">
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:gap-8">
-            <div className="border border-slate-200/80 bg-white p-4 shadow-sm">
-              <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">01 / СТАНДАРТ</span>
-              <p className="mt-1 font-display text-sm font-bold text-[#0d1a46]">MNS & Европын норм</p>
-            </div>
-            <div className="border border-slate-200/80 bg-white p-4 shadow-sm">
-              <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">02 / ЧАНАР</span>
-              <p className="mt-1 font-display text-sm font-bold text-[#0d1a46]">Мэргэшсэн инженерчлэл</p>
-            </div>
-            <div className="border border-slate-200/80 bg-white p-4 shadow-sm">
-              <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">03 / БАТАЛГАА</span>
-              <p className="mt-1 font-display text-sm font-bold text-[#0d1a46]">100% Найдвартай шийдэл</p>
-            </div>
-            <div className="border border-slate-200/80 bg-white p-4 shadow-sm">
-              <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">04 / ЗОРИУЛАЛТ</span>
-              <p className="mt-1 font-display text-sm font-bold text-[#0d1a46]">Бүх төрлийн барилга</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Details & Content Section */}
-      <div className="px-4 py-16 sm:px-6 lg:px-12 lg:py-24">
-        <div className="mx-auto max-w-[1400px]">
-          <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-            {/* Sticky Left Architectural Control Card */}
-            <FadeIn className="lg:col-span-4">
-              <div className="sticky top-28 relative space-y-6 border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-                {/* Corner Crosshairs */}
-                <div className="pointer-events-none absolute left-2 top-2 font-mono text-[10px] text-slate-300 select-none">+</div>
-                <div className="pointer-events-none absolute right-2 top-2 font-mono text-[10px] text-slate-300 select-none">+</div>
-                <div className="pointer-events-none absolute left-2 bottom-2 font-mono text-[10px] text-slate-300 select-none">+</div>
-                <div className="pointer-events-none absolute right-2 bottom-2 font-mono text-[10px] text-slate-300 select-none">+</div>
-
-                <div className="border-b border-slate-100 pb-4">
-                  <span className="inline-block border border-[#0d1a46]/20 bg-[#0d1a46]/[0.04] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[#0d1a46]">
-                    {t("details")}
-                  </span>
-                  <h3 className="mt-4 font-display text-2xl font-bold text-[#0d1a46]">
-                    {product.title}
-                  </h3>
-                </div>
-
-                {product.excerpt && (
-                  <p className="text-sm leading-relaxed text-slate-600">
-                    {product.excerpt}
-                  </p>
-                )}
-
-                <div className="space-y-3 pt-2">
-                  <Link
-                    href="/contact"
-                    className="flex w-full items-center justify-center gap-2 bg-[#0d1a46] px-5 py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-sm transition-all hover:bg-primary hover:text-primary-foreground"
-                  >
-                    <span>{locale === "mn" ? "Төслийн зөвлөгөө авах" : "Inquire for Consultation"}</span>
-                    <ArrowUpRight size={15} />
-                  </Link>
-
-                  {product.websiteUrl && (
-                    <a
-                      href={product.websiteUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex w-full items-center justify-center gap-2 border border-slate-300 bg-white px-5 py-3 text-xs font-bold uppercase tracking-widest text-[#0d1a46] transition-all hover:bg-slate-50"
-                    >
-                      <span>{t("visitWebsite")}</span>
-                      <ArrowUpRight size={15} />
-                    </a>
-                  )}
-                </div>
-              </div>
-            </FadeIn>
-
-            {/* Right Detailed Solution Prose */}
-            <FadeIn delay={0.1} className="lg:col-span-8">
-              <div className="border border-slate-200/90 bg-white p-6 shadow-sm sm:p-10 lg:p-14">
-                {product.content ? (
-                  <CmsContent
-                    html={product.content}
-                    className="prose max-w-none text-slate-700 prose-headings:font-display prose-headings:font-bold prose-headings:text-[#0d1a46] prose-p:text-base prose-p:leading-relaxed prose-p:text-slate-600 prose-a:text-primary prose-strong:text-[#0d1a46] prose-li:text-slate-600 prose-li:marker:text-primary"
-                  />
-                ) : (
-                  <div className="space-y-6">
-                    <h2 className="font-display text-2xl font-bold text-[#0d1a46] sm:text-3xl">
-                      {product.title}
-                    </h2>
-                    <p className="text-base leading-relaxed text-slate-600">
-                      {product.excerpt}
-                    </p>
-                    <div className="mt-8 border-t border-slate-100 pt-6">
-                      <h4 className="font-display text-lg font-bold text-[#0d1a46]">
-                        {locale === "mn" ? "Шийдлийн давуу талууд" : "Key Solution Features"}
-                      </h4>
-                      <ul className="mt-4 space-y-3 text-sm text-slate-600">
-                        <li className="flex items-start gap-2.5">
-                          <span className="mt-1 h-1.5 w-1.5 shrink-0 bg-primary" />
-                          <span>Инженерчлэлийн нарийн тооцоолол, стандартад бүрэн нийцсэн шийдэл</span>
-                        </li>
-                        <li className="flex items-start gap-2.5">
-                          <span className="mt-1 h-1.5 w-1.5 shrink-0 bg-primary" />
-                          <span>Эрчим хүчний хэмнэлт, эрүүл аюулгүй амьдрах орчны чанарын баталгаа</span>
-                        </li>
-                        <li className="flex items-start gap-2.5">
-                          <span className="mt-1 h-1.5 w-1.5 shrink-0 bg-primary" />
-                          <span>Мэргэжлийн инженер, зөвлөхүүдийн цогц дэмжлэг ба угсралт</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </FadeIn>
-          </div>
-        </div>
-      </div>
-
-      {/* Related Products / Solutions Section */}
-      {otherProducts.length > 0 && (
-        <section className="border-t border-slate-200 bg-[#f8fafc] px-4 py-16 sm:px-6 lg:px-12 lg:py-20">
-          <div className="mx-auto max-w-[1400px]">
+      {/* Main Content Layout */}
+      <div className="mx-auto max-w-[1400px] px-4 py-16 sm:px-6 lg:px-12 lg:py-24">
+        <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+          {/* Main Description Column */}
+          <div className="lg:col-span-8">
             <FadeIn>
-              <div className="mb-10 flex flex-col justify-between gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-end">
-                <div>
-                  <span className="font-mono text-xs uppercase tracking-widest text-[#0d1a46]/70">ARTIFY ECOSYSTEM</span>
-                  <h2 className="mt-2 font-display text-2xl font-bold text-[#0d1a46] lg:text-3xl">
-                    {locale === "mn" ? "Бусад бүтээгдэхүүн, үйлчилгээ" : "Explore Other Solutions"}
-                  </h2>
-                </div>
-                <Link
-                  href="/products"
-                  className="inline-flex items-center gap-2 border border-[#0d1a46] bg-white px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-[#0d1a46] transition-all hover:bg-[#0d1a46] hover:text-white"
-                >
-                  <span>{t("backToProducts")}</span>
-                  <ArrowUpRight size={14} />
-                </Link>
+              <div className="prose prose-slate max-w-none dark:prose-invert prose-headings:font-display prose-headings:font-bold prose-headings:text-[#0d1a46] dark:prose-headings:!text-white prose-p:text-base prose-p:leading-relaxed prose-p:text-slate-600 dark:prose-p:!text-white prose-strong:text-[#0d1a46] dark:prose-strong:!text-white prose-li:text-slate-600 dark:prose-li:!text-white">
+                <CmsContent html={product.content} />
               </div>
             </FadeIn>
 
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 items-stretch">
-              {otherProducts.map((other, idx) => (
-                <FadeIn key={other.id} delay={0.1 * (idx + 1)} direction="up" className="flex h-full flex-col">
-                  {/* Outer container with 45-degree top-left chamfer border */}
-                  <div className="group relative flex h-full flex-col bg-slate-200/90 p-[1px] transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#0d1a46]/50 hover:shadow-2xl [clip-path:polygon(22px_0,100%_0,100%_100%,0_100%,0_22px)]">
-                    {/* Inner Card */}
-                    <div className="relative flex h-full flex-col justify-between bg-white p-6 [clip-path:polygon(21px_0,100%_0,100%_100%,0_100%,0_21px)]">
-                      <div className="pointer-events-none absolute left-0 top-0 h-6 w-6 border-b border-r border-[#0d1a46]/15 bg-slate-100/80 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
-                      <div className="pointer-events-none absolute right-2.5 top-2.5 font-mono text-[10px] text-slate-300 select-none">+</div>
-                      <div className="pointer-events-none absolute left-2.5 bottom-2.5 font-mono text-[10px] text-slate-300 select-none">+</div>
-                      <div className="pointer-events-none absolute right-2.5 bottom-2.5 font-mono text-[10px] text-slate-300 select-none">+</div>
+            {/* Clean Air Catalog Download Section */}
+            {isCleanAir && (
+              <FadeIn delay={0.2} className="mt-16 border-t border-slate-200 pt-12 dark:border-white/10">
+                <div className="mb-8">
+                  <span className="inline-block border border-[#0d1a46]/20 bg-[#0d1a46]/[0.04] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[#0d1a46] mb-2.5 dark:border-white/20 dark:bg-white/10 dark:text-white">
+                    Zehnder Documentation
+                  </span>
+                  <h3 className="font-display text-2xl font-bold text-[#0d1a46] dark:text-white">
+                    {isEn ? "Product Catalogs & Technical Documentation" : "Бүтээгдэхүүний каталог татах"}
+                  </h3>
+                  <p className="mt-2 text-sm text-slate-600 dark:!text-white max-w-2xl">
+                    {isEn
+                      ? "Download comprehensive engineering brochures, technical specifications, and system manuals for Zehnder clean air and climate solutions."
+                      : "Германы Zehnder брэндийн эрүүл агаар сэлгэлт, ухаалаг халаалт, радиаторын албан ёсны каталоги болон техникийн танилцуулгыг татаж авна уу."}
+                  </p>
+                </div>
 
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  {cleanAirCatalogs.map((catalog) => (
+                    <div
+                      key={catalog.id}
+                      className="group relative flex flex-col justify-between border border-slate-200 bg-slate-50 p-5 transition-all duration-300 hover:border-[#0d1a46] hover:bg-white hover:shadow-lg dark:border-white/10 dark:bg-[#0b132b] dark:hover:border-white/30 dark:hover:bg-[#0e1938]"
+                    >
                       <div>
-                        <div className="mb-4 flex items-center justify-between pl-3 text-xs font-bold uppercase tracking-widest text-[#0d1a46]/70">
-                          <span className="font-mono text-[#0d1a46]">0{idx + 1} / PRODUCT</span>
-                          <span className="border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[10px] font-semibold text-slate-600">
-                            ARTIFY
+                        <div className="flex items-center justify-between">
+                          <div className="flex h-9 w-9 items-center justify-center bg-[#0d1a46] text-white dark:bg-white dark:text-[#070e24]">
+                            <FileText size={18} />
+                          </div>
+                          <span className="font-mono text-[11px] font-semibold text-slate-500 dark:text-white/80">
+                            {catalog.size}
                           </span>
                         </div>
 
-                        <Link
-                          href={`/products/${other.slug}`}
-                          className="block overflow-hidden bg-slate-200/80 p-[1px] [clip-path:polygon(16px_0,100%_0,100%_100%,0_100%,0_16px)]"
-                        >
-                          <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 [clip-path:polygon(15px_0,100%_0,100%_100%,0_100%,0_15px)]">
-                            {other.thumbnailUrl && (
-                              <Image
-                                src={other.thumbnailUrl}
-                                alt={other.title}
-                                fill
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                              />
-                            )}
-                          </div>
-                        </Link>
-
-                        <Link href={`/products/${other.slug}`} className="block">
-                          <h3 className="mt-5 flex h-[3.5rem] items-center font-display text-xl font-bold leading-tight text-[#0d1a46] transition-colors group-hover:text-primary">
-                            <span className="line-clamp-2">{other.title}</span>
-                          </h3>
-                        </Link>
-
-                        <p className="mt-3 flex h-[4.25rem] items-start text-sm leading-relaxed text-slate-600">
-                          <span className="line-clamp-3">{other.excerpt}</span>
+                        <h4 className="mt-4 font-display text-base font-bold text-[#0d1a46] transition-colors group-hover:text-primary dark:text-white">
+                          {catalog.title}
+                        </h4>
+                        <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:!text-white">
+                          {catalog.description}
                         </p>
                       </div>
 
-                      <div className="mt-6 border-t border-slate-100 pt-4">
-                        <Link
-                          href={`/products/${other.slug}`}
-                          className="flex w-full items-center justify-between bg-[#0d1a46] px-5 py-3 text-xs font-bold uppercase tracking-widest text-white shadow-sm transition-all group-hover:bg-primary group-hover:text-primary-foreground"
+                      <div className="mt-6 pt-4 border-t border-slate-200/80 dark:border-white/10">
+                        <a
+                          href={catalog.fileUrl}
+                          download={catalog.fileName}
+                          className="inline-flex w-full items-center justify-between rounded-none bg-[#0d1a46] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-primary dark:bg-white dark:text-[#070e24] dark:hover:bg-slate-200"
                         >
-                          <span>{t("cta")}</span>
-                          <ArrowUpRight size={16} />
-                        </Link>
+                          <span className="flex items-center gap-2">
+                            <Download size={14} />
+                            {isEn ? "Download Catalog" : "Каталог татах"}
+                          </span>
+                          <span className="text-[10px] font-mono opacity-80">PDF</span>
+                        </a>
                       </div>
                     </div>
+                  ))}
+                </div>
+              </FadeIn>
+            )}
+          </div>
+
+          {/* Sidebar CTA & Info Column */}
+          <div className="lg:col-span-4 space-y-8">
+            <FadeIn delay={0.1}>
+              <div className="relative border border-[#1e294f] bg-[#070e24] p-6 text-white shadow-xl sm:p-8 dark:border-white/10 dark:bg-[#070e24] [clip-path:polygon(18px_0,100%_0,100%_100%,0_100%,0_18px)]">
+                {/* Subtle corner chamfer accent */}
+                <div className="pointer-events-none absolute left-0 top-0 h-5 w-5 border-b border-r border-white/20 bg-white/10 [clip-path:polygon(0_0,100%_0,0_100%)]" />
+
+                <h3 className="font-display text-lg sm:text-xl font-bold text-white">
+                  {isMasterclass
+                    ? isEn ? "Block Academy Masterclass" : "Блок Академи Сургалт"
+                    : isCleanAir
+                    ? isEn ? "Zehnder Clean Air Solutions" : "Zehnder Эрүүл Агаар"
+                    : isEn ? "Request Consultation" : "Зөвлөгөө авах"}
+                </h3>
+                <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-slate-300">
+                  {isMasterclass
+                    ? isEn
+                      ? "Join our professional engineering and construction management masterclasses powered by Block Academy."
+                      : "Барилгын төслийн менежмент, инженерийн практик сургалтуудыг Блок Академиар дамжуулан аваарай."
+                    : isCleanAir
+                    ? isEn
+                      ? "Official Zehnder heating and ventilation solutions engineered for health, silence, and optimal energy efficiency."
+                      : "Германы 120 жилийн түүхтэй Zehnder брэндийн албан ёсны төлөөлөгчөөс инженерийн тооцоолуур, суурилуулалт аваарай."
+                    : isEn
+                    ? "Contact our engineering team to evaluate the best solutions tailored to your project requirements."
+                    : "Манай инженерийн багтай холбогдон төслийнхөө шаардлагад нийцсэн шийдлийг тооцоолуулна уу."}
+                </p>
+
+                <div className="mt-6 space-y-3">
+                  {/* Dedicated Action Button based on product */}
+                  {isMasterclass ? (
+                    <div className="space-y-2.5">
+                      <a
+                        href="https://www.facebook.com/block.mn"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex w-full items-center justify-between rounded-none bg-white px-5 py-3 text-xs font-bold uppercase tracking-wider text-[#070e24] shadow-md transition-all hover:bg-slate-100 active:scale-[0.99]"
+                      >
+                        <span className="text-[#070e24] font-bold">{isEn ? "Visit Block Academy (Facebook)" : "Блок Академи Facebook хуудас"}</span>
+                        <ExternalLink size={15} className="text-[#070e24]" />
+                      </a>
+                      <a
+                        href="https://academy.artify.mn"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex w-full items-center justify-between rounded-none border border-white/20 bg-white/5 px-5 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-colors hover:bg-white/15"
+                      >
+                        <span className="text-white font-bold">academy.artify.mn</span>
+                        <ExternalLink size={15} className="text-white" />
+                      </a>
+                    </div>
+                  ) : isCleanAir ? (
+                    <a
+                      href="https://www.techinvent.mn/en"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex w-full items-center justify-between rounded-none bg-white px-5 py-3 text-xs font-bold uppercase tracking-wider text-[#070e24] shadow-md transition-all hover:bg-slate-100 active:scale-[0.99]"
+                    >
+                      <span className="text-[#070e24] font-bold">{isEn ? "Zehnder Portal (TechInvent)" : "Zehnder хуудас үзэх"}</span>
+                      <ExternalLink size={15} className="text-[#070e24]" />
+                    </a>
+                  ) : (
+                    <Link
+                      href="/contact"
+                      className="flex w-full items-center justify-between rounded-none bg-white px-5 py-3 text-xs font-bold uppercase tracking-wider text-[#070e24] shadow-md transition-all hover:bg-slate-100 active:scale-[0.99]"
+                    >
+                      <span className="text-[#070e24] font-bold">{isEn ? "Send Inquiry" : "Хүсэлт илгээх"}</span>
+                      <ArrowUpRight size={15} className="text-[#070e24]" />
+                    </Link>
+                  )}
+
+                  {/* Direct Email */}
+                  <a
+                    href="mailto:info@artifybrand.com"
+                    className="flex w-full items-center justify-center gap-2 rounded-none border border-white/15 bg-white/5 py-3 text-xs font-bold text-white transition-colors hover:bg-white/15"
+                  >
+                    <Mail size={14} className="text-white/80" />
+                    info@artifybrand.com
+                  </a>
+                </div>
+
+                {/* Key Benefits Guarantee list */}
+                <div className="mt-8 border-t border-white/10 pt-6 space-y-3">
+                  <div className="flex items-center gap-2.5 text-xs text-slate-200">
+                    <CheckCircle2 size={15} className="text-emerald-400 shrink-0" />
+                    <span>{isEn ? "Certified Engineering Calculations" : "Мэргэшсэн инженерийн тооцоолол"}</span>
                   </div>
-                </FadeIn>
+                  <div className="flex items-center gap-2.5 text-xs text-slate-200">
+                    <CheckCircle2 size={15} className="text-emerald-400 shrink-0" />
+                    <span>{isEn ? "Premium Quality Assurance" : "Чанарын өндөр стандарт, баталгаа"}</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 text-xs text-slate-200">
+                    <CheckCircle2 size={15} className="text-emerald-400 shrink-0" />
+                    <span>{isEn ? "Dedicated Client Support" : "Шуурхай дэмжлэг, үйлчилгээ"}</span>
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+          </div>
+        </div>
+
+        {/* Other Products Section with Chamfer Card & 4:3 Proportional Image on Top */}
+        {otherProducts.length > 0 && (
+          <div className="mt-20 border-t border-slate-200/80 pt-16 lg:mt-28 dark:border-white/10">
+            <div className="mb-10">
+              <span className="inline-block border border-[#0d1a46]/20 bg-[#0d1a46]/[0.04] px-3.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-[#0d1a46] mb-3 dark:border-white/20 dark:bg-white/10 dark:text-white">
+                {isEn ? "Solutions" : "Шийдлүүд"}
+              </span>
+              <h2 className="font-display text-2xl font-bold text-[#0d1a46] dark:text-white lg:text-3xl">
+                {isEn ? "Other Solutions" : "Бусад шийдлүүд"}
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {otherProducts.map((p) => (
+                <div
+                  key={p.id}
+                  className="group relative flex h-full flex-col bg-slate-200/90 p-[1px] transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#0d1a46]/50 hover:shadow-2xl [clip-path:polygon(22px_0,100%_0,100%_100%,0_100%,0_22px)] dark:bg-white/10 dark:hover:bg-white/30"
+                >
+                  <div className="relative flex h-full flex-col justify-between bg-white p-5 sm:p-6 [clip-path:polygon(21px_0,100%_0,100%_100%,0_100%,0_21px)] dark:bg-[#0b132b]">
+                    <div className="pointer-events-none absolute left-0 top-0 h-6 w-6 border-b border-r border-[#0d1a46]/15 bg-slate-100/80 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80 dark:border-white/20 dark:bg-white/10" />
+
+                    <div>
+                      {/* Full 4:3 Image on top - Not cut in half */}
+                      {p.thumbnailUrl && (
+                        <Link href={`/products/${p.slug}`} className="block overflow-hidden bg-slate-100 dark:bg-slate-900">
+                          <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100 dark:bg-slate-900">
+                            <Image
+                              src={p.thumbnailUrl}
+                              alt={p.title}
+                              fill
+                              sizes="(max-width: 768px) 100vw, 33vw"
+                              className="h-full w-full object-cover object-[center_30%] transition-transform duration-500 group-hover:scale-105"
+                            />
+                            {p.logoUrl && (
+                              <div className="pointer-events-none absolute bottom-3.5 left-3.5 flex items-center">
+                                <Image
+                                  src={p.logoUrl}
+                                  alt={`${p.title} logo`}
+                                  width={180}
+                                  height={50}
+                                  className="h-5 w-auto max-w-[120px] object-contain object-left drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]"
+                                />
+                              </div>
+                            )}
+                          </div>
+                        </Link>
+                      )}
+
+                      {/* Title below image */}
+                      <Link href={`/products/${p.slug}`} className="block">
+                        <h3 className="mt-5 flex min-h-[3rem] items-center font-display text-lg font-bold leading-tight text-[#0d1a46] transition-colors group-hover:text-primary dark:text-white line-clamp-2">
+                          {p.title}
+                        </h3>
+                      </Link>
+
+                      {/* Description on bottom */}
+                      {p.excerpt && (
+                        <p className="mt-2.5 line-clamp-3 text-xs leading-relaxed text-slate-600 dark:!text-white">
+                          {p.excerpt}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/10">
+                      <Link
+                        href={`/products/${p.slug}`}
+                        className="flex w-full items-center justify-between rounded-none bg-[#0d1a46] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all group-hover:bg-primary group-hover:text-primary-foreground dark:bg-white dark:text-[#070e24] dark:group-hover:bg-slate-200"
+                      >
+                        <span>{t("details")}</span>
+                        <ArrowUpRight size={14} />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
-        </section>
-      )}
+        )}
+      </div>
     </article>
   );
 }

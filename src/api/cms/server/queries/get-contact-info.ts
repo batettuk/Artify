@@ -45,12 +45,20 @@ export const getContactInfo = cache(
     if (!page) throw new Error('CMS page "contact" is missing');
 
     const fields = decodeCustomFields(page.customFieldsData, "contact-fields");
-    const address = getStringValue(fields, "contactAddress");
-    const phone = getStringValue(fields, "contactPhone");
-    const email = getStringValue(fields, "contactEmail");
-    if (!address || !phone || !email) {
-      throw new Error("Contact page custom fields are missing in erxes CMS");
-    }
+    const rawAddress = getStringValue(fields, "contactAddress");
+    const address = language === "en"
+      ? (rawAddress && !/[а-яА-ЯөӨүҮ]/.test(rawAddress) ? rawAddress : "Ulaanbaatar, Mongolia")
+      : (rawAddress || "Улаанбаатар хот, Монгол улс");
+
+    const rawPhone = getStringValue(fields, "contactPhone");
+    const isOldPhone = !rawPhone || rawPhone.includes("7770155") || rawPhone.includes("7770255") || (rawPhone.includes("7710") && !rawPhone.includes("77710"));
+    const phone = isOldPhone ? "+976 77710 155" : rawPhone;
+
+    const email = getStringValue(fields, "contactEmail") || "info@artifybrand.com";
+    const rawHours = getStringValue(fields, "contactHours");
+    const hours = language === "en"
+      ? (rawHours && !/[а-яА-ЯөӨүҮ]/.test(rawHours) ? rawHours : "Mon – Fri: 09:00 – 18:00 (GMT+8)")
+      : (rawHours || "Даваа – Баасан: 09:00 – 18:00 (GMT+8)");
 
     const facebook = validateSocialUrl(
       getMappedStringValue(page.customFieldsMap, "contact-fields", "facebook"),
@@ -63,6 +71,6 @@ export const getContactInfo = cache(
       "instagram.com",
     );
 
-    return { address, phone, email, facebook, instagram };
+    return { address, phone, email, hours, facebook, instagram };
   },
 );

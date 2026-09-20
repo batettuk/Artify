@@ -19,7 +19,7 @@ const defaultProductAssets: Record<string, { thumbnail: string; logo?: string; w
   "consulting": {
     thumbnail: "/images/consulting-1.jpg",
     logo: "/images/artify-logo-white.png",
-    websiteUrl: "/products",
+    websiteUrl: "/products/consulting",
   },
   "custom-materials": {
     thumbnail: "/images/about-1.jpg",
@@ -34,7 +34,7 @@ const defaultProductAssets: Record<string, { thumbnail: string; logo?: string; w
   "blok-akademi": {
     thumbnail: "/images/masterclass.jpg",
     logo: "/images/block-academy-white.png",
-    websiteUrl: "https://www.facebook.com/artify.mn",
+    websiteUrl: "https://www.facebook.com/block.mn",
   },
 };
 

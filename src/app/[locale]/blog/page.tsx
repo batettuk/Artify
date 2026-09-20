@@ -54,18 +54,12 @@ export default async function BlogPage({
             className="h-full w-full object-cover object-center scale-[1.01]"
           />
           {/* Subtle cinematic gradient overlay preserving image clarity */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#070e24] via-[#070e24]/55 to-[#070e24]/30" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-[#070e24]/60 to-[#070e24]" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-5xl px-6 text-center text-white lg:px-12">
           <FadeIn>
-            <span className="inline-block border border-sky-400/30 bg-sky-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.22em] text-sky-300 backdrop-blur-sm">
-              04 — {locale === "mn" ? "Мэдээ, Нийтлэл" : "News & Insights"}
-            </span>
-          </FadeIn>
-
-          <FadeIn delay={0.1}>
-            <h1 className="mt-6 font-display text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
+            <h1 className="font-display text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
               {page?.name || (locale === "mn" ? "Сүүлийн Үеийн Мэдээ" : "Latest Articles")}
             </h1>
           </FadeIn>

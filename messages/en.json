@@ -8,16 +8,16 @@
   },
   "hero": {
     "label": "Artify",
-    "heading": "Ready to elevate your construction project to the level of art?",
-    "body": "ARTIFY BRAND elevates the comfort that users truly experience in every construction project to the level of art. To create this value, we supply the engineering solutions, rare and precisely crafted custom materials, and equipment it requires — all in one place.",
+    "heading": "What is the true value of your project?",
+    "body": "Engineering intellect, bespoke architectural fabrication, and specialized consulting to elevate the living comfort and true quality of every construction project to the level of art.",
     "ctaPrimary": "View Products",
     "ctaSecondary": "Contact Us",
     "established": "EST. 2014"
   },
   "about": {
-    "label": "01 — About Us",
-    "heading": "Crafting Quality of Life",
-    "intro": "ARTIFY is a company that creates solutions enabling people of all ages to experience a higher quality of life in the environments where they work, live, and rest — not just spaces that look good. By correctly combining water, air, light, heat, and space, we craft environments that directly affect comfort, health, productivity, quality sleep, and overall quality of life.",
+    "label": "About Us",
+    "heading": "You are implementing high-value projects. But how do you truly differentiate from competitors?",
+    "intro": "Artify unifies engineering consulting, bespoke fabrication, smart microclimate systems, and professional masterclasses to deliver lasting, tangible value for construction developments.",
     "ubTitle": "What does luxury mean in Ulaanbaatar?",
     "ubIntro": "In Ulaanbaatar, the world's coldest capital, there are many problems we have grown used to in our daily lives.",
     "ubPoints": [
@@ -48,7 +48,7 @@
   },
   "ceo": {
     "label": "CEO Introduction",
-    "quote": "To “craft the quality of life,” engineering craftsmanship must be combined with technological progress. I founded Artify with the goal of making a real contribution to the industry's development.",
+    "quote": "The construction industry is a multidimensional space where knowledge, technology, and craftsmanship from diverse disciplines converge. Artify aspires to be the premier platform where the industry's finest come together.",
     "role": "Founder & Chief Executive Officer"
   },
   "products": {
@@ -78,7 +78,7 @@
     "noPartnersDescription": "Published partners will appear here."
   },
   "blog": {
-    "label": "04 — Blog",
+    "label": "Blog",
     "heading": "Latest Articles",
     "viewAll": "View All",
     "readMore": "Read More",
@@ -115,7 +115,7 @@
     "invalidEmail": "Please enter a valid email address.",
     "invalidMessage": "Please describe your project or inquiry.",
     "address": "Ulaanbaatar, Mongolia",
-    "directPhone": "+976 7771 0155",
+    "directPhone": "+976 77710 155",
     "emailAddress": "info@artifybrand.com",
     "channelsHeading": "Direct Communication",
     "channelsSub": "Connect directly with our engineering and project advisors.",
@@ -133,14 +133,16 @@
     "faq3Q": "How do you partner with international manufacturers like Zehnder?",
     "faq3A": "We are the official system integrators and technology partners for Swiss-made Zehnder ventilation systems and cutting-edge building materials.",
     "faq4Q": "How can I enroll our construction crew into Block Academy?",
-    "faq4A": "Select Masterclass in the contact form or visit our dedicated academy channels to register for certified workforce modules."
+    "faq4A": "Select Masterclass in the contact form or visit our dedicated academy channels to register for certified workforce modules.",
+    "reachOut": "Direct Communication",
+    "reachOutBody": "Connect directly with our engineering and project advisors to calculate bespoke solutions tailored to your development."
   },
   "footer": {
     "tagline": "Crafting Quality of Life",
     "company": "Company",
     "contact": "Contact",
     "address": "Ulaanbaatar, Mongolia",
-    "phone": "+976 7771 0155",
+    "phone": "+976 77710 155",
     "emailAddress": "info@artifybrand.com",
     "training": "Training & Development",
     "cleanAir": "Clean Air",
