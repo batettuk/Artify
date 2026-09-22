@@ -191,8 +191,8 @@ button, input, select, textarea {
   border-radius: 0;
 }
 
-/* Defend header against external rogue styles (e.g. erxes formBundle.js injecting .hidden { display: none !important; }) */
-@media (min-width: 768px) {
+/* Header responsive navigation: Collapsable on iPads, tablets, and phones (< 1280px); Full desktop on >= 1280px */
+@media (min-width: 1280px) {
   header nav,
   header [data-desktop-nav] {
     display: flex !important;
@@ -206,7 +206,7 @@ button, input, select, textarea {
   }
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 1279.98px) {
   header nav,
   header [data-desktop-nav],
   header [data-desktop-search],

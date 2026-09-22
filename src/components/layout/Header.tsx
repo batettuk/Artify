@@ -102,10 +102,10 @@ export default function Header({ locale, navItems }: HeaderProps) {
             />
           </Link>
 
-          {/* Desktop & Tablet Navigation */}
+          {/* Desktop Navigation (Desktops & Laptops >= 1280px) */}
           <nav
             data-desktop-nav
-            className="max-md:!hidden md:!flex items-center gap-1 lg:gap-2"
+            className="max-xl:!hidden xl:!flex items-center gap-1 lg:gap-2"
           >
             {links.map((link) => {
               const linkIsHome = link.href === "/" || link.href === "";
@@ -140,24 +140,24 @@ export default function Header({ locale, navItems }: HeaderProps) {
             })}
           </nav>
 
-          {/* Actions: Search, Theme Toggle, Language, Mobile Trigger */}
+          {/* Actions: Search, Theme Toggle, Language, Hamburger Trigger */}
           <div className="relative z-10 flex items-center gap-2 sm:gap-3">
-            {/* Real-time Interactive Search Bar (Desktop) */}
-            <div data-desktop-search className="max-md:!hidden md:!block">
+            {/* Real-time Interactive Search Bar (Desktop >= 1280px) */}
+            <div data-desktop-search className="max-xl:!hidden xl:!block">
               <SearchBar locale={locale} isDark={isDark || !scrolled} scrolled={scrolled} />
             </div>
 
             {/* Dark Mode Theme Toggle */}
             <ThemeToggle scrolled={scrolled} />
 
-            {/* Desktop Language Switcher */}
-            <div data-desktop-lang className="max-md:!hidden md:!block">
+            {/* Desktop Language Switcher (Desktop >= 1280px) */}
+            <div data-desktop-lang className="max-xl:!hidden xl:!block">
               <LanguageSwitcher locales={[...routing.locales]} scrolled={scrolled} id="desktop" />
             </div>
 
-            {/* Mobile Hamburger Trigger */}
+            {/* Collapsible Hamburger Trigger (iPads, Tablets & Mobile < 1280px) */}
             <button
-              className={`flex h-10 w-10 items-center justify-center border backdrop-blur-md transition-all md:!hidden ${
+              className={`flex h-10 w-10 items-center justify-center border backdrop-blur-md transition-all xl:!hidden ${
                 isDark || !scrolled
                   ? "border-white/20 bg-white/10 text-white hover:bg-white/20 active:scale-95"
                   : "border-[#0d1a46]/20 bg-white/80 text-[#0d1a46] hover:bg-[#0d1a46]/10 active:scale-95"
@@ -171,7 +171,7 @@ export default function Header({ locale, navItems }: HeaderProps) {
         </div>
       </header>
 
-      {/* Fullscreen Mobile Drawer */}
+      {/* Fullscreen Collapsible Drawer (iPads, Tablets & Mobile < 1280px) */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -179,46 +179,49 @@ export default function Header({ locale, navItems }: HeaderProps) {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "tween", duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-[60] flex flex-col bg-[#070e24] text-white md:!hidden"
+            className="fixed inset-0 z-[60] flex flex-col bg-[#070e24] text-white xl:!hidden"
           >
             {/* Top Navigation Bar inside Drawer */}
-            <div className="relative z-10 flex h-20 items-center justify-between border-b border-white/10 px-5 sm:px-7">
-              <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center">
-                <NextImage
-                  src="/images/artify-logo-white.png"
-                  alt="Artify Brand"
-                  width={4351}
-                  height={472}
-                  unoptimized
-                  className="h-7 w-auto"
-                />
-              </Link>
-              <button
-                onClick={() => setMobileOpen(false)}
-                className="flex h-10 w-10 items-center justify-center border border-white/20 bg-white/10 text-white transition-colors hover:bg-white/20 active:scale-95"
-                aria-label="Close mobile menu"
-              >
-                <X size={20} />
-              </button>
+            <div className="relative z-10 flex h-20 items-center justify-between border-b border-white/10 px-5 sm:px-7 md:px-12">
+              <div className="mx-auto flex w-full max-w-2xl items-center justify-between">
+                <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center">
+                  <NextImage
+                    src="/images/artify-logo-white.png"
+                    alt="Artify Brand"
+                    width={4351}
+                    height={472}
+                    unoptimized
+                    className="h-7 w-auto"
+                  />
+                </Link>
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="flex h-10 w-10 items-center justify-center border border-white/20 bg-white/10 text-white transition-colors hover:bg-white/20 active:scale-95"
+                  aria-label="Close mobile menu"
+                >
+                  <X size={20} />
+                </button>
+              </div>
             </div>
 
-            {/* Mobile Drawer Scrollable Content */}
-            <div className="flex-1 overflow-y-auto px-5 py-6 sm:px-7">
-              {/* Search Bar in Mobile Menu */}
-              <div className="mb-6">
-                <SearchBar
-                  locale={locale}
-                  isMobile
-                  isDark
-                  onCloseMobile={() => setMobileOpen(false)}
-                />
-              </div>
+            {/* Mobile/Tablet Drawer Scrollable Content */}
+            <div className="flex-1 overflow-y-auto px-5 py-6 sm:px-7 md:px-12">
+              <div className="mx-auto max-w-2xl">
+                {/* Search Bar in Mobile/Tablet Menu */}
+                <div className="mb-6">
+                  <SearchBar
+                    locale={locale}
+                    isMobile
+                    isDark
+                    onCloseMobile={() => setMobileOpen(false)}
+                  />
+                </div>
 
-              {/* Navigation Links */}
-              <div>
-                <span className="mb-3 block font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-white/80">
-                  {locale === "mn" ? "Үндсэн цэс" : "Navigation"}
-                </span>
+                {/* Navigation Links */}
+                <div>
+                  <span className="mb-3 block font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-white/80">
+                    {locale === "mn" ? "Үндсэн цэс" : "Navigation"}
+                  </span>
 
                 <nav className="flex flex-col divide-y divide-white/10 border-y border-white/10">
                   {links.map((link, index) => {
@@ -346,7 +349,8 @@ export default function Header({ locale, navItems }: HeaderProps) {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
+        </motion.div>
         )}
       </AnimatePresence>
     </>
