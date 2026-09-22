@@ -77,10 +77,12 @@ html {
   scroll-behavior: smooth;
 }
 
-body, html, button, input, select, textarea {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-montserrat), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+@layer base {
+  body, html, button, input, select, textarea {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-montserrat), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
 }
 
 .font-signature {
@@ -188,3 +190,31 @@ body, html, button, input, select, textarea {
 button, input, select, textarea {
   border-radius: 0;
 }
+
+/* Defend header against external rogue styles (e.g. erxes formBundle.js injecting .hidden { display: none !important; }) */
+@media (min-width: 768px) {
+  header nav,
+  header [data-desktop-nav] {
+    display: flex !important;
+  }
+  header [data-desktop-search],
+  header [data-desktop-lang] {
+    display: block !important;
+  }
+  header button[aria-label="Open mobile menu"] {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767.98px) {
+  header nav,
+  header [data-desktop-nav],
+  header [data-desktop-search],
+  header [data-desktop-lang] {
+    display: none !important;
+  }
+  header button[aria-label="Open mobile menu"] {
+    display: flex !important;
+  }
+}
+

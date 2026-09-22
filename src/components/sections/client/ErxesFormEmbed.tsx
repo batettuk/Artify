@@ -37,6 +37,27 @@ export function ErxesFormEmbed({ locale = "mn" }: { locale?: string }) {
       script.async = true;
       document.body.appendChild(script);
     }
+
+    // Neutralize any rogue global style injected by formBundle.js (e.g. .hidden { display: none !important; })
+    const sanitizeRogueStyles = () => {
+      document.querySelectorAll("style:not([data-erxes-sanitized])").forEach((styleEl) => {
+        if (styleEl.textContent && styleEl.textContent.includes(".hidden")) {
+          styleEl.setAttribute("data-erxes-sanitized", "true");
+          styleEl.textContent = styleEl.textContent.replace(
+            /\.hidden\s*\{\s*display:\s*none\s*!important;?\s*\}/g,
+            "/* neutralized erxes rogue .hidden rule */"
+          );
+        }
+      });
+    };
+
+    sanitizeRogueStyles();
+    const observer = new MutationObserver(() => sanitizeRogueStyles());
+    observer.observe(document.head, { childList: true });
+
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   return (

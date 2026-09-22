@@ -31,10 +31,6 @@ export default function Header({ locale, navItems }: HeaderProps) {
   }, []);
 
   const isDark = mounted ? resolvedTheme === "dark" : false;
-  const isContact = pathname === "/contact" || pathname.startsWith("/contact");
-  // On /contact, the header is PERMANENTLY solid frosted luxury dark navy.
-  // It NEVER disappears, NEVER blends into light hero images, and stays visible at all scroll positions.
-  const isSolidDark = isDark || isContact;
 
   // Scroll detection: transparent at top over dark hero banners, solid frosted-glass when scrolled down
   useEffect(() => {
@@ -77,7 +73,7 @@ export default function Header({ locale, navItems }: HeaderProps) {
 
   // In dark mode -> ALWAYS white logo.
   // In light mode -> white logo on top of dark hero banner (!scrolled), navy logo when scrolled down onto light page.
-  const logoSrc = isSolidDark || !scrolled
+  const logoSrc = isDark || !scrolled
     ? "/images/artify-logo-white.png"
     : "/images/artify-logo-navy.png";
 
@@ -85,12 +81,10 @@ export default function Header({ locale, navItems }: HeaderProps) {
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-[9999] w-full transition-all duration-300 ease-out ${
-          isSolidDark
-            ? (scrolled || isContact)
+          scrolled
+            ? isDark
               ? "border-b border-white/10 bg-[#070e24]/95 py-2.5 shadow-[0_4px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl backdrop-saturate-[180%] lg:py-3"
-              : "border-b border-transparent bg-transparent py-3.5 shadow-none lg:py-5"
-            : scrolled
-            ? "border-b border-[#0d1a46]/10 bg-white/95 py-2.5 shadow-[0_4px_30px_rgba(13,26,70,0.08)] backdrop-blur-xl backdrop-saturate-[180%] lg:py-3"
+              : "border-b border-[#0d1a46]/10 bg-white/95 py-2.5 shadow-[0_4px_30px_rgba(13,26,70,0.08)] backdrop-blur-xl backdrop-saturate-[180%] lg:py-3"
             : "border-b border-transparent bg-transparent py-3.5 shadow-none lg:py-5"
         }`}
       >
@@ -109,7 +103,10 @@ export default function Header({ locale, navItems }: HeaderProps) {
           </Link>
 
           {/* Desktop & Tablet Navigation */}
-          <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+          <nav
+            data-desktop-nav
+            className="max-md:!hidden md:!flex items-center gap-1 lg:gap-2"
+          >
             {links.map((link) => {
               const linkIsHome = link.href === "/" || link.href === "";
               const isActive = linkIsHome
@@ -121,7 +118,7 @@ export default function Header({ locale, navItems }: HeaderProps) {
                   key={link.href}
                   href={link.href}
                   className={`relative flex h-[40px] items-center px-3 lg:px-5 text-sm lg:text-base font-bold tracking-tight transition-colors duration-200 ${
-                    isSolidDark || !scrolled
+                    isDark || !scrolled
                       ? isActive
                         ? "text-white font-extrabold"
                         : "text-white/80 hover:text-white"
@@ -134,7 +131,7 @@ export default function Header({ locale, navItems }: HeaderProps) {
                   {isActive && (
                     <span
                       className={`absolute bottom-0 left-3 right-3 lg:left-5 lg:right-5 h-[2px] rounded-none transition-colors ${
-                        isSolidDark || !scrolled ? "bg-white" : "bg-[#0d1a46]"
+                        isDark || !scrolled ? "bg-white" : "bg-[#0d1a46]"
                       }`}
                     />
                   )}
@@ -146,22 +143,22 @@ export default function Header({ locale, navItems }: HeaderProps) {
           {/* Actions: Search, Theme Toggle, Language, Mobile Trigger */}
           <div className="relative z-10 flex items-center gap-2 sm:gap-3">
             {/* Real-time Interactive Search Bar (Desktop) */}
-            <div className="hidden md:block">
-              <SearchBar locale={locale} isDark={isSolidDark} scrolled={scrolled} />
+            <div data-desktop-search className="max-md:!hidden md:!block">
+              <SearchBar locale={locale} isDark={isDark || !scrolled} scrolled={scrolled} />
             </div>
 
             {/* Dark Mode Theme Toggle */}
             <ThemeToggle scrolled={scrolled} />
 
             {/* Desktop Language Switcher */}
-            <div className="hidden md:block">
+            <div data-desktop-lang className="max-md:!hidden md:!block">
               <LanguageSwitcher locales={[...routing.locales]} scrolled={scrolled} id="desktop" />
             </div>
 
             {/* Mobile Hamburger Trigger */}
             <button
-              className={`flex h-10 w-10 items-center justify-center border backdrop-blur-md transition-all md:hidden ${
-                isSolidDark || !scrolled
+              className={`flex h-10 w-10 items-center justify-center border backdrop-blur-md transition-all md:!hidden ${
+                isDark || !scrolled
                   ? "border-white/20 bg-white/10 text-white hover:bg-white/20 active:scale-95"
                   : "border-[#0d1a46]/20 bg-white/80 text-[#0d1a46] hover:bg-[#0d1a46]/10 active:scale-95"
               }`}
@@ -182,7 +179,7 @@ export default function Header({ locale, navItems }: HeaderProps) {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "tween", duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-[60] flex flex-col bg-[#070e24] text-white md:hidden"
+            className="fixed inset-0 z-[60] flex flex-col bg-[#070e24] text-white md:!hidden"
           >
             {/* Top Navigation Bar inside Drawer */}
             <div className="relative z-10 flex h-20 items-center justify-between border-b border-white/10 px-5 sm:px-7">
