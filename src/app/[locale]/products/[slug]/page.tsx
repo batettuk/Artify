@@ -54,12 +54,12 @@ export default async function ProductDetailPage({
   const cleanAirCatalogs = [
     {
       id: "radiator",
-      title: "Zehnder рөдиөтор, алчуур хатаагч",
+      title: "Zehnder радиатор, алчуур хатаагч",
       description: isEn
         ? "Official Zehnder designer radiator & bathroom towel warmer technical specifications."
         : "Германы Zehnder брэндийн дизайнер радиатор, алчуур хатаагчийн албан ёсны техникийн каталоги.",
       fileUrl: "/catalogs/zehnder-radiator-towel-dryer.pdf",
-      fileName: "Zehnder рөдиөтор, алчуур хатаагч.pdf",
+      fileName: "Zehnder радиатор, алчуур хатаагч.pdf",
       size: "13.8 MB",
     },
     {
