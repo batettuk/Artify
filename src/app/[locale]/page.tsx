@@ -14,8 +14,16 @@ export async function generateMetadata({
   const { locale } = await params;
   const page = await getPageDetail({ slug: "home", language: locale });
 
+  const rawDescription = page?.description;
+  const description =
+    rawDescription && !rawDescription.includes("Барилгын төсөл бүрийн")
+      ? rawDescription
+      : locale === "en"
+      ? "You are implementing high-value projects. But how do you truly differentiate from competitors?"
+      : "Та илүү чанартай, үнэ цэнтэй төсөл хэрэгжүүлж байна. Гэвч өрсөлдөгчөөсөө хэрхэн ялгарах вэ?";
+
   return page
-    ? { title: `${page.name} | Artify`, description: page.description ?? undefined }
+    ? { title: `${page.name} | Artify`, description }
     : { title: "Artify" };
 }
 
@@ -28,7 +36,12 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 
   return (
     <>
-      <Hero heading={page.name} body={page.description} videoUrl={page.videoUrl} />
+      <Hero
+        heading={page.name}
+        body={page.description}
+        videoUrl={page.videoUrl}
+        locale={locale}
+      />
       <AboutSection page={sectionPages.about} />
       <CeoSection page={sectionPages.ceo} locale={locale} />
       <BlogSection page={sectionPages.blog} posts={blogPosts} locale={locale} />

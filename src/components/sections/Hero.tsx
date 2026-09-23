@@ -6,17 +6,58 @@ import { Link } from "@/i18n/routing";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { ArrowRight } from "lucide-react";
 
+function formatHeroHeading(text: string | null | undefined, locale?: string): string {
+  if (!text) {
+    return locale === "en"
+      ? "What is the true value\nof your project?"
+      : "Таны төслийн бодит\nүнэ цэн юу вэ?";
+  }
+  if (text.includes("\n")) {
+    return text;
+  }
+  if (/таны төслийн бодит/i.test(text)) {
+    return text.replace(/^(таны төслийн бодит)\s+(.*)$/i, "$1\n$2");
+  }
+  if (/^what is the true value/i.test(text)) {
+    return text.replace(/^(what is the true value)\s+(.*)$/i, "$1\n$2");
+  }
+  return text;
+}
+
+function formatHeroBody(text: string | null | undefined, locale?: string): string {
+  if (!text || text.includes("Барилгын төсөл бүрийн") || text.includes("Engineering intellect")) {
+    return locale === "en"
+      ? "You are implementing high-value projects.\nBut how do you truly differentiate from competitors?"
+      : "Та илүү чанартай, үнэ цэнтэй төсөл хэрэгжүүлж байна.\nГэвч өрсөлдөгчөөсөө хэрхэн ялгарах вэ?";
+  }
+  if (text.includes("\n")) {
+    return text;
+  }
+  if (text.includes("хэрэгжүүлж байна.")) {
+    return text.replace(/(хэрэгжүүлж байна\.)\s+/, "$1\n");
+  }
+  if (/high-value projects\.\s+/i.test(text)) {
+    return text.replace(/(high-value projects\.)\s+/i, "$1\n");
+  }
+  return text;
+}
+
 export function Hero({
   heading,
   body,
   videoUrl,
+  locale,
 }: {
   heading: string;
   body: string | null;
   videoUrl: string | null;
+  locale?: string;
 }) {
   const t = useTranslations("hero");
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  const displayHeading = formatHeroHeading(heading, locale);
+  const displayBody = formatHeroBody(body, locale);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -46,14 +87,14 @@ export function Hero({
 
       <div className="relative z-10 mx-auto max-w-5xl px-6 py-20 text-center lg:px-12 lg:py-24">
         <FadeIn delay={0.1}>
-          <h1 className="font-display text-2xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl xl:text-5xl">
-            {heading}
+          <h1 className="font-display text-2xl font-bold leading-tight text-white whitespace-pre-line sm:text-3xl lg:text-4xl xl:text-5xl">
+            {displayHeading}
           </h1>
         </FadeIn>
 
         <FadeIn delay={0.2}>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/90 sm:text-base lg:text-lg">
-            {body}
+          <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-white/90 whitespace-pre-line font-medium sm:text-base lg:text-lg">
+            {displayBody}
           </p>
         </FadeIn>
 
