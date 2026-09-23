@@ -50,46 +50,46 @@ export default async function ProductDetailPage({
   const isCleanAir = slug === "tech-invent";
   const isMasterclass = slug === "blok-akademi";
 
-  // Catalog items for Clean Air (Zehnder) — User-provided documentation
+  // Catalog items for Clean Air (Zehnder) — Exactly matching user's uploaded files
   const cleanAirCatalogs = [
     {
       id: "radiator",
-      title: isEn ? "Zehnder Radiators & Towel Dryers" : "Zehnder Радиатор, алчуур хатаагч",
+      title: "Zehnder рөдиөтор, алчуур хатаагч",
       description: isEn
         ? "Official Zehnder designer radiator & bathroom towel warmer technical specifications."
         : "Германы Zehnder брэндийн дизайнер радиатор, алчуур хатаагчийн албан ёсны техникийн каталоги.",
       fileUrl: "/catalogs/zehnder-radiator-towel-dryer.pdf",
-      fileName: "Zehnder_Radiators_and_Towel_Dryers.pdf",
+      fileName: "Zehnder рөдиөтор, алчуур хатаагч.pdf",
       size: "13.8 MB",
     },
     {
       id: "erv-system",
-      title: isEn ? "Significance & Use of ERV Systems" : "ERV системийн ач холбогдол ба хэрэглээ",
+      title: "ERV системийн ач холбогдол ба хэрэглээ  TechInvent",
       description: isEn
         ? "Comprehensive technical guide and health advantages of Energy Recovery Ventilation (ERV) systems."
         : "Дулаан ба чийг сэргээгчтэй ухаалаг ERV агааржуулалтын систем, барилгын төсөлд үзүүлэх давуу тал.",
       fileUrl: "/catalogs/erv-system-significance-techinvent.pdf",
-      fileName: "TechInvent_ERV_System_Guide.pdf",
+      fileName: "ERV системийн ач холбогдол ба хэрэглээ  TechInvent.pdf",
       size: "7.5 MB",
     },
     {
       id: "comfoschool",
-      title: isEn ? "ComfoSchool System Catalog" : "ComfoSchool Агааржуулалтын каталог",
+      title: "Comfoscholl catalog 20251104-x (Монгол)",
       description: isEn
         ? "Smart fresh air ventilation systems specifically engineered for schools and modern facilities."
         : "Сургууль, цэцэрлэг болон олон нийтийн барилгад зориулсан эрүүл, цэвэр агаар сэлгэлтийн систем.",
       fileUrl: "/catalogs/comfoschool-catalog-mn.pdf",
-      fileName: "Zehnder_ComfoSchool_Catalog_MN.pdf",
+      fileName: "Comfoscholl catalog 20251104-x (Монгол).pdf",
       size: "1.1 MB",
     },
     {
       id: "caw300",
-      title: isEn ? "CAW300 User Manual & Specs" : "CAW300 Хэрэглэгчийн гарын авлага",
+      title: "CAW300 User Manual MN",
       description: isEn
         ? "Operation, technical specifications, and maintenance guide for Zehnder CAW300 fresh air units."
         : "Zehnder CAW300 төхөөрөмжийн ашиглалт, тохиргоо, суурилуулалтын албан ёсны гарын авлага.",
       fileUrl: "/catalogs/caw300-user-manual-mn.pdf",
-      fileName: "CAW300_User_Manual_MN.pdf",
+      fileName: "CAW300 User Manual MN.pdf",
       size: "955 KB",
     },
   ];
