@@ -152,7 +152,7 @@ export default function Header({ locale, navItems }: HeaderProps) {
           <div className="relative z-10 flex items-center gap-2 sm:gap-3">
             {/* Real-time Interactive Search Bar (Desktop >= 1280px) */}
             <div data-desktop-search className="max-xl:!hidden xl:!block">
-              <SearchBar locale={locale} isDark={isDark || !scrolled} scrolled={scrolled} />
+              <SearchBar locale={locale} scrolled={scrolled} />
             </div>
 
             {/* Dark Mode Theme Toggle */}

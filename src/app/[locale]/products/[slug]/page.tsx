@@ -50,47 +50,47 @@ export default async function ProductDetailPage({
   const isCleanAir = slug === "tech-invent";
   const isMasterclass = slug === "blok-akademi";
 
-  // Catalog items for Clean Air (Zehnder)
+  // Catalog items for Clean Air (Zehnder) — User-provided documentation
   const cleanAirCatalogs = [
     {
       id: "radiator",
-      title: isEn ? "Radiators & Towel Dryers" : "Радиатор, алчуур хатаагч",
+      title: isEn ? "Zehnder Radiators & Towel Dryers" : "Zehnder Радиатор, алчуур хатаагч",
       description: isEn
         ? "Official Zehnder designer radiator & bathroom towel warmer technical specifications."
         : "Германы Zehnder брэндийн дизайнер радиатор, алчуур хатаагчийн албан ёсны техникийн каталоги.",
-      fileUrl: "/catalogs/radiator-towel-warmer-catalog.pdf",
-      fileName: "Zehnder_Radiators_Catalog.pdf",
-      size: "4.8 MB",
+      fileUrl: "/catalogs/zehnder-radiator-towel-dryer.pdf",
+      fileName: "Zehnder_Radiators_and_Towel_Dryers.pdf",
+      size: "13.8 MB",
     },
     {
-      id: "comfo-home",
-      title: isEn ? "Comfo home" : "Comfo home",
+      id: "erv-system",
+      title: isEn ? "Significance & Use of ERV Systems" : "ERV системийн ач холбогдол ба хэрэглээ",
       description: isEn
-        ? "Smart fresh air and climate control systems designed for luxury apartments and residences."
-        : "Орон сууц, хувийн сууцанд зориулсан эрчим хүчний хэмнэлттэй ухаалаг агааржуулалтын систем.",
-      fileUrl: "/catalogs/comfo-home-catalog.pdf",
-      fileName: "Zehnder_ComfoHome_Catalog.pdf",
-      size: "6.2 MB",
+        ? "Comprehensive technical guide and health advantages of Energy Recovery Ventilation (ERV) systems."
+        : "Дулаан ба чийг сэргээгчтэй ухаалаг ERV агааржуулалтын систем, барилгын төсөлд үзүүлэх давуу тал.",
+      fileUrl: "/catalogs/erv-system-significance-techinvent.pdf",
+      fileName: "TechInvent_ERV_System_Guide.pdf",
+      size: "7.5 MB",
     },
     {
-      id: "comfo-house",
-      title: isEn ? "ComfoHouse" : "ComfoHouse",
+      id: "comfoschool",
+      title: isEn ? "ComfoSchool System Catalog" : "ComfoSchool Агааржуулалтын каталог",
       description: isEn
-        ? "Whole-house decentralized & central ventilation systems with heat & humidity recovery."
-        : "Амины орон сууцны дулаан, чийг сэргээгчтэй төвлөрсөн агаар сэлгэлтийн цогц систем.",
-      fileUrl: "/catalogs/comfo-house-catalog.pdf",
-      fileName: "Zehnder_ComfoHouse_Catalog.pdf",
-      size: "5.5 MB",
+        ? "Smart fresh air ventilation systems specifically engineered for schools and modern facilities."
+        : "Сургууль, цэцэрлэг болон олон нийтийн барилгад зориулсан эрүүл, цэвэр агаар сэлгэлтийн систем.",
+      fileUrl: "/catalogs/comfoschool-catalog-mn.pdf",
+      fileName: "Zehnder_ComfoSchool_Catalog_MN.pdf",
+      size: "1.1 MB",
     },
     {
-      id: "caw",
-      title: isEn ? "CAW100, CAW300 Series" : "CAW100, CAW300",
+      id: "caw300",
+      title: isEn ? "CAW300 User Manual & Specs" : "CAW300 Хэрэглэгчийн гарын авлага",
       description: isEn
-        ? "Compact high-efficiency fresh air filtration and heat exchange ventilation units."
-        : "Өндөр үр ашигтай, авсаархан цэвэр агааржуулалт болон дулаан солилцуурын төхөөрөмжүүд.",
-      fileUrl: "/catalogs/caw100-caw300-catalog.pdf",
-      fileName: "Zehnder_CAW_Series_Catalog.pdf",
-      size: "3.9 MB",
+        ? "Operation, technical specifications, and maintenance guide for Zehnder CAW300 fresh air units."
+        : "Zehnder CAW300 төхөөрөмжийн ашиглалт, тохиргоо, суурилуулалтын албан ёсны гарын авлага.",
+      fileUrl: "/catalogs/caw300-user-manual-mn.pdf",
+      fileName: "CAW300_User_Manual_MN.pdf",
+      size: "955 KB",
     },
   ];
 
