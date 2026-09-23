@@ -153,7 +153,7 @@ export async function ProductsSection({
                 <ExternalLink size={15} />
               </a>
               <a
-                href="https://www.facebook.com/block.mn"
+                href="https://www.facebook.com/profile.php?id=61583605854922"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-none border border-white/30 bg-white/10 px-5 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-md transition-all hover:bg-white/20 w-full sm:w-auto"

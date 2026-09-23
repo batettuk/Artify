@@ -250,7 +250,7 @@ export default async function ProductDetailPage({
                   {isMasterclass ? (
                     <div className="space-y-2.5">
                       <a
-                        href="https://www.facebook.com/block.mn"
+                        href="https://www.facebook.com/profile.php?id=61583605854922"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex w-full items-center justify-between rounded-none bg-white px-5 py-3 text-xs font-bold uppercase tracking-wider text-[#070e24] shadow-md transition-all hover:bg-slate-100 active:scale-[0.99]"

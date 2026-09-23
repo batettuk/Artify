@@ -63,7 +63,7 @@ export default function Footer({ locale, navItems, contactInfo }: FooterProps) {
       external: true,
     },
     {
-      href: "https://www.facebook.com/block.mn",
+      href: "https://www.facebook.com/profile.php?id=61583605854922",
       label: locale === "mn" ? "Мастеркласс (Block Academy)" : "Masterclass (Block Academy)",
       external: true,
     },
@@ -100,8 +100,8 @@ export default function Footer({ locale, navItems, contactInfo }: FooterProps) {
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-slate-300 sm:text-base">
               {locale === "mn"
-                ? "Амьдралын чанарыг урлана. Барилгын төсөл бүрийн хэрэглэгчийн тав тухыг урлагийн түвшинд хөгжүүлнэ."
-                : "Crafting Quality of Life. Elevating human comfort and construction to the level of art."}
+                ? "Инженерийн нарийн тооцоолол, ухаалаг агааржуулалт, захиалгат ховор материалын цогц шийдлээр амьдралын чанарыг урлана."
+                : "Crafting the quality of life through precise engineering, intelligent ventilation, and bespoke rare architectural materials."}
             </p>
 
             <div className="mt-8 flex items-center gap-3">
@@ -227,7 +227,7 @@ export default function Footer({ locale, navItems, contactInfo }: FooterProps) {
             />
           </a>
 
-          <p className="font-semibold tracking-wide text-white/90">{locale === "mn" ? "Амьдралын чанарыг урлана" : "Crafting Quality of Life"}</p>
+          <p className="font-semibold tracking-wide text-white/90">crafting the quality of life</p>
         </div>
       </div>
     </footer>

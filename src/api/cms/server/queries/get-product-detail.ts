@@ -34,7 +34,7 @@ const defaultProductAssets: Record<string, { thumbnail: string; logo?: string; w
   "blok-akademi": {
     thumbnail: "/images/masterclass.jpg",
     logo: "/images/block-academy-white.png",
-    websiteUrl: "https://www.facebook.com/block.mn",
+    websiteUrl: "https://www.facebook.com/profile.php?id=61583605854922",
   },
 };
 

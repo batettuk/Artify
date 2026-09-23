@@ -34,8 +34,8 @@ export async function GET(request: Request) {
       categoryLabel: isMn ? "Хуудас" : "Pages",
       url: "/",
       excerpt: isMn
-        ? "ARTIFY BRAND — Амьдралын чанарыг урлана"
-        : "ARTIFY BRAND — Crafting Quality of Life",
+        ? "ARTIFY BRAND — Инженерийн нарийн тооцоолол, ухаалаг агааржуулалт, захиалгат ховор материалын цогц шийдлээр амьдралын чанарыг урлана."
+        : "ARTIFY BRAND — crafting the quality of life",
       thumbnailUrl: "/images/artify-logo-white.png",
     },
     {
