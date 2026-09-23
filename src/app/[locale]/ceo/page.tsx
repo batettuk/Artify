@@ -204,40 +204,48 @@ He achieved his "Certified Civil Engineer" credential in 2019 and "Certified Cos
       {/* Main Content Area */}
       <div className="mx-auto max-w-[1400px] px-4 py-16 sm:px-6 lg:px-12 lg:py-24">
         {/* Visual Quote & Portrait Presentation Card */}
-        <div className="group relative flex h-full flex-col bg-white/10 p-[1px] shadow-2xl [clip-path:polygon(28px_0,100%_0,100%_100%,0_100%,0_28px)] mb-20">
-          <div className="relative overflow-hidden bg-[#040817] [background:radial-gradient(circle_at_20%_25%,rgba(24,48,110,0.55)_0%,#040817_65%)] p-6 sm:p-10 lg:p-14 [clip-path:polygon(27px_0,100%_0,100%_100%,0_100%,0_27px)]">
-            <div className="pointer-events-none absolute left-0 top-0 h-8 w-8 border-b border-r border-white/20 bg-white/10 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
+        <div className="group relative flex h-full flex-col bg-slate-200/90 dark:bg-white/10 p-[1px] shadow-xl dark:shadow-2xl [clip-path:polygon(28px_0,100%_0,100%_100%,0_100%,0_28px)] mb-20 transition-all duration-300">
+          <div className="relative overflow-hidden bg-white dark:bg-[#040817] [background:radial-gradient(circle_at_20%_25%,rgba(219,234,254,0.65)_0%,rgba(248,250,252,0.6)_45%,#ffffff_75%)] dark:[background:radial-gradient(circle_at_20%_25%,rgba(24,48,110,0.55)_0%,#040817_65%)] p-6 sm:p-10 lg:p-14 transition-colors duration-500 [clip-path:polygon(27px_0,100%_0,100%_100%,0_100%,0_27px)]">
+            <div className="pointer-events-none absolute left-0 top-0 h-8 w-8 border-b border-r border-[#0d1a46]/20 bg-slate-100/90 dark:border-white/20 dark:bg-white/10 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
 
             <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
               <div className="flex flex-col justify-between lg:col-span-7">
                 <div className="mb-6 sm:mb-8">
+                  <Image
+                    src="/images/artify-logo-navy.png"
+                    alt="ARTIFY®"
+                    width={280}
+                    height={60}
+                    priority
+                    className="h-8 sm:h-10 w-auto object-contain dark:hidden"
+                  />
                   <Image
                     src="/images/artify-logo-white.png"
                     alt="ARTIFY®"
                     width={280}
                     height={60}
                     priority
-                    className="h-8 sm:h-10 w-auto object-contain"
+                    className="h-8 sm:h-10 w-auto object-contain hidden dark:block"
                   />
                 </div>
 
                 <div className="relative max-w-2xl">
                   <CmsContent
                     html={quoteContent}
-                    className="font-display text-lg font-medium leading-relaxed text-white/95 sm:text-xl lg:text-2xl lg:leading-[1.7] [&_strong]:font-bold [&_strong]:text-white"
+                    className="font-display text-lg font-medium leading-relaxed text-[#070e24] dark:text-white/95 sm:text-xl lg:text-2xl lg:leading-[1.7] [&_strong]:font-bold [&_strong]:text-[#0d1a46] dark:[&_strong]:text-white"
                   />
                 </div>
 
                 <div className="mt-8 flex flex-col items-end sm:mt-10 sm:pr-8">
-                  <span className="font-mono text-[11px] font-medium tracking-wider text-slate-400 uppercase">
+                  <span className="font-mono text-[11px] font-medium tracking-wider text-slate-500 dark:text-slate-400 uppercase">
                     Founder & CEO:
                   </span>
-                  <span className="font-signature text-3xl font-bold tracking-wide text-white drop-shadow-md sm:text-4xl lg:text-5xl mt-1 select-none">
+                  <span className="font-signature text-3xl font-bold tracking-wide text-[#0d1a46] dark:text-white drop-shadow-sm dark:drop-shadow-md sm:text-4xl lg:text-5xl mt-1 select-none">
                     Munkhchuluun S.
                   </span>
                 </div>
 
-                <div className="mt-8 border-t border-white/10 pt-4 text-left sm:text-right text-xs font-medium text-slate-400">
+                <div className="mt-8 border-t border-slate-200 dark:border-white/10 pt-4 text-left sm:text-right text-xs font-medium text-slate-600 dark:text-slate-400">
                   {ceoCredentials}
                 </div>
               </div>
@@ -250,7 +258,7 @@ He achieved his "Certified Civil Engineer" credential in 2019 and "Certified Cos
                     fill
                     priority
                     sizes="(max-width: 1024px) 100vw, 40vw"
-                    className="h-full w-full object-contain object-bottom drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)]"
+                    className="h-full w-full object-contain object-bottom drop-shadow-[0_15px_30px_rgba(13,26,70,0.18)] dark:drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)]"
                   />
                 </div>
               </div>
@@ -310,7 +318,7 @@ He achieved his "Certified Civil Engineer" credential in 2019 and "Certified Cos
             <FadeIn delay={0.15}>
               <div className="border border-slate-200/90 bg-white p-6 shadow-sm sm:p-8 dark:bg-[#0b132b] dark:border-white/10 [clip-path:polygon(16px_0,100%_0,100%_100%,0_100%,0_16px)]">
                 <div className="flex items-center gap-2 mb-4">
-                  <Building2 size={16} className="text-white" />
+                  <Building2 size={16} className="text-[#0d1a46] dark:text-white" />
                   <h3 className="font-display text-base font-bold text-[#0d1a46] dark:text-white uppercase tracking-wide">
                     {isEn ? "Featured Projects" : "Хэрэгжүүлсэн томоохон төслүүд"}
                   </h3>
