@@ -58,6 +58,8 @@ export type ContactInfoDto = {
   hours?: string;
   facebook: string | null;
   instagram: string | null;
+  slogan?: string;
+  brandDescription?: string;
 };
 
 export type MenuItemDto = {

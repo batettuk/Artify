@@ -6,6 +6,7 @@ import ApolloClientProvider from "@/lib/apollo/provider";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { getMenu } from "@/api/cms/server/queries/get-menu";
 import { getContactInfo } from "@/api/cms/server/queries/get-contact-info";
+import { getProducts } from "@/api/cms/server/queries/get-products";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { routing } from "@/i18n/routing";
@@ -45,11 +46,12 @@ export default async function LocaleLayout({
 }: LayoutProps<"/[locale]">) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [messages, headerMenu, footerMenu, contactInfo] = await Promise.all([
+  const [messages, headerMenu, footerMenu, contactInfo, products] = await Promise.all([
     getMessages(),
     getMenu({ kind: "header", language: locale }),
     getMenu({ kind: "footer", language: locale }),
     getContactInfo(locale),
+    getProducts(locale),
   ]);
 
   return (
@@ -69,7 +71,12 @@ export default async function LocaleLayout({
             <ApolloClientProvider>
               <Header locale={locale} navItems={headerMenu} />
               <main className="flex-1">{children}</main>
-              <Footer locale={locale} navItems={footerMenu} contactInfo={contactInfo} />
+              <Footer
+                locale={locale}
+                navItems={footerMenu}
+                contactInfo={contactInfo}
+                products={products}
+              />
             </ApolloClientProvider>
           </NextIntlClientProvider>
         </ThemeProvider>

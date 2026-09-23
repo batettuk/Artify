@@ -1,12 +1,13 @@
 import { Link } from "@/i18n/routing";
 import Image from "@/components/common/Image";
 import { Phone, Mail, MapPin, ArrowUpRight } from "lucide-react";
-import type { ContactInfoDto, MenuItemDto } from "@/api/cms/types/public";
+import type { ContactInfoDto, MenuItemDto, ProductCardDto } from "@/api/cms/types/public";
 
 interface FooterProps {
   locale: string;
   navItems?: MenuItemDto[];
   contactInfo: ContactInfoDto;
+  products?: ProductCardDto[];
 }
 
 function FacebookIcon({ size = 20 }: { size?: number }) {
@@ -37,37 +38,51 @@ function InstagramIcon({ size = 20 }: { size?: number }) {
   );
 }
 
-export default function Footer({ locale, navItems, contactInfo }: FooterProps) {
-  const companyLinks = [
-    { href: "/", label: locale === "mn" ? "Нүүр" : "Home" },
-    { href: "/#about", label: locale === "mn" ? "Бидний тухай" : "About Us" },
-    { href: "/products", label: locale === "mn" ? "Бүтээгдэхүүн" : "Products" },
-    { href: "/blog", label: locale === "mn" ? "Мэдээ, нийтлэл" : "Blog & News" },
-    { href: "/contact", label: locale === "mn" ? "Холбоо барих" : "Contact" },
-  ];
+export default function Footer({ locale, navItems, contactInfo, products }: FooterProps) {
+  const companyLinks =
+    navItems && navItems.length > 0
+      ? navItems.map((item) => ({
+          href: item.url,
+          label: item.label,
+          external: item.external,
+        }))
+      : [
+          { href: "/", label: locale === "mn" ? "Нүүр" : "Home", external: false },
+          { href: "/#about", label: locale === "mn" ? "Бидний тухай" : "About Us", external: false },
+          { href: "/products", label: locale === "mn" ? "Бүтээгдэхүүн" : "Products", external: false },
+          { href: "/blog", label: locale === "mn" ? "Мэдээ, нийтлэл" : "Blog & News", external: false },
+          { href: "/contact", label: locale === "mn" ? "Холбоо барих" : "Contact", external: false },
+        ];
 
-  const productLinks = [
-    {
-      href: "/products/consulting",
-      label: locale === "mn" ? "Зөвлөх үйлчилгээ" : "Consulting Services",
-      external: false,
-    },
-    {
-      href: "/products/custom-materials",
-      label: locale === "mn" ? "Онцгой хийцлэлтэй бүтээгдэхүүн" : "Custom Fabrication",
-      external: false,
-    },
-    {
-      href: "https://www.techinvent.mn/en",
-      label: locale === "mn" ? "Эрүүл агаар (Zehnder)" : "Clean Air Solutions (Zehnder)",
-      external: true,
-    },
-    {
-      href: "https://www.facebook.com/profile.php?id=61583605854922",
-      label: locale === "mn" ? "Мастеркласс (Block Academy)" : "Masterclass (Block Academy)",
-      external: true,
-    },
-  ];
+  const productLinks =
+    products && products.length > 0
+      ? products.map((p) => ({
+          href: p.websiteUrl || `/products/${p.slug}`,
+          label: p.title,
+          external: !!p.websiteUrl && /^https?:\/\//.test(p.websiteUrl),
+        }))
+      : [
+          {
+            href: "/products/consulting",
+            label: locale === "mn" ? "Зөвлөх үйлчилгээ" : "Consulting Services",
+            external: false,
+          },
+          {
+            href: "/products/custom-materials",
+            label: locale === "mn" ? "Онцгой хийцлэлтэй бүтээгдэхүүн" : "Custom Fabrication",
+            external: false,
+          },
+          {
+            href: "https://www.techinvent.mn/en",
+            label: locale === "mn" ? "Эрүүл агаар (Zehnder)" : "Clean Air Solutions (Zehnder)",
+            external: true,
+          },
+          {
+            href: "https://www.facebook.com/profile.php?id=61583605854922",
+            label: locale === "mn" ? "Мастеркласс (Block Academy)" : "Masterclass (Block Academy)",
+            external: true,
+          },
+        ];
 
   const facebookUrl = contactInfo.facebook || "https://www.facebook.com/artify.mn";
   const instagramUrl = contactInfo.instagram || "https://www.instagram.com/artify.mn";
@@ -82,6 +97,13 @@ export default function Footer({ locale, navItems, contactInfo }: FooterProps) {
     locale === "en"
       ? (contactInfo.hours && !/[а-яА-ЯөӨүҮ]/.test(contactInfo.hours) ? contactInfo.hours : "Mon – Fri: 09:00 – 18:00 (GMT+8)")
       : (contactInfo.hours || "Даваа – Баасан: 09:00 – 18:00 (GMT+8)");
+
+  const slogan = contactInfo.slogan || "Crafting The Quality Of Life";
+  const brandDescription =
+    contactInfo.brandDescription ||
+    (locale === "mn"
+      ? "Инженерийн нарийн тооцоолол, ухаалаг агааржуулалт, захиалгат ховор материалын цогц шийдлээр амьдралын чанарыг урлана."
+      : "Crafting the quality of life through precise engineering, intelligent ventilation, and bespoke rare architectural materials.");
 
   return (
     <footer className="w-full border-t border-[#0d1a46]/30 bg-[#070e24] text-white">
@@ -99,9 +121,7 @@ export default function Footer({ locale, navItems, contactInfo }: FooterProps) {
               />
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-slate-300 sm:text-base">
-              {locale === "mn"
-                ? "Инженерийн нарийн тооцоолол, ухаалаг агааржуулалт, захиалгат ховор материалын цогц шийдлээр амьдралын чанарыг урлана."
-                : "Crafting the quality of life through precise engineering, intelligent ventilation, and bespoke rare architectural materials."}
+              {brandDescription}
             </p>
 
             <div className="mt-8 flex items-center gap-3">
@@ -135,12 +155,23 @@ export default function Footer({ locale, navItems, contactInfo }: FooterProps) {
             <ul className="mt-6 space-y-3.5">
               {companyLinks.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm font-medium text-white/90 transition-colors hover:text-white hover:underline"
-                  >
-                    {link.label}
-                  </Link>
+                  {link.external ? (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-medium text-white/90 transition-colors hover:text-white hover:underline"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      href={link.href}
+                      className="text-sm font-medium text-white/90 transition-colors hover:text-white hover:underline"
+                    >
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -227,7 +258,7 @@ export default function Footer({ locale, navItems, contactInfo }: FooterProps) {
             />
           </a>
 
-          <p className="font-semibold tracking-wide text-white/90">crafting the quality of life</p>
+          <p className="font-semibold tracking-wide text-white/90">{slogan}</p>
         </div>
       </div>
     </footer>

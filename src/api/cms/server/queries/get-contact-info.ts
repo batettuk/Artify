@@ -71,6 +71,23 @@ export const getContactInfo = cache(
       "instagram.com",
     );
 
-    return { address, phone, email, hours, facebook, instagram };
+    const customMap = page.customFieldsMap as Record<string, Record<string, unknown>> | null;
+    const rawSlogan =
+      (customMap?.["contact-fields"]?.["slogan"] as string | undefined) ||
+      (customMap?.["contact-fields"]?.["tagline"] as string | undefined) ||
+      null;
+    const slogan = rawSlogan || "Crafting The Quality Of Life";
+
+    const rawBrandDesc =
+      (customMap?.["contact-fields"]?.["brandDescription"] as string | undefined) ||
+      (customMap?.["contact-fields"]?.["footerDescription"] as string | undefined) ||
+      null;
+    const brandDescription =
+      rawBrandDesc ||
+      (language === "mn"
+        ? "Инженерийн нарийн тооцоолол, ухаалаг агааржуулалт, захиалгат ховор материалын цогц шийдлээр амьдралын чанарыг урлана."
+        : "Crafting the quality of life through precise engineering, intelligent ventilation, and bespoke rare architectural materials.");
+
+    return { address, phone, email, hours, facebook, instagram, slogan, brandDescription };
   },
 );

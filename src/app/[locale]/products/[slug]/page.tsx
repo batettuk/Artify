@@ -7,6 +7,8 @@ import { FadeIn } from "@/components/motion/FadeIn";
 import { Link } from "@/i18n/routing";
 import { ArrowLeft, ArrowUpRight, Download, FileText, ExternalLink, Mail, CheckCircle2 } from "lucide-react";
 import Image from "@/components/common/Image";
+import { ScrollDownCue } from "@/components/common/ScrollDownCue";
+import { ScrollToButton } from "@/components/common/ScrollToButton";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
@@ -95,7 +97,7 @@ export default async function ProductDetailPage({
   return (
     <article className="min-h-screen bg-background text-foreground">
       {/* Full-bleed Edge-to-Edge Clean Hero Banner */}
-      <section className="relative flex min-h-[380px] w-full items-center justify-center overflow-hidden bg-[#070e24] pt-32 pb-20 lg:min-h-[440px] lg:pt-36 lg:pb-24">
+      <section className="relative flex min-h-[500px] w-full flex-col justify-center overflow-hidden bg-[#070e24] pt-28 pb-24 sm:min-h-[480px] sm:pt-36 sm:pb-36">
         <div className="absolute inset-0">
           {product.thumbnailUrl && (
             <Image
@@ -142,7 +144,36 @@ export default async function ProductDetailPage({
               </p>
             </FadeIn>
           )}
+
+          {isCleanAir && (
+            <FadeIn delay={0.25} className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <ScrollToButton
+                targetId="catalogs"
+                className="inline-flex items-center gap-2 rounded-none bg-white px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#070e24] shadow-lg transition-all hover:bg-slate-200 active:scale-[0.99]"
+              >
+                <Download size={15} />
+                <span>{isEn ? "Download Catalogs" : "Каталог татах"}</span>
+              </ScrollToButton>
+              <a
+                href="https://www.techinvent.mn/en"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-none border border-white/30 bg-white/10 px-6 py-3 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-sm transition-all hover:bg-white/20"
+              >
+                <span>{isEn ? "Zehnder Portal" : "Zehnder хуудас үзэх"}</span>
+                <ExternalLink size={14} />
+              </a>
+            </FadeIn>
+          )}
         </div>
+
+        {/* Down Scrolling Animation Indicator for Clean Air */}
+        {isCleanAir && (
+          <ScrollDownCue
+            targetId="catalogs"
+            label={isEn ? "Scroll Down" : "Доош гүйлгэх"}
+          />
+        )}
       </section>
 
       {/* Main Content Layout */}
@@ -158,7 +189,8 @@ export default async function ProductDetailPage({
 
             {/* Clean Air Catalog Download Section */}
             {isCleanAir && (
-              <FadeIn delay={0.2} className="mt-16 border-t border-slate-200 pt-12 dark:border-white/10">
+              <div id="catalogs" className="scroll-mt-24">
+                <FadeIn delay={0.2} className="mt-16 border-t border-slate-200 pt-12 dark:border-white/10">
                 <div className="mb-8">
                   <span className="inline-block border border-[#0d1a46]/20 bg-[#0d1a46]/[0.04] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[#0d1a46] mb-2.5 dark:border-white/20 dark:bg-white/10 dark:text-white">
                     Zehnder Documentation
@@ -214,6 +246,7 @@ export default async function ProductDetailPage({
                   ))}
                 </div>
               </FadeIn>
+              </div>
             )}
           </div>
 
@@ -269,15 +302,24 @@ export default async function ProductDetailPage({
                       </a>
                     </div>
                   ) : isCleanAir ? (
-                    <a
-                      href="https://www.techinvent.mn/en"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex w-full items-center justify-between rounded-none bg-white px-5 py-3 text-xs font-bold uppercase tracking-wider text-[#070e24] shadow-md transition-all hover:bg-slate-100 active:scale-[0.99]"
-                    >
-                      <span className="text-[#070e24] font-bold">{isEn ? "Zehnder Portal (TechInvent)" : "Zehnder хуудас үзэх"}</span>
-                      <ExternalLink size={15} className="text-[#070e24]" />
-                    </a>
+                    <div className="space-y-2.5">
+                      <ScrollToButton
+                        targetId="catalogs"
+                        className="flex w-full items-center justify-between rounded-none bg-white px-5 py-3 text-xs font-bold uppercase tracking-wider text-[#070e24] shadow-md transition-all hover:bg-slate-100 active:scale-[0.99]"
+                      >
+                        <span className="text-[#070e24] font-bold">{isEn ? "Download Catalogs" : "Каталог татах"}</span>
+                        <Download size={15} className="text-[#070e24]" />
+                      </ScrollToButton>
+                      <a
+                        href="https://www.techinvent.mn/en"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex w-full items-center justify-between rounded-none border border-white/20 bg-white/5 px-5 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-colors hover:bg-white/15"
+                      >
+                        <span className="text-white font-bold">{isEn ? "Zehnder Portal (TechInvent)" : "Zehnder хуудас үзэх"}</span>
+                        <ExternalLink size={15} className="text-white" />
+                      </a>
+                    </div>
                   ) : (
                     <Link
                       href="/contact"
