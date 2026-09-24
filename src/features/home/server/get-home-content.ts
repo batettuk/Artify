@@ -8,6 +8,7 @@ import {
   getProjects,
 } from "@/api/cms/server/queries/get-home-collection";
 import { getPageDetail } from "@/api/cms/server/queries/get-page-detail";
+import { getPostBySlug } from "@/api/cms/server/queries/get-post-by-slug";
 import type { CmsCollectionDto } from "@/api/cms/types/public";
 
 async function resolveCollection<T>(
@@ -42,6 +43,11 @@ export const getHomeContent = cache(async (language: string) => {
     blogPosts,
     projects,
     partners,
+    heroPost,
+    aboutPost,
+    ceoStatementPost,
+    ceoCredentialsPost,
+    homeCtaPost,
   ] = await Promise.all([
     getPageDetail({ slug: "home", language }),
     getPageDetail({ slug: "about", language }),
@@ -54,6 +60,11 @@ export const getHomeContent = cache(async (language: string) => {
     getBlogPosts({ language, limit: 3 }),
     resolveCollection("tusul", getProjects(language)),
     resolveCollection("khamtragch", getPartners(language)),
+    getPostBySlug({ slug: "home-hero", language }),
+    getPostBySlug({ slug: "about-company", language }),
+    getPostBySlug({ slug: "ceo-statement", language }),
+    getPostBySlug({ slug: "ceo-credentials", language }),
+    getPostBySlug({ slug: "home-cta", language }),
   ]);
 
   return {
@@ -67,8 +78,16 @@ export const getHomeContent = cache(async (language: string) => {
       contact: contactPage,
       contactText: contactTextPage,
     },
+    posts: {
+      hero: heroPost,
+      about: aboutPost,
+      ceoStatement: ceoStatementPost,
+      ceoCredentials: ceoCredentialsPost,
+      homeCta: homeCtaPost,
+    },
     blogPosts,
     projects,
     partners,
   };
 });
+

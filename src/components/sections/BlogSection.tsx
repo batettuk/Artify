@@ -3,6 +3,7 @@ import { Link } from "@/i18n/routing";
 import { FadeIn } from "@/components/motion/FadeIn";
 import Image from "@/components/common/Image";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { formatCmsDate } from "@/lib/utils/format-date";
 import type { BlogCardDto, CmsPageDto } from "@/api/cms/types/public";
 
 export async function BlogSection({
@@ -68,13 +69,7 @@ export async function BlogSection({
 
                         <div className="p-5 lg:p-6">
                           <p className="font-mono text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                            {post.publishedDate
-                              ? new Date(post.publishedDate).toLocaleDateString(locale, {
-                                  year: "numeric",
-                                  month: "short",
-                                  day: "numeric",
-                                })
-                              : ""}
+                            {formatCmsDate(post.publishedDate, locale)}
                           </p>
                           <h3 className="mt-2.5 font-display text-base font-bold leading-snug text-[#0d1a46] dark:text-white transition-colors group-hover:text-primary dark:group-hover:text-slate-300 sm:text-lg">
                             {post.title}

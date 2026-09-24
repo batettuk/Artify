@@ -17,23 +17,23 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import { getPostBySlug } from "@/api/cms/server/queries/get-post-by-slug";
+import { getProjects } from "@/api/cms/server/queries/get-home-collection";
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const page = await getPageDetail({ slug: "/ceo", language: locale });
+  const [page, statementPost] = await Promise.all([
+    getPageDetail({ slug: "/ceo", language: locale }),
+    getPostBySlug({ slug: "ceo-statement", language: locale }),
+  ]);
 
-  const isEn = locale === "en";
-  const title = isEn
-    ? "Munkhchuluun Sukhbaatar — Founder & CEO | Artify"
-    : "Мөнхчулуун Сүхбаатар — Үүсгэн байгуулагч, Гүйцэтгэх захирал | Artify";
-  const description =
-    page?.description ||
-    (isEn
-      ? "Executive Profile & Leadership Statement of Munkhchuluun S., Founder & CEO of Artify Brand."
-      : "Артифай компанийн үүсгэн байгуулагч, гүйцэтгэх захирал Мөнхчулуун Сүхбаатарын танилцуулга, карьерын түүх.");
+  const name = statementPost?.title || page?.name || "Munkhchuluun Sukhbaatar";
+  const title = `${name} | Artify`;
+  const description = statementPost?.excerpt || page?.description || "";
 
   return {
     title,
@@ -47,119 +47,62 @@ export default async function CeoProfilePage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const page = await getPageDetail({ slug: "/ceo", language: locale });
-  if (!page) notFound();
+  const [page, statementPost, credentialsPost, competenciesPost, projectItems] =
+    await Promise.all([
+      getPageDetail({ slug: "/ceo", language: locale }),
+      getPostBySlug({ slug: "ceo-statement", language: locale }),
+      getPostBySlug({ slug: "ceo-credentials", language: locale }),
+      getPostBySlug({ slug: "ceo-competencies", language: locale }),
+      getProjects(locale).catch(() => []),
+    ]);
+
+  if (!page && !statementPost) notFound();
 
   const isEn = locale === "en";
 
-  const ceoName = isEn ? "Munkhchuluun Sukhbaatar" : "Мөнхчулуун Сүхбаатар";
-  const ceoRole = isEn
-    ? "Founder & Chief Executive Officer"
-    : "Үүсгэн байгуулагч, Гүйцэтгэх захирал";
-  const ceoCredentials = isEn
-    ? "Certified Civil Engineer • Certified Cost Estimator (+15 Years Industry Experience)"
-    : "Иргэний барилгын мэргэшсэн инженер, мэргэшсэн төсөвчин (+15 жилийн салбарын туршлага)";
+  const ceoName = statementPost?.title || page?.name || "";
+  const ceoRole = credentialsPost?.title || "";
+  const ceoCredentials = credentialsPost?.excerpt || "";
 
-  const defaultQuote = isEn
-    ? "“The construction industry is a multidimensional space where knowledge, technology, and craftsmanship from diverse disciplines converge. Artify aspires to be the premier platform where the industry's finest come together.”"
-    : "“Барилгын салбар бол олон салбарын мэдлэг, технологи, ур чадвар нэгддэг өргөн хүрээний орон зай. Салбарын шилдэгүүд нэгдэх талбар нь Артифай байхыг зорьдог.”";
+  const quoteContent = statementPost?.excerpt || page?.description || "";
+  const bioContent = statementPost?.content || page?.content || "";
 
-  const defaultEnBio = `Munkhchuluun Sukhbaatar is a certified civil engineer and project management specialist with over 15 years of distinguished leadership in the construction sector. Throughout his career, he has advanced from site engineer to client supervision engineer, chief engineer, director of project management, and chief executive officer, accumulating extensive hands-on experience across every phase of real estate development.
+  // Dynamic projects from CMS (post type: tusul)
+  const projects = projectItems.map((p) => ({
+    name: p.title,
+    category: p.tags.join(" • ") || p.content || "",
+    thumbnailUrl: p.thumbnailUrl,
+  }));
 
-His portfolio of successfully delivered developments includes landmark projects such as Gegeenten Complex, Romana Residence, SS Garden, Active Garden, and Gerlug Vista. Across these projects, his responsibilities spanned structural assembly, advanced engineering solutions, quality assurance, budgeting, supply chain management, subcontractor coordination, and state commissioning.
-
-In 2024, he founded Artify Deluxe LLC, synthesizing his years of engineering, project execution, procurement, and management expertise to drive higher quality, efficiency, and human-centric living standards across the construction industry.
-
-He achieved his "Certified Civil Engineer" credential in 2019 and "Certified Cost Estimator" credential in 2020.`;
-
-  // Parse Quote for top hero card and Biography for main section
-  let quoteContent = defaultQuote;
-  let bioContent = page.content || "";
-
-  if (isEn) {
-    if (page.description) {
-      const raw = page.description.trim();
-      const quoteMatch = raw.match(/^[“"][^“”"]+[”"]/);
-      if (quoteMatch) {
-        quoteContent = quoteMatch[0].trim();
-        const remainder = raw.slice(quoteMatch[0].length).trim();
-        bioContent = remainder || defaultEnBio;
-      } else {
-        bioContent = defaultEnBio;
-      }
-    } else {
-      bioContent = defaultEnBio;
-    }
-  } else {
-    if (page.description) {
-      const raw = page.description.trim();
-      const quoteMatch = raw.match(/^[“"][^“”"]+[”"]/);
-      if (quoteMatch) {
-        quoteContent = quoteMatch[0].trim();
-      } else {
-        quoteContent = raw.split(/\r?\n\r?\n|\r?\n/)[0]?.trim() || defaultQuote;
-      }
-    }
-  }
-
-  const projects = [
-    {
-      name: isEn ? "Gegeenten Complex" : "Гэгээнтэн цогцолбор хотхон",
-      category: isEn ? "Mixed-Use Complex" : "Орон сууц, үйлчилгээний цогцолбор",
-      year: "2016 – 2018",
-    },
-    {
-      name: isEn ? "Romana Residence" : "Romana Residence",
-      category: isEn ? "Luxury Residential" : "Тансаг зэрэглэлийн орон сууц",
-      year: "2018 – 2020",
-    },
-    {
-      name: isEn ? "SS Garden" : "SS Garden",
-      category: isEn ? "Townhouse & Villa" : "Таунхаус, хотхоны бүтээн байгуулалт",
-      year: "2021 – 2023",
-    },
-    {
-      name: isEn ? "Active Garden" : "Active Garden",
-      category: isEn ? "Green Community & ERV" : "Эрүүл эко, ухаалаг агааржуулалттай төсөл",
-      year: "2023 – 2024",
-    },
-    {
-      name: isEn ? "Gerlug Vista" : "Гэрлүг Виста",
-      category: isEn ? "High-End Residential" : "Орчин үеийн орон сууцны төсөл",
-      year: "2024 – 2025",
-    },
+  // Dynamic competencies from CMS (post: ceo-competencies)
+  const competencyIcons = [
+    <Building2 key="bld" className="text-white" size={20} />,
+    <Award key="awd" className="text-white" size={20} />,
+    <FileCheck key="chk" className="text-white" size={20} />,
+    <Sparkles key="spk" className="text-white" size={20} />,
   ];
 
-  const coreCompetencies = [
-    {
-      title: isEn ? "+15 Years Practical Experience" : "+15 жилийн бодит туршлага",
-      desc: isEn
-        ? "Comprehensive project oversight from site engineer, client supervisor, chief engineer, to executive director."
-        : "Талбайн инженерээс эхлэн ерөнхий инженер, захиалагчийн хяналт, гүйцэтгэх захирал хүртэлх бүх үе шатны практик туршлага.",
-      icon: <Building2 className="text-white" size={20} />,
-    },
-    {
-      title: isEn ? "Accredited Civil Engineer (2019)" : "Мэргэшсэн инженер (2019)",
-      desc: isEn
-        ? "Official national engineering accreditation ensuring structural integrity and modern building standards."
-        : "Барилга байгууламжийн бүтээц, техникийн шийдэл, стандартын дагуу төсөл хэрэгжүүлэх мэргэжлийн зэрэг.",
-      icon: <Award className="text-white" size={20} />,
-    },
-    {
-      title: isEn ? "Accredited Cost Estimator (2020)" : "Мэргэшсэн төсөвчин (2020)",
-      desc: isEn
-        ? "Precision budget modeling, pricing strategy, investment efficiency, and construction financial control."
-        : "Төслийн хөрөнгө оруулалтын оновчлол, үнийн бодлого, төсөв тооцооны өндөр нарийвчлалтай удирдлага.",
-      icon: <FileCheck className="text-white" size={20} />,
-    },
-    {
-      title: isEn ? "Engineering-Driven Innovation" : "Инженерийн ур ухаан & Инновац",
-      desc: isEn
-        ? "Harmonizing Swiss Zehnder clean-air microclimate systems, custom facades, and architectural differentiation."
-        : "Швейцарын Zehnder ухаалаг агаар сэлгэлт, ховор захиалгат хийцлэл, амьдралын чанарыг эрхэмлэсэн шийдлүүд.",
-      icon: <Sparkles className="text-white" size={20} />,
-    },
-  ];
+  const rawCompetencies = (competenciesPost?.content || "")
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+
+  const coreCompetencies = rawCompetencies.map((line, idx) => {
+    const separatorIdx = line.indexOf(" | ");
+    if (separatorIdx !== -1) {
+      return {
+        title: line.slice(0, separatorIdx).trim(),
+        desc: line.slice(separatorIdx + 3).trim(),
+        icon: competencyIcons[idx % competencyIcons.length],
+      };
+    }
+    return {
+      title: line,
+      desc: "",
+      icon: competencyIcons[idx % competencyIcons.length],
+    };
+  });
+
 
   return (
     <article className="bg-background text-foreground">
@@ -331,13 +274,12 @@ He achieved his "Certified Civil Engineer" credential in 2019 and "Certified Cos
                         <h4 className="font-display text-sm font-bold text-[#0d1a46] dark:text-white">
                           {proj.name}
                         </h4>
-                        <span className="font-mono text-[10px] font-semibold text-slate-400">
-                          {proj.year}
-                        </span>
                       </div>
-                      <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                        {proj.category}
-                      </p>
+                      {proj.category && (
+                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                          {proj.category}
+                        </p>
+                      )}
                     </div>
                   ))}
                 </div>

@@ -1,6 +1,6 @@
-import { getTranslations } from "next-intl/server";
 import { getPageDetail } from "@/api/cms/server/queries/get-page-detail";
 import { getProducts } from "@/api/cms/server/queries/get-products";
+import { getPostBySlug } from "@/api/cms/server/queries/get-post-by-slug";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { ProductsSection } from "@/components/sections/ProductsSection";
 import Image from "@/components/common/Image";
@@ -12,10 +12,9 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "nav" });
   const page = await getPageDetail({ slug: "products", language: locale });
   return {
-    title: `${page?.name ?? t("products")} | Artify`,
+    title: `${page?.name ?? "Products"} | Artify`,
     description: page?.description ?? undefined,
   };
 }
@@ -27,9 +26,10 @@ export default async function ProductsPage({
 }) {
   const { locale } = await params;
 
-  const [page, products] = await Promise.all([
+  const [page, products, academyPost] = await Promise.all([
     getPageDetail({ slug: "products", language: locale }),
     getProducts(locale),
+    getPostBySlug({ slug: "academy-portal", language: locale }),
   ]);
 
   return (
@@ -52,7 +52,7 @@ export default async function ProductsPage({
         <div className="relative z-10 mx-auto max-w-5xl px-6 text-center text-white lg:px-12">
           <FadeIn>
             <h1 className="font-display text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
-              {page?.name || (locale === "mn" ? "Бүтээгдэхүүн, Инновац" : "Innovative Products")}
+              {page?.name || ""}
             </h1>
           </FadeIn>
 
@@ -66,7 +66,12 @@ export default async function ProductsPage({
         </div>
       </section>
 
-      <ProductsSection page={page} products={products} locale={locale} />
+      <ProductsSection
+        page={page}
+        products={products}
+        academyPost={academyPost}
+        locale={locale}
+      />
     </>
   );
 }

@@ -31,3 +31,33 @@ export async function getPageSlugs(language: string): Promise<string[]> {
     page.slug ? [page.slug] : [],
   );
 }
+
+export interface CmsPageListItemDto {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  thumbnailUrl: string | null;
+}
+
+export async function getPages(language: string): Promise<CmsPageListItemDto[]> {
+  if (!language) {
+    throw new Error("CMS language is required");
+  }
+
+  const variables: CpPagesVariables = { language };
+  const { data } = await getCmsClient().query<CpPagesData, CpPagesVariables>({
+    query: CP_PAGES,
+    variables,
+    context: cmsPublicQueryContext,
+  });
+
+  return (data?.cpPages ?? []).map((page) => ({
+    id: page._id,
+    name: page.name || "",
+    slug: page.slug || "",
+    description: page.description ? page.description.replace(/<[^>]+>/g, "").trim() : "",
+    thumbnailUrl: page.thumbnail?.url ?? null,
+  }));
+}
+

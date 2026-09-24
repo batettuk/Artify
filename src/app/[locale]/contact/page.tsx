@@ -1,6 +1,6 @@
-import { getTranslations } from "next-intl/server";
 import { getPageDetail } from "@/api/cms/server/queries/get-page-detail";
 import { getContactInfo } from "@/api/cms/server/queries/get-contact-info";
+import { getPostBySlug } from "@/api/cms/server/queries/get-post-by-slug";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { FadeIn } from "@/components/motion/FadeIn";
 import Image from "@/components/common/Image";
@@ -12,14 +12,9 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "contact" });
   const page = await getPageDetail({ slug: "contact", language: locale });
-  const isEn = locale === "en";
-  const title = page?.name || (isEn ? "Contact & Inquiries" : "Холбоо барих");
-  let description = page?.description || t("body");
-  if (description.includes("<") || description.includes("Address:") || description.includes("Phone:")) {
-    description = t("body");
-  }
+  const title = page?.name || "Contact";
+  const description = page?.description || "";
   return {
     title: `${title} | Artify`,
     description,
@@ -32,19 +27,15 @@ export default async function ContactPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "contact" });
-  const [page, textPage, contactInfo] = await Promise.all([
+  const [page, textPage, contactInfo, faqsPost] = await Promise.all([
     getPageDetail({ slug: "contact", language: locale }),
     getPageDetail({ slug: "contact-text", language: locale }),
     getContactInfo(locale),
+    getPostBySlug({ slug: "contact-faqs", language: locale }),
   ]);
 
-  const isEn = locale === "en";
-  const heroHeading = page?.name || (isEn ? "Contact & Inquiries" : "Холбоо барих");
-  let heroBody = page?.description || t("body");
-  if (heroBody.includes("<") || heroBody.includes("Address:") || heroBody.includes("Phone:")) {
-    heroBody = t("body");
-  }
+  const heroHeading = page?.name || "";
+  const heroBody = page?.description || "";
 
   return (
     <>
@@ -88,7 +79,9 @@ export default async function ContactPage({
         hours={contactInfo.hours}
         facebookUrl={contactInfo.facebook || undefined}
         instagramUrl={contactInfo.instagram || undefined}
+        faqsPost={faqsPost}
       />
     </>
   );
 }
+

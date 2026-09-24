@@ -6,40 +6,41 @@ import { Link } from "@/i18n/routing";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { ArrowRight } from "lucide-react";
 
-function formatHeroHeading(text: string | null | undefined, locale?: string): string {
-  if (!text) {
-    return locale === "en"
-      ? "What is the true value\nof your project?"
-      : "Таны төслийн бодит\nүнэ цэн юу вэ?";
+function formatHeroHeading(text: string | null | undefined): string {
+  if (!text) return "";
+  const clean = text.replace(/<br\s*\/?>/gi, "\n");
+  if (clean.includes("\n")) {
+    return clean;
   }
-  if (text.includes("\n")) {
-    return text;
+  // Cut specifically on "бодит" (bodit)
+  if (/бодит/i.test(clean)) {
+    return clean.replace(/(бодит)\s+/i, "$1\n");
   }
-  if (/таны төслийн бодит/i.test(text)) {
-    return text.replace(/^(таны төслийн бодит)\s+(.*)$/i, "$1\n$2");
+  if (/bodit/i.test(clean)) {
+    return clean.replace(/(bodit)\s+/i, "$1\n");
   }
-  if (/^what is the true value/i.test(text)) {
-    return text.replace(/^(what is the true value)\s+(.*)$/i, "$1\n$2");
+  if (/true value/i.test(clean)) {
+    return clean.replace(/(true value)\s+/i, "$1\n");
   }
-  return text;
+  if (/value/i.test(clean)) {
+    return clean.replace(/(value)\s+/i, "$1\n");
+  }
+  return clean;
 }
 
-function formatHeroBody(text: string | null | undefined, locale?: string): string {
-  if (!text || text.includes("Барилгын төсөл бүрийн") || text.includes("Engineering intellect")) {
-    return locale === "en"
-      ? "You are implementing high-value projects.\nBut how do you truly differentiate from competitors?"
-      : "Та илүү чанартай, үнэ цэнтэй төсөл хэрэгжүүлж байна.\nГэвч өрсөлдөгчөөсөө хэрхэн ялгарах вэ?";
+function formatHeroBody(text: string | null | undefined): string {
+  if (!text) return "";
+  const clean = text.replace(/<br\s*\/?>/gi, "\n");
+  if (clean.includes("\n")) {
+    return clean;
   }
-  if (text.includes("\n")) {
-    return text;
+  if (clean.includes("хэрэгжүүлж байна.")) {
+    return clean.replace(/(хэрэгжүүлж байна\.)\s+/, "$1\n");
   }
-  if (text.includes("хэрэгжүүлж байна.")) {
-    return text.replace(/(хэрэгжүүлж байна\.)\s+/, "$1\n");
+  if (/high-value projects\.\s+/i.test(clean)) {
+    return clean.replace(/(high-value projects\.)\s+/i, "$1\n");
   }
-  if (/high-value projects\.\s+/i.test(text)) {
-    return text.replace(/(high-value projects\.)\s+/i, "$1\n");
-  }
-  return text;
+  return clean;
 }
 
 export function Hero({
@@ -55,22 +56,73 @@ export function Hero({
 }) {
   const t = useTranslations("hero");
   const videoRef = useRef<HTMLVideoElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
-  const displayHeading = formatHeroHeading(heading, locale);
-  const displayBody = formatHeroBody(body, locale);
+  const displayHeading = formatHeroHeading(heading);
+  const displayBody = formatHeroBody(body);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (video) {
-      video.muted = true;
-      video.play().catch((err) => {
-        console.error("Video autoplay failed:", err);
-      });
+    const section = sectionRef.current;
+    if (!video || !section) return;
+
+    video.muted = true;
+
+    // Do not autoplay if user prefers reduced motion
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+      video.pause();
+      return;
     }
+
+    let isSectionVisible = true;
+
+    const playVideo = () => {
+      if (isSectionVisible && !document.hidden) {
+        video.play().catch(() => {});
+      }
+    };
+
+    const pauseVideo = () => {
+      video.pause();
+    };
+
+    // Pause video immediately when scrolled out of view to save CPU and GPU
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isSectionVisible = entry.isIntersecting;
+          if (entry.isIntersecting) {
+            playVideo();
+          } else {
+            pauseVideo();
+          }
+        });
+      },
+      { threshold: 0.05 }
+    );
+
+    observer.observe(section);
+
+    // Pause video when tab is hidden or minimized
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        pauseVideo();
+      } else if (isSectionVisible) {
+        playVideo();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
   return (
-    <section className="relative flex min-h-[80vh] lg:h-[80vh] w-full items-center justify-center overflow-hidden">
+    <section ref={sectionRef} className="relative flex min-h-[80vh] lg:h-[80vh] w-full items-center justify-center overflow-hidden">
       <video
         ref={videoRef}
         autoPlay
@@ -87,7 +139,7 @@ export function Hero({
 
       <div className="relative z-10 mx-auto max-w-5xl px-6 py-20 text-center lg:px-12 lg:py-24">
         <FadeIn delay={0.1}>
-          <h1 className="font-display text-2xl font-bold leading-tight text-white whitespace-pre-line sm:text-3xl lg:text-4xl xl:text-5xl">
+          <h1 className="font-display text-3xl font-bold leading-tight text-white whitespace-pre-line sm:text-4xl lg:text-5xl xl:text-6xl drop-shadow-sm">
             {displayHeading}
           </h1>
         </FadeIn>
@@ -117,8 +169,9 @@ export function Hero({
         </FadeIn>
       </div>
 
-      <div className="pointer-events-none absolute -bottom-20 -right-20 h-64 w-64 bg-primary/20 blur-3xl lg:h-96 lg:w-96" />
-      <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 bg-primary/20 blur-3xl lg:h-96 lg:w-96" />
+      <div className="pointer-events-none absolute -bottom-20 -right-20 h-64 w-64 [background:radial-gradient(circle,rgba(63,87,142,0.25)_0%,transparent_70%)] lg:h-96 lg:w-96" />
+      <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 [background:radial-gradient(circle,rgba(63,87,142,0.25)_0%,transparent_70%)] lg:h-96 lg:w-96" />
     </section>
   );
 }
+

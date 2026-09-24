@@ -1,10 +1,19 @@
 import { CmsContent } from "@/components/common/CmsContent";
 import { FadeIn } from "@/components/motion/FadeIn";
 import Image from "@/components/common/Image";
-import type { CmsPageDto } from "@/api/cms/types/public";
+import type { CmsPageDto, CmsPostDto } from "@/api/cms/types/public";
 
-export function AboutSection({ page }: { page: CmsPageDto | null }) {
-  if (!page) return null;
+export function AboutSection({
+  page,
+  post,
+}: {
+  page: CmsPageDto | null;
+  post?: CmsPostDto | null;
+}) {
+  if (!page && !post) return null;
+
+  const title = post?.title || page?.name || "";
+  const content = post?.content || page?.description || "";
 
   return (
     <section className="bg-background px-4 py-12 sm:px-6 lg:px-12 lg:py-20" id="about">
@@ -23,11 +32,11 @@ export function AboutSection({ page }: { page: CmsPageDto | null }) {
 
                   <div>
                     <h2 className="font-display text-2xl font-bold leading-tight text-[#0d1a46] dark:text-white sm:text-3xl lg:text-4xl">
-                      {page.name}
+                      {title}
                     </h2>
                     
                     <CmsContent
-                      html={page.description}
+                      html={content}
                       className="mt-6 text-sm leading-relaxed text-slate-600 dark:text-slate-300 sm:text-base [&_h3]:mt-6 [&_h3]:font-display [&_h3]:text-base [&_h3]:font-bold [&_h3]:text-[#0d1a46] dark:[&_h3]:text-white [&_h3]:lg:text-lg [&_p]:mt-2.5 [&_p:empty]:hidden [&_strong]:font-bold [&_strong]:text-[#0d1a46] dark:[&_strong]:text-white [&_p:first-of-type]:mt-4 [&_li]:text-slate-600 dark:[&_li]:text-slate-300"
                     />
                   </div>
@@ -35,6 +44,7 @@ export function AboutSection({ page }: { page: CmsPageDto | null }) {
               </div>
             </FadeIn>
           </div>
+
 
           {/* High-End Architectural Photography Showcase Column with 45-Degree Cuts - Single Long Photo */}
           <div className="lg:col-span-6 flex flex-col">

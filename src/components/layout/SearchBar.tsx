@@ -79,7 +79,7 @@ export function SearchBar({
     [isMn]
   );
 
-  // Debounced search query
+  // Debounced search query with request aborting
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
@@ -87,11 +87,14 @@ export function SearchBar({
       return;
     }
 
+    const controller = new AbortController();
+
     const timer = setTimeout(async () => {
       setIsLoading(true);
       try {
         const res = await fetch(
-          `/api/search?q=${encodeURIComponent(query.trim())}&locale=${locale}`
+          `/api/search?q=${encodeURIComponent(query.trim())}&locale=${locale}`,
+          { signal: controller.signal }
         );
         if (res.ok) {
           const data = await res.json();
@@ -100,7 +103,8 @@ export function SearchBar({
         } else {
           setResults([]);
         }
-      } catch (err) {
+      } catch (err: any) {
+        if (err?.name === "AbortError") return;
         console.error("Search fetch error:", err);
         setResults([]);
       } finally {
@@ -108,8 +112,12 @@ export function SearchBar({
       }
     }, 180);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [query, locale]);
+
 
   // Filtered results based on active tab
   const filteredResults = useMemo(() => {

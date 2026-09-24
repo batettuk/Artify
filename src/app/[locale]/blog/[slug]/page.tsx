@@ -9,6 +9,7 @@ import { CmsContent } from "@/components/common/CmsContent";
 import Image from "@/components/common/Image";
 import { Link } from "@/i18n/routing";
 import { ArrowLeft, Calendar } from "lucide-react";
+import { formatCmsDate } from "@/lib/utils/format-date";
 
 export async function generateStaticParams() {
   const results = await Promise.all(
@@ -45,13 +46,7 @@ export default async function PostPage({
   const post = await getPostDetail({ slug, language: locale });
   if (!post) notFound();
 
-  const formattedDate = post.publishedDate
-    ? new Date(post.publishedDate).toLocaleDateString(locale, {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      })
-    : "";
+  const formattedDate = formatCmsDate(post.publishedDate, locale);
 
   const heroImage = post.thumbnailUrl || "/images/about-2.jpg";
 

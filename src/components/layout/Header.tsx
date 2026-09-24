@@ -32,15 +32,24 @@ export default function Header({ locale, navItems }: HeaderProps) {
 
   const isDark = mounted ? resolvedTheme === "dark" : false;
 
-  // Scroll detection: transparent at top over dark hero banners, solid frosted-glass when scrolled down
+  // Scroll detection: throttled with requestAnimationFrame for 60/120Hz smooth performance
   useEffect(() => {
+    let rafId: number | null = null;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 20);
+        rafId = null;
+      });
     };
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
+    };
   }, []);
+
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -235,22 +244,23 @@ export default function Header({ locale, navItems }: HeaderProps) {
                 : "bg-[#f8fafc] text-[#070e24] [background:radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(13,26,70,0.06),#f8fafc_70%)]"
             }`}
           >
-            {/* Ambient Lighting Orbs */}
+            {/* Ambient Lighting Orbs - hardware accelerated zero-filter radial gradients */}
             <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
               {isDark ? (
                 <>
-                  <div className="absolute -top-24 right-1/4 h-80 w-80 rounded-full bg-blue-600/15 blur-3xl" />
-                  <div className="absolute top-1/2 -left-20 h-72 w-72 rounded-full bg-sky-500/10 blur-3xl" />
-                  <div className="absolute bottom-10 right-10 h-72 w-72 rounded-full bg-indigo-600/10 blur-3xl" />
+                  <div className="absolute -top-24 right-1/4 h-80 w-80 rounded-full [background:radial-gradient(circle,rgba(37,99,235,0.18)_0%,transparent_70%)]" />
+                  <div className="absolute top-1/2 -left-20 h-72 w-72 rounded-full [background:radial-gradient(circle,rgba(14,165,233,0.12)_0%,transparent_70%)]" />
+                  <div className="absolute bottom-10 right-10 h-72 w-72 rounded-full [background:radial-gradient(circle,rgba(79,70,229,0.12)_0%,transparent_70%)]" />
                 </>
               ) : (
                 <>
-                  <div className="absolute -top-24 right-1/4 h-80 w-80 rounded-full bg-blue-400/10 blur-3xl" />
-                  <div className="absolute top-1/2 -left-20 h-72 w-72 rounded-full bg-sky-300/15 blur-3xl" />
-                  <div className="absolute bottom-10 right-10 h-72 w-72 rounded-full bg-slate-300/20 blur-3xl" />
+                  <div className="absolute -top-24 right-1/4 h-80 w-80 rounded-full [background:radial-gradient(circle,rgba(96,165,250,0.12)_0%,transparent_70%)]" />
+                  <div className="absolute top-1/2 -left-20 h-72 w-72 rounded-full [background:radial-gradient(circle,rgba(125,211,252,0.15)_0%,transparent_70%)]" />
+                  <div className="absolute bottom-10 right-10 h-72 w-72 rounded-full [background:radial-gradient(circle,rgba(203,213,225,0.2)_0%,transparent_70%)]" />
                 </>
               )}
             </div>
+
 
             {/* Drawer Scrollable Content */}
             <div className="flex-1 overflow-y-auto px-5 py-6 sm:px-8 md:px-12">

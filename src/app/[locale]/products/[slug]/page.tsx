@@ -11,6 +11,8 @@ import { ScrollDownCue } from "@/components/common/ScrollDownCue";
 import { ScrollToButton } from "@/components/common/ScrollToButton";
 import type { Metadata } from "next";
 
+import { getPostBySlug } from "@/api/cms/server/queries/get-post-by-slug";
+
 export async function generateMetadata({
   params,
 }: {
@@ -34,9 +36,22 @@ export default async function ProductDetailPage({
   const { locale, slug } = await params;
   const t = await getTranslations({ locale, namespace: "products" });
 
-  const [product, allProducts] = await Promise.all([
+  const [
+    product,
+    allProducts,
+    catalogsPost,
+    guaranteesPost,
+    sidebarMasterclassPost,
+    sidebarCleanAirPost,
+    sidebarAdvisoryPost,
+  ] = await Promise.all([
     getProductDetail({ slug, language: locale }),
     getProducts(locale),
+    getPostBySlug({ slug: "zehnder-catalogs", language: locale }),
+    getPostBySlug({ slug: "service-guarantees", language: locale }),
+    getPostBySlug({ slug: "sidebar-masterclass", language: locale }),
+    getPostBySlug({ slug: "sidebar-clean-air", language: locale }),
+    getPostBySlug({ slug: "sidebar-advisory", language: locale }),
   ]);
 
   if (!product) {
@@ -50,49 +65,42 @@ export default async function ProductDetailPage({
   const isCleanAir = slug === "tech-invent";
   const isMasterclass = slug === "blok-akademi";
 
-  // Catalog items for Clean Air (Zehnder) — Exactly matching user's uploaded files
-  const cleanAirCatalogs = [
-    {
-      id: "radiator",
-      title: "Zehnder радиатор, алчуур хатаагч",
-      description: isEn
-        ? "Official Zehnder designer radiator & bathroom towel warmer technical specifications."
-        : "Германы Zehnder брэндийн дизайнер радиатор, алчуур хатаагчийн албан ёсны техникийн каталоги.",
-      fileUrl: "/catalogs/zehnder-radiator-towel-dryer.pdf",
-      fileName: "Zehnder радиатор, алчуур хатаагч.pdf",
-      size: "13.8 MB",
-    },
-    {
-      id: "erv-system",
-      title: "ERV системийн ач холбогдол ба хэрэглээ  TechInvent",
-      description: isEn
-        ? "Comprehensive technical guide and health advantages of Energy Recovery Ventilation (ERV) systems."
-        : "Дулаан ба чийг сэргээгчтэй ухаалаг ERV агааржуулалтын систем, барилгын төсөлд үзүүлэх давуу тал.",
-      fileUrl: "/catalogs/erv-system-significance-techinvent.pdf",
-      fileName: "ERV системийн ач холбогдол ба хэрэглээ  TechInvent.pdf",
-      size: "7.5 MB",
-    },
-    {
-      id: "comfoschool",
-      title: "Comfoscholl catalog 20251104-x (Монгол)",
-      description: isEn
-        ? "Smart fresh air ventilation systems specifically engineered for schools and modern facilities."
-        : "Сургууль, цэцэрлэг болон олон нийтийн барилгад зориулсан эрүүл, цэвэр агаар сэлгэлтийн систем.",
-      fileUrl: "/catalogs/comfoschool-catalog-mn.pdf",
-      fileName: "Comfoscholl catalog 20251104-x (Монгол).pdf",
-      size: "1.1 MB",
-    },
-    {
-      id: "caw300",
-      title: "CAW300 User Manual MN",
-      description: isEn
-        ? "Operation, technical specifications, and maintenance guide for Zehnder CAW300 fresh air units."
-        : "Zehnder CAW300 төхөөрөмжийн ашиглалт, тохиргоо, суурилуулалтын албан ёсны гарын авлага.",
-      fileUrl: "/catalogs/caw300-user-manual-mn.pdf",
-      fileName: "CAW300 User Manual MN.pdf",
-      size: "955 KB",
-    },
-  ];
+  // Catalog items for Clean Air (Zehnder) parsed directly from CMS post
+  const cleanAirCatalogs = (catalogsPost?.content || "")
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .map((line, idx) => {
+      const parts = line.split(" | ");
+      return {
+        id: `catalog-${idx}`,
+        title: parts[0]?.trim() || "",
+        description: parts[1]?.trim() || "",
+        fileUrl: parts[2]?.trim() || "",
+        fileName: (parts[0]?.trim() || "catalog") + ".pdf",
+        size: parts[3]?.trim() || "PDF",
+      };
+    });
+
+  // Dynamic guarantees list parsed from CMS post
+  const guarantees = (guaranteesPost?.content || "")
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+
+  // Dynamic sidebar card title and description from CMS posts
+  const sidebarTitle = isMasterclass
+    ? sidebarMasterclassPost?.title || ""
+    : isCleanAir
+    ? sidebarCleanAirPost?.title || ""
+    : sidebarAdvisoryPost?.title || "";
+
+  const sidebarDesc = isMasterclass
+    ? sidebarMasterclassPost?.excerpt || ""
+    : isCleanAir
+    ? sidebarCleanAirPost?.excerpt || ""
+    : sidebarAdvisoryPost?.excerpt || "";
+
 
   return (
     <article className="min-h-screen bg-background text-foreground">
@@ -196,13 +204,13 @@ export default async function ProductDetailPage({
                     Zehnder Documentation
                   </span>
                   <h3 className="font-display text-2xl font-bold text-[#0d1a46] dark:text-white">
-                    {isEn ? "Product Catalogs & Technical Documentation" : "Бүтээгдэхүүний каталог татах"}
+                    {catalogsPost?.title || ""}
                   </h3>
-                  <p className="mt-2 text-sm text-slate-600 dark:!text-white max-w-2xl">
-                    {isEn
-                      ? "Download comprehensive engineering brochures, technical specifications, and system manuals for Zehnder clean air and climate solutions."
-                      : "Германы Zehnder брэндийн эрүүл агаар сэлгэлт, ухаалаг халаалт, радиаторын албан ёсны каталоги болон техникийн танилцуулгыг татаж авна уу."}
-                  </p>
+                  {catalogsPost?.excerpt && (
+                    <p className="mt-2 text-sm text-slate-600 dark:!text-white max-w-2xl">
+                      {catalogsPost.excerpt}
+                    </p>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -258,24 +266,10 @@ export default async function ProductDetailPage({
                 <div className="pointer-events-none absolute left-0 top-0 h-5 w-5 border-b border-r border-white/20 bg-white/10 [clip-path:polygon(0_0,100%_0,0_100%)]" />
 
                 <h3 className="font-display text-lg sm:text-xl font-bold text-white">
-                  {isMasterclass
-                    ? isEn ? "Block Academy Masterclass" : "Блок Академи Сургалт"
-                    : isCleanAir
-                    ? isEn ? "Zehnder Clean Air Solutions" : "Zehnder Эрүүл Агаар"
-                    : isEn ? "Request Consultation" : "Зөвлөгөө авах"}
+                  {sidebarTitle}
                 </h3>
                 <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-slate-300">
-                  {isMasterclass
-                    ? isEn
-                      ? "Join our professional engineering and construction management masterclasses powered by Block Academy."
-                      : "Барилгын төслийн менежмент, инженерийн практик сургалтуудыг Блок Академиар дамжуулан аваарай."
-                    : isCleanAir
-                    ? isEn
-                      ? "Official Zehnder heating and ventilation solutions engineered for health, silence, and optimal energy efficiency."
-                      : "Германы 120 жилийн түүхтэй Zehnder брэндийн албан ёсны төлөөлөгчөөс инженерийн тооцоолуур, суурилуулалт аваарай."
-                    : isEn
-                    ? "Contact our engineering team to evaluate the best solutions tailored to your project requirements."
-                    : "Манай инженерийн багтай холбогдон төслийнхөө шаардлагад нийцсэн шийдлийг тооцоолуулна уу."}
+                  {sidebarDesc}
                 </p>
 
                 <div className="mt-6 space-y-3">
@@ -340,25 +334,22 @@ export default async function ProductDetailPage({
                   </a>
                 </div>
 
-                {/* Key Benefits Guarantee list */}
-                <div className="mt-8 border-t border-white/10 pt-6 space-y-3">
-                  <div className="flex items-center gap-2.5 text-xs text-slate-200">
-                    <CheckCircle2 size={15} className="text-emerald-400 shrink-0" />
-                    <span>{isEn ? "Certified Engineering Calculations" : "Мэргэшсэн инженерийн тооцоолол"}</span>
+                {/* Key Benefits Guarantee list from CMS post */}
+                {guarantees.length > 0 && (
+                  <div className="mt-8 border-t border-white/10 pt-6 space-y-3">
+                    {guarantees.map((benefit, idx) => (
+                      <div key={idx} className="flex items-center gap-2.5 text-xs text-slate-200">
+                        <CheckCircle2 size={15} className="text-emerald-400 shrink-0" />
+                        <span>{benefit}</span>
+                      </div>
+                    ))}
                   </div>
-                  <div className="flex items-center gap-2.5 text-xs text-slate-200">
-                    <CheckCircle2 size={15} className="text-emerald-400 shrink-0" />
-                    <span>{isEn ? "Premium Quality Assurance" : "Чанарын өндөр стандарт, баталгаа"}</span>
-                  </div>
-                  <div className="flex items-center gap-2.5 text-xs text-slate-200">
-                    <CheckCircle2 size={15} className="text-emerald-400 shrink-0" />
-                    <span>{isEn ? "Dedicated Client Support" : "Шуурхай дэмжлэг, үйлчилгээ"}</span>
-                  </div>
-                </div>
+                )}
               </div>
             </FadeIn>
           </div>
         </div>
+
 
         {/* Other Products Section with Chamfer Card & 4:3 Proportional Image on Top */}
         {otherProducts.length > 0 && (

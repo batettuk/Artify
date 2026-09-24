@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getProducts } from "@/api/cms/server/queries/get-products";
 import { getBlogPosts } from "@/api/cms/server/queries/get-blog-posts";
 import { getProjects } from "@/api/cms/server/queries/get-home-collection";
+import { getPages } from "@/api/cms/server/queries/get-pages";
 
 export interface SearchResultItem {
   id: string;
@@ -25,70 +26,12 @@ export async function GET(request: Request) {
 
   const isMn = locale === "mn";
 
-  // Static site pages to include in search
-  const staticPages: SearchResultItem[] = [
-    {
-      id: "page-home",
-      title: isMn ? "Нүүр хуудас" : "Home Page",
-      category: "pages",
-      categoryLabel: isMn ? "Хуудас" : "Pages",
-      url: "/",
-      excerpt: isMn
-        ? "ARTIFY BRAND — Инженерийн нарийн тооцоолол, ухаалаг агааржуулалт, захиалгат ховор материалын цогц шийдлээр амьдралын чанарыг урлана."
-        : "ARTIFY BRAND — crafting the quality of life",
-      thumbnailUrl: "/images/artify-logo-white.png",
-    },
-    {
-      id: "page-about",
-      title: isMn ? "Бидний тухай" : "About Us",
-      category: "pages",
-      categoryLabel: isMn ? "Хуудас" : "Pages",
-      url: "/#about",
-      excerpt: isMn
-        ? "Компанийн танилцуулга, үнэт зүйлс, үйл ажиллагааны үндсэн чиглэл"
-        : "Company philosophy, values, and core service pillars",
-      thumbnailUrl: "/images/about-1.jpg",
-    },
-    {
-      id: "page-products",
-      title: isMn ? "Бүтээгдэхүүн, Шийдлүүд" : "Products & Solutions",
-      category: "pages",
-      categoryLabel: isMn ? "Хуудас" : "Pages",
-      url: "/products",
-      excerpt: isMn
-        ? "Зөвлөх үйлчилгээ, Zehnder агааржуулалт, онцгой хийцлэл, сургалт"
-        : "Consulting, Zehnder clean air systems, bespoke fabrication, masterclass",
-      thumbnailUrl: "/images/consulting-1.jpg",
-    },
-    {
-      id: "page-blog",
-      title: isMn ? "Мэдээ, Нийтлэл" : "News & Articles",
-      category: "pages",
-      categoryLabel: isMn ? "Хуудас" : "Pages",
-      url: "/blog",
-      excerpt: isMn
-        ? "Барилгын салбарын сүүлийн үеийн мэдээ, шинэ технологийн нийтлэл"
-        : "Latest construction news, sustainable trends, and engineering articles",
-      thumbnailUrl: "/images/about-2.jpg",
-    },
-    {
-      id: "page-contact",
-      title: isMn ? "Холбоо барих, Захиалга" : "Contact & Consultation",
-      category: "pages",
-      categoryLabel: isMn ? "Хуудас" : "Pages",
-      url: "/contact",
-      excerpt: isMn
-        ? "Төслийн зөвлөгөө авах, шууд утас, төв оффис, захиалгын маягт"
-        : "Request consultation, phone numbers, HQ location, and inquiry form",
-      thumbnailUrl: "/images/consulting-2.jpg",
-    },
-  ];
-
   try {
-    const [products, posts, projects] = await Promise.all([
+    const [products, posts, projects, pages] = await Promise.all([
       getProducts(locale).catch(() => []),
       getBlogPosts({ language: locale, limit: 30 }).catch(() => []),
       getProjects(locale).catch(() => []),
+      getPages(locale).catch(() => []),
     ]);
 
     const productResults: SearchResultItem[] = products.map((p) => ({
@@ -123,11 +66,30 @@ export async function GET(request: Request) {
       thumbnailUrl: pr.thumbnailUrl,
     }));
 
+    const pageResults: SearchResultItem[] = pages
+      .filter((page) => page.slug !== "contact-text")
+      .map((page) => {
+        const cleanSlug = page.slug.replace(/^\/+/, "");
+        let url = `/${cleanSlug}`;
+        if (cleanSlug === "home") url = "/";
+        if (cleanSlug === "about") url = "/#about";
+        return {
+          id: `page-${page.id}`,
+          title: page.name,
+          slug: page.slug,
+          category: "pages",
+          categoryLabel: isMn ? "Хуудас" : "Pages",
+          url,
+          excerpt: page.description,
+          thumbnailUrl: page.thumbnailUrl,
+        };
+      });
+
     const allItems = [
       ...productResults,
       ...blogResults,
       ...projectResults,
-      ...staticPages,
+      ...pageResults,
     ];
 
     const filtered = allItems.filter((item) => {
@@ -141,12 +103,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ results: filtered });
   } catch (error) {
     console.error("[Search API] Error searching CMS content:", error);
-    // Fallback to searching static pages
-    const filteredStatic = staticPages.filter(
-      (p) =>
-        p.title.toLowerCase().includes(q) ||
-        p.excerpt?.toLowerCase().includes(q)
-    );
-    return NextResponse.json({ results: filteredStatic });
+    return NextResponse.json({ results: [] });
   }
 }
+

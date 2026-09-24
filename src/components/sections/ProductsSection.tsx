@@ -4,7 +4,7 @@ import EmptyState from "@/components/common/EmptyState";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 import Image from "@/components/common/Image";
-import type { CmsPageDto, ProductCardDto } from "@/api/cms/types/public";
+import type { CmsPageDto, CmsPostDto, ProductCardDto } from "@/api/cms/types/public";
 
 function ProductCard({
   product,
@@ -15,6 +15,7 @@ function ProductCard({
   ctaLabel: string;
   delay?: number;
 }) {
+
   return (
     <FadeIn delay={delay} direction="up" className="flex h-full flex-col">
       {/* Outer container with 45-degree top-left chamfer cut border */}
@@ -99,13 +100,18 @@ function ProductCard({
 
 export async function ProductsSection({
   products,
+  academyPost,
   locale,
 }: {
   page?: CmsPageDto | null;
   products: ProductCardDto[];
+  academyPost?: CmsPostDto | null;
   locale: string;
 }) {
   const t = await getTranslations({ locale, namespace: "products" });
+
+  const academyTitle = academyPost?.title || "";
+  const academyDescription = academyPost?.content || academyPost?.excerpt || "";
 
   return (
     <section className="px-4 py-16 sm:px-6 lg:px-12 lg:py-20 bg-[#f8fafc] border-b border-slate-200/80 dark:bg-[#060b18] dark:border-white/10">
@@ -125,7 +131,7 @@ export async function ProductsSection({
           </div>
         )}
 
-        {/* Artify Academy Portal Highlight Card */}
+        {/* Artify Academy Portal Highlight Card from CMS post */}
         <div className="mt-12 sm:mt-16 group relative bg-slate-200/90 p-[1px] shadow-sm transition-all duration-300 [clip-path:polygon(20px_0,100%_0,100%_100%,0_100%,0_20px)] dark:bg-white/10">
           <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6 bg-[#070e24] p-6 sm:p-8 [clip-path:polygon(19px_0,100%_0,100%_100%,0_100%,0_19px)] text-white">
             <div className="pointer-events-none absolute left-0 top-0 h-6 w-6 border-b border-r border-white/20 bg-white/10 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
@@ -134,12 +140,10 @@ export async function ProductsSection({
                 academy.artify.mn
               </span>
               <h3 className="font-display text-lg sm:text-xl font-bold text-white">
-                {locale === "mn" ? "Artify Академи — Сургалтын нэгдсэн систем" : "Artify Academy — Training & Certification"}
+                {academyTitle}
               </h3>
               <p className="mt-1 text-xs sm:text-sm text-white leading-relaxed">
-                {locale === "mn"
-                  ? "Барилгын салбарын инженер, техникийн ажилтнууд болон борлуулагчдад зориулсан мэргэшсэн сургалтын систем."
-                  : "Specialized engineering calculation modules, property sales masterclasses, and certified workforce development."}
+                {academyDescription}
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3 w-full md:w-auto shrink-0">
@@ -168,3 +172,4 @@ export async function ProductsSection({
     </section>
   );
 }
+

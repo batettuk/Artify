@@ -3,7 +3,18 @@ import { Link } from "@/i18n/routing";
 import { ArrowUpRight } from "lucide-react";
 import Image from "@/components/common/Image";
 
-export function HomeCtaSection({ locale }: { locale: string }) {
+import type { CmsPostDto } from "@/api/cms/types/public";
+
+export function HomeCtaSection({
+  post,
+  locale,
+}: {
+  post?: CmsPostDto | null;
+  locale: string;
+}) {
+  const headline = post?.title || "";
+  const description = post?.excerpt || post?.content || "";
+
   return (
     <section className="relative overflow-hidden bg-[#070e24] px-4 py-16 text-white sm:px-6 lg:px-12 lg:py-24 border-t border-white/10">
       <div className="absolute inset-0">
@@ -20,22 +31,18 @@ export function HomeCtaSection({ locale }: { locale: string }) {
       <div className="relative z-10 mx-auto max-w-[1400px]">
         <div className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-end">
           <div className="max-w-2xl">
-            
             <FadeIn delay={0.1}>
               <h2 className="mt-4 font-display text-2xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl">
-                {locale === "mn"
-                  ? "Барилгын төслөө чанарын шинэ түвшинд хүргэхэд бэлэн үү?"
-                  : "Ready to elevate your project to a new standard of living?"}
+                {headline}
               </h2>
             </FadeIn>
             <FadeIn delay={0.15}>
               <p className="mt-3 text-sm leading-relaxed text-slate-300 sm:text-base">
-                {locale === "mn"
-                  ? "Инженерийн нарийн тооцоолол, ухаалаг агааржуулалт, захиалгат ховор материалын цогц шийдлээр амьдралын чанарыг урлана."
-                  : "From precision engineering and smart ventilation to bespoke fabrication, we craft environments where you truly thrive."}
+                {description}
               </p>
             </FadeIn>
           </div>
+
 
           <FadeIn delay={0.2} className="flex flex-wrap items-center gap-4">
             <Link

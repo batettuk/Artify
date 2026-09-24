@@ -5,6 +5,7 @@ import { Link } from "@/i18n/routing";
 import { FadeIn } from "@/components/motion/FadeIn";
 import Image from "@/components/common/Image";
 import { ArrowRight, Calendar } from "lucide-react";
+import { formatCmsDate } from "@/lib/utils/format-date";
 import type { BlogCardDto } from "@/api/cms/types/public";
 
 interface FeaturedPostProps {
@@ -49,13 +50,7 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
 
                       <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
                         <Calendar size={14} className="text-primary dark:text-white" />
-                        {post.publishedDate
-                          ? new Date(post.publishedDate).toLocaleDateString(locale, {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })
-                          : ""}
+                        {formatCmsDate(post.publishedDate, locale)}
                       </div>
 
                       <h3 className="mt-4 font-display text-2xl font-bold leading-tight text-[#0d1a46] dark:text-white transition-colors group-hover:text-primary dark:group-hover:text-slate-300 lg:text-3xl">

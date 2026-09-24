@@ -19,5 +19,8 @@ export function getCmsPortalId() {
 // Freshness policy: all public CMS reads revalidate every 60s.
 // Only confirmed-public DTOs (pages, posts, menus) pass through this context.
 export const cmsPublicQueryContext = {
-  fetchOptions: { next: { revalidate: 60 } },
+  fetchOptions:
+    process.env.NODE_ENV !== "production"
+      ? { cache: "no-store" }
+      : { next: { revalidate: 60 } },
 };

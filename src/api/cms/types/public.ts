@@ -72,3 +72,13 @@ export type MenuItemDto = {
 export type CmsCollectionDto<T> =
   | { status: "ready"; items: T[] }
   | { status: "unconfigured"; postType: string };
+
+export type CmsPostDto = {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  content: string | null;
+  thumbnailUrl: string | null;
+};
+

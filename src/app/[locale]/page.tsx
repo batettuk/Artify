@@ -8,44 +8,54 @@ import { CeoSection } from "@/components/sections/CeoSection";
 import { BlogSection } from "@/components/sections/BlogSection";
 import { HomeCtaSection } from "@/components/sections/HomeCtaSection";
 
+import { getPostBySlug } from "@/api/cms/server/queries/get-post-by-slug";
+
 export async function generateMetadata({
   params,
 }: PageProps<"/[locale]">): Promise<Metadata> {
   const { locale } = await params;
-  const page = await getPageDetail({ slug: "home", language: locale });
+  const [page, heroPost] = await Promise.all([
+    getPageDetail({ slug: "home", language: locale }),
+    getPostBySlug({ slug: "home-hero", language: locale }),
+  ]);
 
-  const rawDescription = page?.description;
-  const description =
-    rawDescription && !rawDescription.includes("Барилгын төсөл бүрийн")
-      ? rawDescription
-      : locale === "en"
-      ? "You are implementing high-value projects. But how do you truly differentiate from competitors?"
-      : "Та илүү чанартай, үнэ цэнтэй төсөл хэрэгжүүлж байна. Гэвч өрсөлдөгчөөсөө хэрхэн ялгарах вэ?";
+  const title = heroPost?.title || page?.name || "Artify";
+  const description = heroPost?.excerpt || heroPost?.content || page?.description || "";
 
-  return page
-    ? { title: `${page.name} | Artify`, description }
-    : { title: "Artify" };
+  return {
+    title: `${title} | Artify`,
+    description,
+  };
 }
 
 export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
-  const { page, sectionPages, blogPosts } =
+  const { page, sectionPages, blogPosts, posts } =
     await getHomeContent(locale);
 
   if (!page) notFound();
 
+  const heroHeading = posts.hero?.title || page.name;
+  const heroBody = posts.hero?.excerpt || posts.hero?.content || page.description;
+
   return (
     <>
       <Hero
-        heading={page.name}
-        body={page.description}
+        heading={heroHeading}
+        body={heroBody}
         videoUrl={page.videoUrl}
         locale={locale}
       />
-      <AboutSection page={sectionPages.about} />
-      <CeoSection page={sectionPages.ceo} locale={locale} />
+      <AboutSection page={sectionPages.about} post={posts.about} />
+      <CeoSection
+        page={sectionPages.ceo}
+        statementPost={posts.ceoStatement}
+        credentialsPost={posts.ceoCredentials}
+        locale={locale}
+      />
       <BlogSection page={sectionPages.blog} posts={blogPosts} locale={locale} />
-      <HomeCtaSection locale={locale} />
+      <HomeCtaSection post={posts.homeCta} locale={locale} />
     </>
   );
 }
+

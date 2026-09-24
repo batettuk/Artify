@@ -12,7 +12,7 @@ import {
   HelpCircle,
   MapPin,
 } from "lucide-react";
-import type { CmsPageDto } from "@/api/cms/types/public";
+import type { CmsPageDto, CmsPostDto } from "@/api/cms/types/public";
 
 interface ContactFormProps {
   page?: CmsPageDto | null;
@@ -24,6 +24,7 @@ interface ContactFormProps {
   hours?: string;
   facebookUrl?: string;
   instagramUrl?: string;
+  faqsPost?: CmsPostDto | null;
 }
 
 function FacebookIcon({ size = 18 }: { size?: number }) {
@@ -47,52 +48,29 @@ export function ContactForm({
   textPage,
   locale = "mn",
   phone,
-  email = "info@artifybrand.com",
+  email,
   address,
   hours,
-  facebookUrl = "https://facebook.com",
-  instagramUrl = "https://instagram.com",
+  facebookUrl,
+  instagramUrl,
+  faqsPost,
 }: ContactFormProps) {
   const t = useTranslations("contact");
-  const isEn = locale === "en";
 
-  const resolvedAddress =
-    isEn
-      ? (address && !/[а-яА-ЯөӨүҮ]/.test(address) ? address : "Ulaanbaatar, Mongolia")
-      : (address || "Улаанбаатар хот, Монгол улс");
-  const resolvedHours =
-    isEn
-      ? (hours && !/[а-яА-ЯөӨүҮ]/.test(hours) ? hours : "Mon – Fri: 09:00 – 18:00 (GMT+8)")
-      : (hours || "Дав – Баа: 09:00 – 18:00 (GMT+8)");
-  const isOldPhone = !phone || phone.includes("7770155") || phone.includes("7770255") || (phone.includes("7710") && !phone.includes("77710"));
-  const resolvedPhone = isOldPhone ? "+976 77710 155" : phone;
+  const resolvedAddress = address || "";
+  const resolvedHours = hours || "";
+  const resolvedPhone = phone || "";
 
-  const faqs = [
-    {
-      q: locale === "mn" ? "Төслийн зөвлөгөөг хэр хурдан авах боломжтой вэ?" : "How quickly can we receive project advisory?",
-      a: locale === "mn"
-        ? "Манай инженерийн зөвлөхүүд таны хүсэлтийг хүлээн авснаас хойш 24 цагийн дотор анхны үнэлгээ, хариуг хүргэдэг."
-        : "Our engineering consultants deliver an initial assessment and response within 24 hours of receiving your inquiry.",
-    },
-    {
-      q: locale === "mn" ? "Улаанбаатар хотод газар дээр нь очиж инженерийн үзлэг хийдэг үү?" : "Do you conduct on-site engineering assessments in Ulaanbaatar?",
-      a: locale === "mn"
-        ? "Тийм ээ, манай мэргэшсэн инженерүүд барилгын дулаан алдагдал, дуу чимээ, агааржуулалтын хэмжилтийг газар дээр нь хийдэг."
-        : "Yes, our accredited engineers perform on-site measurements for building thermal loss, acoustics, and air quality ventilation.",
-    },
-    {
-      q: locale === "mn" ? "Zehnder зэрэг олон улсын брэндүүдтэй хэрхэн хамтардаг вэ?" : "How do you partner with global brands like Zehnder?",
-      a: locale === "mn"
-        ? "Бид Швейцарын алдарт Zehnder брэндийн ухаалаг агааржуулалтын системийг Монголын зах зээлд албан ёсны инженерийн түвшинд нийлүүлж угсардаг."
-        : "We officially engineer and supply Swiss Zehnder smart ERV ventilation systems and architectural radiators directly to Mongolian projects.",
-    },
-    {
-      q: locale === "mn" ? "Block Academy-ийн сургалтад ажилтнуудаа хэрхэн хамруулах вэ?" : "How can our team participate in Block Academy training?",
-      a: locale === "mn"
-        ? "Маягтаас Мастеркласс сургалтыг сонгох эсвэл академийн сувгуудаар дамжуулан барилгын мэргэшсэн ур чадварын хөтөлбөрт бүртгүүлэх боломжтой."
-        : "You can select Masterclass Training in the consultation form or enroll via our academy channels for certified professional development.",
-    },
-  ];
+  const faqs = (faqsPost?.content || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const [q, a] = line.split("|").map((s) => s.trim());
+      return { q: q || "", a: a || "" };
+    })
+    .filter((item) => item.q && item.a);
+
 
   return (
     <div className="bg-background text-foreground">
@@ -122,59 +100,69 @@ export function ContactForm({
                       </p>
 
                       {/* Key Headquarters Coordinates */}
-                      <div className="mt-8 space-y-4 border-t border-white/10 pt-6">
-                        <div className="flex items-start gap-3 text-xs sm:text-sm text-slate-300">
-                          <MapPin size={16} className="text-white shrink-0 mt-0.5" />
-                          <span>{resolvedAddress}</span>
-                        </div>
+                      {(resolvedAddress || resolvedHours) && (
+                        <div className="mt-8 space-y-4 border-t border-white/10 pt-6">
+                          {resolvedAddress && (
+                            <div className="flex items-start gap-3 text-xs sm:text-sm text-slate-300">
+                              <MapPin size={16} className="text-white shrink-0 mt-0.5" />
+                              <span>{resolvedAddress}</span>
+                            </div>
+                          )}
 
-                        <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-300">
-                          <Clock size={16} className="text-white shrink-0" />
-                          <span>{resolvedHours}</span>
+                          {resolvedHours && (
+                            <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-300">
+                              <Clock size={16} className="text-white shrink-0" />
+                              <span>{resolvedHours}</span>
+                            </div>
+                          )}
                         </div>
-                      </div>
+                      )}
 
                       {/* Direct Clickable Action Buttons */}
                       <div className="mt-8 space-y-3">
-                        <a
-                          href={`tel:${resolvedPhone.replace(/\s+/g, "")}`}
-                          className="group/btn flex items-center justify-between border border-white/20 bg-white/10 p-4 transition-all hover:bg-white hover:text-[#070e24]"
-                        >
-                          <div className="flex items-center gap-3.5">
-                            <div className="flex h-10 w-10 items-center justify-center bg-white/15 text-white transition-colors group-hover/btn:bg-[#070e24] group-hover/btn:text-white">
-                              <Phone size={18} />
+                        {resolvedPhone && (
+                          <a
+                            href={`tel:${resolvedPhone.replace(/\s+/g, "")}`}
+                            className="group/btn flex items-center justify-between border border-white/20 bg-white/10 p-4 transition-all hover:bg-white hover:text-[#070e24]"
+                          >
+                            <div className="flex items-center gap-3.5">
+                              <div className="flex h-10 w-10 items-center justify-center bg-white/15 text-white transition-colors group-hover/btn:bg-[#070e24] group-hover/btn:text-white">
+                                <Phone size={18} />
+                              </div>
+                              <div>
+                                <span className="block text-[11px] font-semibold uppercase tracking-wider text-slate-300 group-hover/btn:text-slate-600">
+                                  {t("callDirect")}
+                                </span>
+                                <span className="font-display text-sm font-bold text-white group-hover/btn:text-[#070e24]">
+                                  {resolvedPhone}
+                                </span>
+                              </div>
                             </div>
-                            <div>
-                              <span className="block text-[11px] font-semibold uppercase tracking-wider text-slate-300 group-hover/btn:text-slate-600">
-                                {t("callDirect")}
-                              </span>
-                              <span className="font-display text-sm font-bold text-white group-hover/btn:text-[#070e24]">
-                                {resolvedPhone}
-                              </span>
-                            </div>
-                          </div>
-                          <ArrowUpRight size={16} className="text-white/60 transition-transform group-hover/btn:text-[#070e24] group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-                        </a>
+                            <ArrowUpRight size={16} className="text-white/60 transition-transform group-hover/btn:text-[#070e24] group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                          </a>
+                        )}
 
-                        <a
-                          href={`mailto:${email}`}
-                          className="group/btn flex items-center justify-between border border-white/20 bg-white/10 p-4 transition-all hover:bg-white hover:text-[#070e24]"
-                        >
-                          <div className="flex items-center gap-3.5">
-                            <div className="flex h-10 w-10 items-center justify-center bg-white/15 text-white transition-colors group-hover/btn:bg-[#070e24] group-hover/btn:text-white">
-                              <Mail size={18} />
+                        {email && (
+                          <a
+                            href={`mailto:${email}`}
+                            className="group/btn flex items-center justify-between border border-white/20 bg-white/10 p-4 transition-all hover:bg-white hover:text-[#070e24]"
+                          >
+                            <div className="flex items-center gap-3.5">
+                              <div className="flex h-10 w-10 items-center justify-center bg-white/15 text-white transition-colors group-hover/btn:bg-[#070e24] group-hover/btn:text-white">
+                                <Mail size={18} />
+                              </div>
+                              <div>
+                                <span className="block text-[11px] font-semibold uppercase tracking-wider text-slate-300 group-hover/btn:text-slate-600">
+                                  {t("emailDirect")}
+                                </span>
+                                <span className="font-display text-sm font-bold text-white group-hover/btn:text-[#070e24]">
+                                  {email}
+                                </span>
+                              </div>
                             </div>
-                            <div>
-                              <span className="block text-[11px] font-semibold uppercase tracking-wider text-slate-300 group-hover/btn:text-slate-600">
-                                {t("emailDirect")}
-                              </span>
-                              <span className="font-display text-sm font-bold text-white group-hover/btn:text-[#070e24]">
-                                {email}
-                              </span>
-                            </div>
-                          </div>
-                          <ArrowUpRight size={16} className="text-white/60 transition-transform group-hover/btn:text-[#070e24] group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-                        </a>
+                            <ArrowUpRight size={16} className="text-white/60 transition-transform group-hover/btn:text-[#070e24] group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                          </a>
+                        )}
                       </div>
                     </div>
 
@@ -186,24 +174,28 @@ export function ContactForm({
                         </div>
 
                         <div className="flex items-center gap-3">
-                          <a
-                            href={facebookUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Facebook"
-                            className="flex h-9 w-9 items-center justify-center border border-white/20 bg-white/10 text-white transition-all hover:bg-white hover:text-[#070e24]"
-                          >
-                            <FacebookIcon size={16} />
-                          </a>
-                          <a
-                            href={instagramUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Instagram"
-                            className="flex h-9 w-9 items-center justify-center border border-white/20 bg-white/10 text-white transition-all hover:bg-white hover:text-[#070e24]"
-                          >
-                            <InstagramIcon size={16} />
-                          </a>
+                          {facebookUrl && (
+                            <a
+                              href={facebookUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label="Facebook"
+                              className="flex h-9 w-9 items-center justify-center border border-white/20 bg-white/10 text-white transition-all hover:bg-white hover:text-[#070e24]"
+                            >
+                              <FacebookIcon size={16} />
+                            </a>
+                          )}
+                          {instagramUrl && (
+                            <a
+                              href={instagramUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label="Instagram"
+                              className="flex h-9 w-9 items-center justify-center border border-white/20 bg-white/10 text-white transition-all hover:bg-white hover:text-[#070e24]"
+                            >
+                              <InstagramIcon size={16} />
+                            </a>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -223,57 +215,59 @@ export function ContactForm({
       </section>
 
       {/* Bottom Architectural FAQ Grid Section */}
-      <section className="border-t border-slate-200 dark:border-white/10 bg-[#f8fafc] dark:bg-[#060b18] px-4 py-16 sm:px-6 lg:px-12 lg:py-20">
-        <div className="mx-auto max-w-[1400px]">
-          <FadeIn>
-            <div className="mb-10 flex flex-col justify-between gap-4 border-b border-slate-200 dark:border-white/10 pb-6 sm:flex-row sm:items-end">
-              <div>
-                <div className="inline-flex items-center gap-2 border border-[#0d1a46]/20 dark:border-white/20 bg-[#0d1a46]/[0.04] dark:bg-white/10 px-3.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-[#0d1a46] dark:text-white">
-                  FAQ & Inquiries
+      {faqs.length > 0 && (
+        <section className="border-t border-slate-200 dark:border-white/10 bg-[#f8fafc] dark:bg-[#060b18] px-4 py-16 sm:px-6 lg:px-12 lg:py-20">
+          <div className="mx-auto max-w-[1400px]">
+            <FadeIn>
+              <div className="mb-10 flex flex-col justify-between gap-4 border-b border-slate-200 dark:border-white/10 pb-6 sm:flex-row sm:items-end">
+                <div>
+                  <div className="inline-flex items-center gap-2 border border-[#0d1a46]/20 dark:border-white/20 bg-[#0d1a46]/[0.04] dark:bg-white/10 px-3.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-[#0d1a46] dark:text-white">
+                    FAQ & Inquiries
+                  </div>
+                  <h3 className="mt-3 font-display text-2xl font-bold text-[#0d1a46] dark:text-white sm:text-3xl">
+                    {faqsPost?.title || t("faqTitle")}
+                  </h3>
                 </div>
-                <h3 className="mt-3 font-display text-2xl font-bold text-[#0d1a46] dark:text-white sm:text-3xl">
-                  {t("faqTitle")}
-                </h3>
+                {faqsPost?.excerpt && (
+                  <p className="max-w-md text-xs leading-relaxed text-slate-500 dark:text-slate-400 sm:text-sm">
+                    {faqsPost.excerpt}
+                  </p>
+                )}
               </div>
-              <p className="max-w-md text-xs leading-relaxed text-slate-500 dark:text-slate-400 sm:text-sm">
-                {locale === "mn"
-                  ? "Төсөл эхлүүлэх, инженерийн үзлэг хийлгэх, хамтран ажиллахтай холбоотой нийтлэг асуултууд."
-                  : "Common questions regarding project initiation, engineering site visits, and partnerships."}
-              </p>
-            </div>
-          </FadeIn>
+            </FadeIn>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
-            {faqs.map((faq, idx) => (
-              <FadeIn key={idx} delay={0.08 * (idx + 1)} className="h-full">
-                <div className="group relative flex h-full flex-col bg-slate-200/90 dark:bg-white/10 p-[1px] shadow-sm transition-all duration-300 hover:bg-[#0d1a46]/50 dark:hover:bg-white/20 hover:shadow-xl [clip-path:polygon(20px_0,100%_0,100%_100%,0_100%,0_20px)]">
-                  <div className="relative flex h-full flex-col justify-between bg-white dark:bg-[#070e24] p-6 sm:p-8 [clip-path:polygon(19px_0,100%_0,100%_100%,0_100%,0_19px)]">
-                    {/* Top-left corner chamfer decoration */}
-                    <div className="pointer-events-none absolute left-0 top-0 h-5 w-5 border-b border-r border-[#0d1a46]/15 bg-slate-100/80 dark:border-white/20 dark:bg-white/10 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
+              {faqs.map((faq, idx) => (
+                <FadeIn key={idx} delay={0.08 * (idx + 1)} className="h-full">
+                  <div className="group relative flex h-full flex-col bg-slate-200/90 dark:bg-white/10 p-[1px] shadow-sm transition-all duration-300 hover:bg-[#0d1a46]/50 dark:hover:bg-white/20 hover:shadow-xl [clip-path:polygon(20px_0,100%_0,100%_100%,0_100%,0_20px)]">
+                    <div className="relative flex h-full flex-col justify-between bg-white dark:bg-[#070e24] p-6 sm:p-8 [clip-path:polygon(19px_0,100%_0,100%_100%,0_100%,0_19px)]">
+                      {/* Top-left corner chamfer decoration */}
+                      <div className="pointer-events-none absolute left-0 top-0 h-5 w-5 border-b border-r border-[#0d1a46]/15 bg-slate-100/80 dark:border-white/20 dark:bg-white/10 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
 
-                    {/* Subtle corner crosshairs */}
-                    <div className="pointer-events-none absolute right-3 top-3 font-mono text-[10px] text-slate-300 dark:text-white/20 select-none">+</div>
-                    <div className="pointer-events-none absolute right-3 bottom-3 font-mono text-[10px] text-slate-300 dark:text-white/20 select-none">+</div>
+                      {/* Subtle corner crosshairs */}
+                      <div className="pointer-events-none absolute right-3 top-3 font-mono text-[10px] text-slate-300 dark:text-white/20 select-none">+</div>
+                      <div className="pointer-events-none absolute right-3 bottom-3 font-mono text-[10px] text-slate-300 dark:text-white/20 select-none">+</div>
 
-                    <div>
-                      <div className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-widest text-[#0d1a46]/80 dark:text-white/80">
-                        <HelpCircle size={15} className="text-primary dark:text-white shrink-0" />
-                        <span>0{idx + 1} / QUESTION</span>
+                      <div>
+                        <div className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-widest text-[#0d1a46]/80 dark:text-white/80">
+                          <HelpCircle size={15} className="text-primary dark:text-white shrink-0" />
+                          <span>0{idx + 1} / QUESTION</span>
+                        </div>
+                        <h4 className="mt-3 font-display text-base font-bold text-[#0d1a46] dark:text-white sm:text-lg">
+                          {faq.q}
+                        </h4>
+                        <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                          {faq.a}
+                        </p>
                       </div>
-                      <h4 className="mt-3 font-display text-base font-bold text-[#0d1a46] dark:text-white sm:text-lg">
-                        {faq.q}
-                      </h4>
-                      <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                        {faq.a}
-                      </p>
                     </div>
                   </div>
-                </div>
-              </FadeIn>
-            ))}
+                </FadeIn>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

@@ -84,26 +84,15 @@ export default function Footer({ locale, navItems, contactInfo, products }: Foot
           },
         ];
 
-  const facebookUrl = contactInfo.facebook || "https://www.facebook.com/artify.mn";
-  const instagramUrl = contactInfo.instagram || "https://www.instagram.com/artify.mn";
-  const rawPhone = contactInfo.phone || "+976 77710 155";
-  const phone = rawPhone.includes("7770155") || rawPhone.includes("7770255") || (rawPhone.includes("7710") && !rawPhone.includes("77710")) ? "+976 77710 155" : rawPhone;
-  const email = contactInfo.email || "info@artifybrand.com";
-  const address =
-    locale === "en"
-      ? (contactInfo.address && !/[а-яА-ЯөӨүҮ]/.test(contactInfo.address) ? contactInfo.address : "Ulaanbaatar, Mongolia")
-      : (contactInfo.address || "Улаанбаатар хот, Монгол улс");
-  const hours =
-    locale === "en"
-      ? (contactInfo.hours && !/[а-яА-ЯөӨүҮ]/.test(contactInfo.hours) ? contactInfo.hours : "Mon – Fri: 09:00 – 18:00 (GMT+8)")
-      : (contactInfo.hours || "Даваа – Баасан: 09:00 – 18:00 (GMT+8)");
+  const facebookUrl = contactInfo.facebook || "https://www.facebook.com/profile.php?id=61583605854922";
+  const instagramUrl = contactInfo.instagram || "https://www.instagram.com";
+  const phone = contactInfo.phone || "";
+  const email = contactInfo.email || "";
+  const address = contactInfo.address || "";
+  const hours = contactInfo.hours || "";
+  const slogan = contactInfo.slogan || "";
+  const brandDescription = contactInfo.brandDescription || "";
 
-  const slogan = contactInfo.slogan || "Crafting The Quality Of Life";
-  const brandDescription =
-    contactInfo.brandDescription ||
-    (locale === "mn"
-      ? "Инженерийн нарийн тооцоолол, ухаалаг агааржуулалт, захиалгат ховор материалын цогц шийдлээр амьдралын чанарыг урлана."
-      : "Crafting the quality of life through precise engineering, intelligent ventilation, and bespoke rare architectural materials.");
 
   return (
     <footer className="w-full border-t border-[#0d1a46]/30 bg-[#070e24] text-white">
@@ -210,30 +199,38 @@ export default function Footer({ locale, navItems, contactInfo, products }: Foot
           </div>
 
           {/* Contact Column */}
-          <div>
-            <h4 className="text-xs font-bold uppercase tracking-[0.22em] text-white">
-              {locale === "mn" ? "Холбоо барих" : "Contact"}
-            </h4>
-            <div className="mt-2 h-0.5 w-8 bg-white/80" />
-            <ul className="mt-6 space-y-4 text-sm text-white/90">
-              <li className="flex items-start gap-3">
-                <MapPin size={18} className="mt-0.5 shrink-0 text-white/80" />
-                <span>{address}</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone size={18} className="shrink-0 text-white/80" />
-                <a href={`tel:${phone.replace(/\s+/g, '')}`} className="transition-colors hover:text-white hover:underline">
-                  {phone}
-                </a>
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail size={18} className="shrink-0 text-white/80" />
-                <a href={`mailto:${email}`} className="transition-colors hover:text-white hover:underline">
-                  {email}
-                </a>
-              </li>
-            </ul>
-          </div>
+          {(address || phone || email) && (
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-[0.22em] text-white">
+                {locale === "mn" ? "Холбоо барих" : "Contact"}
+              </h4>
+              <div className="mt-2 h-0.5 w-8 bg-white/80" />
+              <ul className="mt-6 space-y-4 text-sm text-white/90">
+                {address && (
+                  <li className="flex items-start gap-3">
+                    <MapPin size={18} className="mt-0.5 shrink-0 text-white/80" />
+                    <span>{address}</span>
+                  </li>
+                )}
+                {phone && (
+                  <li className="flex items-center gap-3">
+                    <Phone size={18} className="shrink-0 text-white/80" />
+                    <a href={`tel:${phone.replace(/\s+/g, '')}`} className="transition-colors hover:text-white hover:underline">
+                      {phone}
+                    </a>
+                  </li>
+                )}
+                {email && (
+                  <li className="flex items-center gap-3">
+                    <Mail size={18} className="shrink-0 text-white/80" />
+                    <a href={`mailto:${email}`} className="transition-colors hover:text-white hover:underline">
+                      {email}
+                    </a>
+                  </li>
+                )}
+              </ul>
+            </div>
+          )}
         </div>
 
         {/* Bottom copyright & Powered by bar */}

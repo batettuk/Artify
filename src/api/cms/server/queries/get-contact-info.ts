@@ -2,6 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 import { getPageDetail } from "@/api/cms/server/queries/get-page-detail";
+import { getPostBySlug } from "@/api/cms/server/queries/get-post-by-slug";
 import {
   decodeCustomFields,
   getMappedStringValue,
@@ -34,60 +35,75 @@ function validateSocialUrl(
 }
 
 /**
- * Canonical contact info (address/phone/email) from the "contact" CMS page
- * custom fields. Shared by the contact form and the footer.
+ * Canonical contact info (address/phone/email/hours/slogan/description)
+ * fetched dynamically from the CMS "brand-info" post and "contact" page.
  */
 export const getContactInfo = cache(
   async (language: string): Promise<ContactInfoDto> => {
     if (!language) throw new Error("CMS language is required");
 
-    const page = await getPageDetail({ slug: "contact", language });
-    if (!page) throw new Error('CMS page "contact" is missing');
+    const [page, brandPost] = await Promise.all([
+      getPageDetail({ slug: "contact", language }).catch(() => null),
+      getPostBySlug({ slug: "brand-info", language }).catch(() => null),
+    ]);
 
-    const fields = decodeCustomFields(page.customFieldsData, "contact-fields");
-    const rawAddress = getStringValue(fields, "contactAddress");
-    const address = language === "en"
-      ? (rawAddress && !/[а-яА-ЯөӨүҮ]/.test(rawAddress) ? rawAddress : "Ulaanbaatar, Mongolia")
-      : (rawAddress || "Улаанбаатар хот, Монгол улс");
+    let parsedAddress = "";
+    let parsedPhone = "";
+    let parsedEmail = "";
+    let parsedHours = "";
+    let parsedSlogan = brandPost?.excerpt ?? "";
+    let parsedDescription = "";
 
-    const rawPhone = getStringValue(fields, "contactPhone");
-    const isOldPhone = !rawPhone || rawPhone.includes("7770155") || rawPhone.includes("7770255") || (rawPhone.includes("7710") && !rawPhone.includes("77710"));
-    const phone = isOldPhone ? "+976 77710 155" : rawPhone;
+    if (brandPost?.content) {
+      const lines = brandPost.content.split("\n");
+      for (const rawLine of lines) {
+        const line = rawLine.trim();
+        const colonIdx = line.indexOf(":");
+        if (colonIdx === -1) continue;
+        const key = line.slice(0, colonIdx).trim().toLowerCase();
+        const val = line.slice(colonIdx + 1).trim();
 
-    const email = getStringValue(fields, "contactEmail") || "info@artifybrand.com";
-    const rawHours = getStringValue(fields, "contactHours");
-    const hours = language === "en"
-      ? (rawHours && !/[а-яА-ЯөӨүҮ]/.test(rawHours) ? rawHours : "Mon – Fri: 09:00 – 18:00 (GMT+8)")
-      : (rawHours || "Даваа – Баасан: 09:00 – 18:00 (GMT+8)");
+        if (key.includes("address") || key.includes("хаяг")) {
+          parsedAddress = val;
+        } else if (key.includes("phone") || key.includes("утас")) {
+          parsedPhone = val;
+        } else if (key.includes("email") || key.includes("шуудан")) {
+          parsedEmail = val;
+        } else if (key.includes("hour") || key.includes("цаг")) {
+          parsedHours = val;
+        } else if (key.includes("slogan") || key.includes("уриа")) {
+          parsedSlogan = val;
+        } else if (key.includes("description") || key.includes("тайлбар")) {
+          parsedDescription = val;
+        }
+      }
+    }
 
-    const facebook = validateSocialUrl(
-      getMappedStringValue(page.customFieldsMap, "contact-fields", "facebook"),
-      "Facebook",
-      "facebook.com",
-    );
-    const instagram = validateSocialUrl(
-      getMappedStringValue(page.customFieldsMap, "contact-fields", "instagram"),
-      "Instagram",
-      "instagram.com",
-    );
+    const fields = page ? decodeCustomFields(page.customFieldsData, "contact-fields") : {};
+    const address = parsedAddress || getStringValue(fields, "contactAddress") || "";
+    const phone = parsedPhone || getStringValue(fields, "contactPhone") || "";
+    const email = parsedEmail || getStringValue(fields, "contactEmail") || "";
+    const hours = parsedHours || getStringValue(fields, "contactHours") || "";
 
-    const customMap = page.customFieldsMap as Record<string, Record<string, unknown>> | null;
-    const rawSlogan =
-      (customMap?.["contact-fields"]?.["slogan"] as string | undefined) ||
-      (customMap?.["contact-fields"]?.["tagline"] as string | undefined) ||
-      null;
-    const slogan = rawSlogan || "Crafting The Quality Of Life";
+    const facebook = page
+      ? validateSocialUrl(
+          getMappedStringValue(page.customFieldsMap, "contact-fields", "facebook"),
+          "Facebook",
+          "facebook.com",
+        )
+      : null;
+    const instagram = page
+      ? validateSocialUrl(
+          getMappedStringValue(page.customFieldsMap, "contact-fields", "instagram"),
+          "Instagram",
+          "instagram.com",
+        )
+      : null;
 
-    const rawBrandDesc =
-      (customMap?.["contact-fields"]?.["brandDescription"] as string | undefined) ||
-      (customMap?.["contact-fields"]?.["footerDescription"] as string | undefined) ||
-      null;
-    const brandDescription =
-      rawBrandDesc ||
-      (language === "mn"
-        ? "Инженерийн нарийн тооцоолол, ухаалаг агааржуулалт, захиалгат ховор материалын цогц шийдлээр амьдралын чанарыг урлана."
-        : "Crafting the quality of life through precise engineering, intelligent ventilation, and bespoke rare architectural materials.");
+    const slogan = parsedSlogan || "";
+    const brandDescription = parsedDescription || "";
 
     return { address, phone, email, hours, facebook, instagram, slogan, brandDescription };
   },
 );
+

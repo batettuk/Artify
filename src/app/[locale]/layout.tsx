@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { getMenu } from "@/api/cms/server/queries/get-menu";
 import { getContactInfo } from "@/api/cms/server/queries/get-contact-info";
 import { getProducts } from "@/api/cms/server/queries/get-products";
+import { getPostBySlug } from "@/api/cms/server/queries/get-post-by-slug";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { routing } from "@/i18n/routing";
@@ -15,14 +16,13 @@ import "../globals.css";
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin", "cyrillic"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
 const nunito = Nunito_Sans({
   variable: "--font-nunito",
   subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "600", "700"],
 });
+
 
 const caveat = Caveat({
   variable: "--font-signature",
@@ -30,11 +30,25 @@ const caveat = Caveat({
   weight: ["600", "700"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://artify.vercel.app"),
-  title: "Artify | Барилгын шийдлүүд",
-  description: "Artify — инновац, чанар, тогтвортой барилгын бүтээн байгуулалт.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const brandPost = await getPostBySlug({ slug: "brand-info", language: locale }).catch(() => null);
+  const title = brandPost?.title || "Artify Brand";
+  const description = brandPost?.excerpt || "";
+  return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://artifybrand.com"),
+    title: {
+      default: title,
+      template: `%s | ${title}`,
+    },
+    description,
+  };
+}
+
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

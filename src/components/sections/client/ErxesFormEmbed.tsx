@@ -28,18 +28,8 @@ export function ErxesFormEmbed({ locale = "mn" }: { locale?: string }) {
       ],
     };
 
-    // Client-side script dynamic check for route transitions
-    const scriptSrc = "https://artifynew.nextwidgets.erxes.io/formBundle.js";
-    let script = document.querySelector(`script[src="${scriptSrc}"]`) as HTMLScriptElement | null;
-    if (!script) {
-      script = document.createElement("script");
-      script.src = scriptSrc;
-      script.async = true;
-      document.body.appendChild(script);
-    }
-
-    // Neutralize any rogue global style injected by formBundle.js (e.g. .hidden { display: none !important; })
-    const sanitizeRogueStyles = () => {
+    // One-time cleanup for any rogue .hidden CSS rule injected by erxes widget
+    const timer = setTimeout(() => {
       document.querySelectorAll("style:not([data-erxes-sanitized])").forEach((styleEl) => {
         if (styleEl.textContent && styleEl.textContent.includes(".hidden")) {
           styleEl.setAttribute("data-erxes-sanitized", "true");
@@ -49,16 +39,13 @@ export function ErxesFormEmbed({ locale = "mn" }: { locale?: string }) {
           );
         }
       });
-    };
-
-    sanitizeRogueStyles();
-    const observer = new MutationObserver(() => sanitizeRogueStyles());
-    observer.observe(document.head, { childList: true });
+    }, 1000);
 
     return () => {
-      observer.disconnect();
+      clearTimeout(timer);
     };
   }, []);
+
 
   return (
     <>

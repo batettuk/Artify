@@ -5,36 +5,28 @@ import { FadeIn } from "@/components/motion/FadeIn";
 import Image from "@/components/common/Image";
 import { Link } from "@/i18n/routing";
 import { ArrowUpRight } from "lucide-react";
-import type { CmsPageDto } from "@/api/cms/types/public";
+import type { CmsPageDto, CmsPostDto } from "@/api/cms/types/public";
 
 export function CeoSection({
   page,
+  statementPost,
+  credentialsPost,
   locale = "mn",
 }: {
   page: CmsPageDto | null;
+  statementPost?: CmsPostDto | null;
+  credentialsPost?: CmsPostDto | null;
   locale?: string;
 }) {
-  if (!page) return null;
+  if (!page && !statementPost) return null;
 
   const isEn = locale === "en";
-  const defaultQuote = isEn
-    ? "“The construction industry is a multidimensional space where knowledge, technology, and craftsmanship from diverse disciplines converge. Artify aspires to be the premier platform where the industry's finest come together.”"
-    : "“Барилгын салбар бол олон салбарын мэдлэг, технологи, ур чадвар нэгддэг өргөн хүрээний орон зай. Салбарын шилдэгүүд нэгдэх талбар нь Артифай байхыг зорьдог.”";
 
-  // The homepage CEO presentation card exclusively features the executive statement quote.
-  let quoteContent = defaultQuote;
-  if (page.description) {
-    const raw = page.description.trim();
-    const quoteMatch = raw.match(/^[“"][^“”"]+[”"]/);
-    if (quoteMatch) {
-      quoteContent = quoteMatch[0].trim();
-    } else {
-      const firstParagraph = raw.split(/\r?\n\r?\n|\r?\n/)[0]?.trim();
-      if (firstParagraph && (firstParagraph.startsWith("“") || firstParagraph.startsWith("\""))) {
-        quoteContent = firstParagraph;
-      }
-    }
-  }
+  // Executive statement quote exclusively from CMS post
+  const quoteContent = statementPost?.excerpt || page?.description || "";
+  const ceoName = statementPost?.title || page?.name || "";
+  const credentialsText = credentialsPost?.excerpt || "";
+
 
   const imageSrc = "/images/ceo.png";
 
@@ -89,18 +81,18 @@ export function CeoSection({
                       Founder & CEO:
                     </span>
                     <span className="font-signature text-3xl font-bold tracking-wide text-[#0d1a46] dark:text-white drop-shadow-sm dark:drop-shadow-md sm:text-4xl lg:text-5xl mt-1 select-none">
-                      Munkhchuluun S.
+                      {ceoName}
                     </span>
                   </div>
                 </FadeIn>
 
-                {/* Bottom Row: Learn More CTA & Official Credentials */}
-                <FadeIn delay={0.25}>
+                {/* Desktop only: Bottom Row with Learn More CTA & Credentials */}
+                <FadeIn delay={0.25} className="hidden lg:block">
                   <div className="mt-10 flex flex-col items-start justify-between gap-6 border-t border-slate-200 dark:border-white/10 pt-6 sm:flex-row sm:items-end">
                     {/* Learn More Executive Profile Button */}
                     <Link
                       href="/ceo"
-                      className="group/btn inline-flex items-center gap-2 border border-[#0d1a46]/20 bg-[#070e24] px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white shadow-md transition-all hover:bg-[#0d1a46] active:scale-95 dark:border-white/30 dark:bg-white/10 dark:text-white dark:hover:bg-white dark:hover:text-[#040817] dark:shadow-lg rounded-none"
+                      className="group/btn inline-flex items-center justify-center gap-2 border border-[#0d1a46]/20 bg-[#070e24] px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white shadow-md transition-all hover:bg-[#0d1a46] active:scale-95 dark:border-white/30 dark:bg-white/10 dark:text-white dark:hover:bg-white dark:hover:text-[#040817] dark:shadow-lg rounded-none w-full sm:w-auto"
                     >
                       <span>{isEn ? "Learn More About CEO" : "Дэлгэрэнгүй танилцах"}</span>
                       <ArrowUpRight
@@ -109,14 +101,16 @@ export function CeoSection({
                       />
                     </Link>
 
-                    {/* Official Engineering & Estimator Credentials */}
-                    <div className="text-left sm:text-right text-[11px] font-medium leading-tight text-slate-600 dark:text-slate-400 sm:text-xs">
-                      <p>{isEn ? "Certified Civil Engineer," : "Иргэний барилгын мэргэшсэн инженер,"}</p>
-                      <p className="mt-0.5">{isEn ? "Certified Cost Estimator" : "мэргэшсэн төсөвчин"}</p>
-                    </div>
+                    {/* Official Engineering & Estimator Credentials from CMS */}
+                    {credentialsText && (
+                      <div className="text-left sm:text-right text-[11px] font-medium leading-tight text-slate-600 dark:text-slate-400 sm:text-xs">
+                        <p>{credentialsText}</p>
+                      </div>
+                    )}
                   </div>
                 </FadeIn>
               </div>
+
 
               {/* Right Column: High-Resolution CEO Cutout Portrait */}
               <div className="relative flex flex-col items-center justify-end lg:col-span-5">
@@ -124,12 +118,34 @@ export function CeoSection({
                   <div className="relative mx-auto h-[380px] w-full max-w-[360px] sm:h-[480px] sm:max-w-[420px] lg:h-[560px] lg:max-w-[480px]">
                     <Image
                       src={imageSrc}
-                      alt={page.name || "Munkhchuluun S. - Founder & CEO"}
+                      alt={ceoName}
                       fill
                       priority
                       sizes="(max-width: 1024px) 100vw, 45vw"
                       className="h-full w-full object-contain object-bottom transition-transform duration-700 hover:scale-[1.02] drop-shadow-[0_15px_30px_rgba(13,26,70,0.18)] dark:drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)]"
                     />
+                  </div>
+                </FadeIn>
+
+                {/* Mobile & Tablet only: Positioned directly on the bottom of the CEO picture */}
+                <FadeIn delay={0.2} className="w-full lg:hidden mt-6">
+                  <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-200 dark:border-white/10 pt-6 sm:flex-row sm:items-center">
+                    <Link
+                      href="/ceo"
+                      className="group/btn inline-flex items-center justify-center gap-2 border border-[#0d1a46]/20 bg-[#070e24] px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white shadow-md transition-all hover:bg-[#0d1a46] active:scale-95 dark:border-white/30 dark:bg-white/10 dark:text-white dark:hover:bg-white dark:hover:text-[#040817] dark:shadow-lg rounded-none w-full sm:w-auto"
+                    >
+                      <span>{isEn ? "Learn More About CEO" : "Дэлгэрэнгүй танилцах"}</span>
+                      <ArrowUpRight
+                        size={14}
+                        className="transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
+                      />
+                    </Link>
+
+                    {credentialsText && (
+                      <div className="text-center sm:text-right text-[11px] font-medium leading-tight text-slate-600 dark:text-slate-400 sm:text-xs">
+                        <p>{credentialsText}</p>
+                      </div>
+                    )}
                   </div>
                 </FadeIn>
               </div>

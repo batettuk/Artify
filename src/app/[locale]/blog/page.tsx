@@ -17,8 +17,8 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "nav" });
   const page = await getPageDetail({ slug: "blog", language: locale });
   return {
-    title: `${page?.name ?? t("blog")} | Artify`,
-    description: page?.description ?? "Artify — мэдээ, нийтлэл.",
+    title: `${page?.name ?? "Blog"} | Artify`,
+    description: page?.description ?? undefined,
   };
 }
 
@@ -60,7 +60,7 @@ export default async function BlogPage({
         <div className="relative z-10 mx-auto max-w-5xl px-6 text-center text-white lg:px-12">
           <FadeIn>
             <h1 className="font-display text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
-              {page?.name || (locale === "mn" ? "Сүүлийн Үеийн Мэдээ" : "Latest Articles")}
+              {page?.name || ""}
             </h1>
           </FadeIn>
 
