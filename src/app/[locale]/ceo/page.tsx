@@ -178,7 +178,7 @@ export default async function CeoProfilePage({
           >
             <div className="pointer-events-none absolute left-0 top-0 h-8 w-8 border-b border-r border-white/20 bg-white/10 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
 
-            <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
+            <div className="grid items-center lg:items-end gap-8 lg:grid-cols-12 lg:gap-12">
               <div className="flex flex-col justify-between lg:col-span-7">
                 <div className="mb-6 sm:mb-8">
                   <Image
@@ -212,8 +212,8 @@ export default async function CeoProfilePage({
                 </div>
               </div>
 
-              <div className="relative flex flex-col items-center justify-end lg:col-span-5">
-                <div className="relative mx-auto h-[360px] w-full max-w-[340px] sm:h-[440px] sm:max-w-[400px] lg:h-[500px]">
+              <div className="relative flex flex-col items-center justify-end lg:col-span-5 lg:self-end lg:-mb-14">
+                <div className="relative mx-auto h-[360px] w-full max-w-[340px] sm:h-[440px] sm:max-w-[400px] lg:h-[520px] lg:max-w-[440px] xl:h-[560px] xl:max-w-[470px] [mask-image:linear-gradient(to_bottom,black_82%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_82%,transparent_100%)]">
                   <Image
                     src="/images/ceo.png"
                     alt={ceoName}

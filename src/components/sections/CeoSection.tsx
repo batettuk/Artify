@@ -65,7 +65,7 @@ export function CeoSection({
             {/* Top-left corner chamfer decoration */}
             <div className="pointer-events-none absolute left-0 top-0 h-7 w-7 border-b border-r border-white/20 bg-white/10 [clip-path:polygon(0_0,100%_0,0_100%)] opacity-80" />
 
-            <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
+            <div className="grid items-center lg:items-end gap-8 lg:grid-cols-12 lg:gap-12">
               {/* Left Column: Brand Logo, Quote, Signature & Credentials */}
               <div className="flex flex-col justify-between lg:col-span-7">
                 {/* Brand Logo Header - Always pristine white logo on the dark executive card */}
@@ -129,10 +129,10 @@ export function CeoSection({
                 </FadeIn>
               </div>
 
-              {/* Right Column: High-Resolution CEO Cutout Portrait */}
-              <div className="relative flex flex-col items-center justify-end lg:col-span-5">
+              {/* Right Column: High-Resolution CEO Cutout Portrait anchored flush to bottom */}
+              <div className="relative flex flex-col items-center justify-end lg:col-span-5 lg:self-end lg:-mb-14">
                 <FadeIn direction="up" delay={0.15} className="w-full">
-                  <div className="relative mx-auto h-[380px] w-full max-w-[360px] sm:h-[480px] sm:max-w-[420px] lg:h-[560px] lg:max-w-[480px]">
+                  <div className="relative mx-auto h-[380px] w-full max-w-[360px] sm:h-[480px] sm:max-w-[420px] lg:h-[580px] lg:max-w-[460px] xl:h-[620px] xl:max-w-[490px] [mask-image:linear-gradient(to_bottom,black_82%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_82%,transparent_100%)]">
                     <Image
                       src={imageSrc}
                       alt={ceoName}
