@@ -290,19 +290,19 @@ export default function Header({ locale, navItems }: HeaderProps) {
                     isDark ? "border-white/10" : "border-[#0d1a46]/10"
                   }`}
                 >
-                  <span className={`font-mono text-[11px] font-bold uppercase tracking-[0.25em] ${
+                  <span className={`font-sans text-[11px] font-bold uppercase tracking-[0.2em] ${
                     isDark ? "text-sky-300" : "text-[#0d1a46]"
                   }`}>
                     {locale === "mn" ? "Үндсэн цэс" : "Directory"}
                   </span>
-                  <span className={`font-mono text-[10px] ${
+                  <span className={`font-sans text-[10px] font-medium ${
                     isDark ? "text-white/40" : "text-slate-400"
                   }`}>
                     0{links.length} {locale === "mn" ? "Хэсэг" : "Items"}
                   </span>
                 </motion.div>
 
-                {/* Navigation Links — Words Pop Out with 3D Spring Physics */}
+                {/* Navigation Links */}
                 <nav className="flex flex-col gap-3 [perspective:1000px]">
                   {links.map((link, index) => {
                     const linkIsHome = link.href === "/" || link.href === "";
@@ -340,8 +340,8 @@ export default function Header({ locale, navItems }: HeaderProps) {
                               : "border-slate-200/90 bg-white hover:border-[#0d1a46]/30 hover:bg-slate-50/90 shadow-sm hover:shadow-md"
                           }`}
                         >
-                          {/* Background Large Monospace Number Watermark */}
-                          <span className={`pointer-events-none absolute right-16 sm:right-20 top-1/2 -translate-y-1/2 select-none font-mono text-5xl sm:text-6xl font-black group-hover:scale-110 transition-all duration-300 ${
+                          {/* Background Large Number Watermark */}
+                          <span className={`pointer-events-none absolute right-16 sm:right-20 top-1/2 -translate-y-1/2 select-none font-sans text-5xl sm:text-6xl font-bold group-hover:scale-110 transition-all duration-300 ${
                             isDark
                               ? "text-white/[0.03] group-hover:text-white/[0.07]"
                               : "text-[#0d1a46]/[0.05] group-hover:text-[#0d1a46]/[0.08]"
@@ -373,23 +373,23 @@ export default function Header({ locale, navItems }: HeaderProps) {
 
                           <div className="relative z-10 flex items-center gap-3.5 sm:gap-5 pl-2.5 sm:pl-3">
                             {/* Clean Index number */}
-                            <span className={`font-mono text-sm sm:text-base font-bold tracking-widest transition-colors ${
+                            <span className={`font-sans text-xs sm:text-sm font-semibold tracking-wider transition-colors ${
                               isActive
-                                ? isDark ? "text-sky-300 font-extrabold" : "text-[#0d1a46] font-extrabold"
+                                ? isDark ? "text-sky-300 font-bold" : "text-[#0d1a46] font-bold"
                                 : isDark ? "text-white/40 group-hover:text-white/70" : "text-slate-400 group-hover:text-[#070e24]"
                             }`}>
                               {num}
                             </span>
 
-                            {/* Main Page Word (POPS OUT!) */}
+                            {/* Main Page Name — standard website font (Montserrat) in clean elegant styling */}
                             <h3
-                              className={`font-display text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight transition-transform duration-300 group-hover:translate-x-1 ${
+                              className={`font-sans text-xl sm:text-2xl md:text-3xl font-bold tracking-tight transition-transform duration-300 group-hover:translate-x-1 ${
                                 isDark
                                   ? isActive
-                                    ? "text-white drop-shadow-[0_4px_20px_rgba(56,189,248,0.4)]"
+                                    ? "text-white"
                                     : "text-white/90 group-hover:text-white"
                                   : isActive
-                                  ? "text-[#070e24] drop-shadow-[0_2px_12px_rgba(7,14,36,0.15)]"
+                                  ? "text-[#070e24]"
                                   : "text-[#0d1a46] group-hover:text-black"
                               }`}
                             >
@@ -397,7 +397,7 @@ export default function Header({ locale, navItems }: HeaderProps) {
                             </h3>
 
                             {isActive && (
-                              <span className={`flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-mono font-bold tracking-widest ${
+                              <span className={`flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-sans font-bold tracking-wider ${
                                 isDark
                                   ? "border-sky-400/30 bg-sky-400/10 text-sky-300"
                                   : "border-[#0d1a46]/20 bg-[#0d1a46]/10 text-[#070e24]"
@@ -441,7 +441,7 @@ export default function Header({ locale, navItems }: HeaderProps) {
                   transition={{ type: "spring", stiffness: 350, damping: 26, delay: 0.35 }}
                   className="mt-6"
                 >
-                  <span className={`mb-2 block font-mono text-[10px] font-bold uppercase tracking-[0.25em] ${
+                  <span className={`mb-2 block font-sans text-[10px] font-bold uppercase tracking-[0.2em] ${
                     isDark ? "text-white/70" : "text-slate-500"
                   }`}>
                     {locale === "mn" ? "Хэл сонгох" : "Language"}
@@ -515,7 +515,7 @@ export default function Header({ locale, navItems }: HeaderProps) {
                         }`}>
                           <Phone size={13} />
                         </div>
-                        <span className="font-mono font-medium">+976 77710 155</span>
+                        <span className="font-sans font-medium">+976 77710 155</span>
                       </a>
 
                       <a
@@ -529,7 +529,7 @@ export default function Header({ locale, navItems }: HeaderProps) {
                         }`}>
                           <Mail size={13} />
                         </div>
-                        <span className="truncate font-mono font-medium">info@artifybrand.com</span>
+                        <span className="truncate font-sans font-medium">info@artifybrand.com</span>
                       </a>
                     </div>
 
@@ -542,7 +542,7 @@ export default function Header({ locale, navItems }: HeaderProps) {
                   </div>
 
                   {/* Brand Footnote */}
-                  <div className={`flex items-center justify-between text-[10px] font-mono pt-2 ${
+                  <div className={`flex items-center justify-between text-[10px] font-sans pt-2 ${
                     isDark ? "text-slate-500" : "text-slate-400"
                   }`}>
                     <span>ARTIFY BRAND © 2026</span>
