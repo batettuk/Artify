@@ -7,13 +7,17 @@ import type { CmsPostDto } from "@/api/cms/types/public";
 
 export function HomeCtaSection({
   post,
+  slogan,
   locale,
 }: {
   post?: CmsPostDto | null;
+  slogan?: string;
   locale: string;
 }) {
   const headline = post?.title || "";
-  const description = post?.excerpt || post?.content || "";
+  const displaySlogan =
+    slogan ||
+    (locale === "mn" ? "Амьдралын чанарыг урлана" : "Crafting the quality of life");
 
   return (
     <section className="relative overflow-hidden bg-[#070e24] px-4 py-16 text-white sm:px-6 lg:px-12 lg:py-24 border-t border-white/10">
@@ -36,11 +40,13 @@ export function HomeCtaSection({
                 {headline}
               </h2>
             </FadeIn>
-            <FadeIn delay={0.15}>
-              <p className="mt-3 text-sm leading-relaxed text-slate-300 sm:text-base">
-                {description}
-              </p>
-            </FadeIn>
+            {displaySlogan && (
+              <FadeIn delay={0.15}>
+                <p className="mt-3 text-xs font-semibold tracking-[0.18em] uppercase text-slate-300 sm:text-sm">
+                  {displaySlogan}
+                </p>
+              </FadeIn>
+            )}
           </div>
 
 

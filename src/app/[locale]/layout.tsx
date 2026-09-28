@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Montserrat, Nunito_Sans, Caveat } from "next/font/google";
+import { Montserrat, Nunito_Sans } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import ApolloClientProvider from "@/lib/apollo/provider";
@@ -13,6 +13,8 @@ import Footer from "@/components/layout/Footer";
 import { routing } from "@/i18n/routing";
 import "../globals.css";
 
+import localFont from "next/font/local";
+
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin", "cyrillic"],
@@ -23,11 +25,21 @@ const nunito = Nunito_Sans({
   subsets: ["latin", "cyrillic"],
 });
 
-
-const caveat = Caveat({
+const baystarScript = localFont({
+  src: [
+    {
+      path: "../../fonts/BaystarScriptMedium.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../fonts/BaystarScriptBold.otf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
   variable: "--font-signature",
-  subsets: ["latin"],
-  weight: ["600", "700"],
+  display: "swap",
 });
 
 export async function generateMetadata({
@@ -72,7 +84,7 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${montserrat.variable} ${nunito.variable} ${caveat.variable} h-full antialiased`}
+      className={`${montserrat.variable} ${nunito.variable} ${baystarScript.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300">
         <ThemeProvider

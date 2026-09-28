@@ -85,8 +85,25 @@ html {
   }
 }
 
+@font-face {
+  font-family: "BaystarScript";
+  src: url("/fonts/BaystarScriptMedium.otf") format("opentype");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "BaystarScript";
+  src: url("/fonts/BaystarScriptBold.otf") format("opentype");
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 .font-signature {
-  font-family: var(--font-signature), cursive;
+  font-family: var(--font-signature), "BaystarScript", "Caveat", cursive;
+  font-style: normal;
 }
 
 /* Light mode headings default */

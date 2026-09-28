@@ -100,7 +100,11 @@ export const getContactInfo = cache(
         )
       : null;
 
-    const slogan = parsedSlogan || "";
+    const rawSlogan = parsedSlogan || brandPost?.excerpt || "";
+    const isMn = language === "mn";
+    const slogan = isMn
+      ? (rawSlogan && !/crafting/i.test(rawSlogan) ? rawSlogan : "Амьдралын чанарыг урлана")
+      : (rawSlogan || "Crafting the quality of life");
     const brandDescription = parsedDescription || "";
 
     return { address, phone, email, hours, facebook, instagram, slogan, brandDescription };

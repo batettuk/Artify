@@ -46,6 +46,7 @@ export const getHomeContent = cache(async (language: string) => {
     heroPost,
     aboutPost,
     ceoStatementPost,
+    ceoStatementPostEn,
     ceoCredentialsPost,
     homeCtaPost,
   ] = await Promise.all([
@@ -63,6 +64,9 @@ export const getHomeContent = cache(async (language: string) => {
     getPostBySlug({ slug: "home-hero", language }),
     getPostBySlug({ slug: "about-company", language }),
     getPostBySlug({ slug: "ceo-statement", language }),
+    language === "en"
+      ? Promise.resolve(null)
+      : getPostBySlug({ slug: "ceo-statement", language: "en" }),
     getPostBySlug({ slug: "ceo-credentials", language }),
     getPostBySlug({ slug: "home-cta", language }),
   ]);
@@ -82,6 +86,7 @@ export const getHomeContent = cache(async (language: string) => {
       hero: heroPost,
       about: aboutPost,
       ceoStatement: ceoStatementPost,
+      ceoStatementEn: ceoStatementPostEn,
       ceoCredentials: ceoCredentialsPost,
       homeCta: homeCtaPost,
     },

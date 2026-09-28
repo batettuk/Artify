@@ -109,9 +109,11 @@ export default function Footer({ locale, navItems, contactInfo, products }: Foot
                 className="h-8 w-auto lg:h-10"
               />
             </Link>
-            <p className="mt-5 max-w-sm text-sm leading-relaxed text-slate-300 sm:text-base">
-              {brandDescription}
-            </p>
+            {slogan && (
+              <p className="mt-4 max-w-sm text-xs font-semibold tracking-[0.18em] uppercase text-slate-300 sm:text-sm">
+                {slogan}
+              </p>
+            )}
 
             <div className="mt-8 flex items-center gap-3">
               <a

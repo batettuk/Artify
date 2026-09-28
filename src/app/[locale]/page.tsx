@@ -9,6 +9,7 @@ import { BlogSection } from "@/components/sections/BlogSection";
 import { HomeCtaSection } from "@/components/sections/HomeCtaSection";
 
 import { getPostBySlug } from "@/api/cms/server/queries/get-post-by-slug";
+import { getContactInfo } from "@/api/cms/server/queries/get-contact-info";
 
 export async function generateMetadata({
   params,
@@ -30,8 +31,11 @@ export async function generateMetadata({
 
 export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
-  const { page, sectionPages, blogPosts, posts } =
-    await getHomeContent(locale);
+  const [{ page, sectionPages, blogPosts, posts }, contactInfo] =
+    await Promise.all([
+      getHomeContent(locale),
+      getContactInfo(locale),
+    ]);
 
   if (!page) notFound();
 
@@ -50,11 +54,12 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       <CeoSection
         page={sectionPages.ceo}
         statementPost={posts.ceoStatement}
+        statementPostEn={posts.ceoStatementEn}
         credentialsPost={posts.ceoCredentials}
         locale={locale}
       />
       <BlogSection page={sectionPages.blog} posts={blogPosts} locale={locale} />
-      <HomeCtaSection post={posts.homeCta} locale={locale} />
+      <HomeCtaSection post={posts.homeCta} slogan={contactInfo.slogan} locale={locale} />
     </>
   );
 }
