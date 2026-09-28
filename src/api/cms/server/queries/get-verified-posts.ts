@@ -47,12 +47,18 @@ export async function getVerifiedPosts({
     sortDirection,
     limit,
   };
-  const { data } = await client.query<CpPostsData, CpPostsVariables>({
-    query: CP_POSTS,
-    variables,
-    context: cmsPublicQueryContext,
-  });
-  const posts = data?.cpPosts ?? [];
+  let posts: Post[] = [];
+  try {
+    const { data } = await client.query<CpPostsData, CpPostsVariables>({
+      query: CP_POSTS,
+      variables,
+      context: cmsPublicQueryContext,
+    });
+    posts = data?.cpPosts ?? [];
+  } catch (error) {
+    console.warn(`CMS query failed for post type ${postType.code}:`, error);
+    return [];
+  }
 
   for (const post of posts) {
     if (
